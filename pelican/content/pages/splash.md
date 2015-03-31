@@ -14,7 +14,9 @@ save_as: index.html
 </p>
 
 <p>
-<a href="hello3/">Angular Repeat Across Elements</a>
+<a href="hello3/">Angular Repeat</a>
 </p>
 
-
+<p>
+<a href="hello4/">Angular Repeat Across Elements</a>
+</p>
