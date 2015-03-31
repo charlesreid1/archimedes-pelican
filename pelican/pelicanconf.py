@@ -11,7 +11,7 @@ SITEURL = ''
 
 AUTHOR = u'charlesreid1'
 SITENAME = u'Archimedes Pelican'
-SITEURL = '/archimedes-pelican'
+#SITEURL = '/archimedes-pelican'
 
 PATH = 'content'
 
@@ -63,8 +63,7 @@ TEMPLATE_PAGES['hello1.html'] = 'hello1/index.html'
 TEMPLATE_PAGES['hello2.html'] = 'hello2/index.html'
 TEMPLATE_PAGES['hello3.html'] = 'hello3/index.html'
 TEMPLATE_PAGES['hello4.html'] = 'hello4/index.html'
-
-
+TEMPLATE_PAGES['hello5.html'] = 'hello5/index.html'
 
 
 

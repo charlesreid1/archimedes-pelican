@@ -20,3 +20,7 @@ save_as: index.html
 <p>
 <a href="hello4/">Angular Repeat Across Elements</a>
 </p>
+
+<p>
+<a href="hello5/">Angular Repeat Extra Variables</a>
+</p>

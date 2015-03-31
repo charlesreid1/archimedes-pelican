@@ -10,25 +10,32 @@
 
 {% block content %}
 
-{% include 'hello4.md' %}
+{% include 'hello5.md' %}
 
 <hr />
 
 <div ng-app="notesApp">
 
     <div ng-controller="NotesCtrl">
-        <table class="table table-striped">
-            <tr ng-repeat-start="note in notes">
-                <td>[[note.label]]</td>
-            </tr>
-            <tr ng-repeat-end>
-                <td>Done: [[note.done]]</td>
-            </tr>
-        </table>
+
+        <div ng-repeat="note in notes">
+
+            <span class="lab">[[note.label]]</span>
+            <span class="label label-default" ng-bind="note.done"></span>
+
+            <div>Index of Element: [[$index]]</div>
+            <div>At Even Position: [[$even]]</div>
+            <div>At Odd Position: [[$odd]]</div>
+            <div>First Element: [[$first]]</div>
+            <div>Middle Element: [[$middle]]</div>
+            <div>Last Element: [[$last]]</div>
+
+            <br />
+
+        </div>
+
     </div>
-
 </div>
-
 
 <script type="text/javascript">
 
@@ -38,7 +45,8 @@
         $scope.notes = [
             {id: 1, label: 'First Note', done: false},
             {id: 2, label: 'Second Note', done: false},
-            {id: 3, label: 'Third Note', done: true}
+            {id: 3, label: 'Third Note', done: true},
+            {id: 4, label: 'Last Note', done: false}
         ];
     };
 
