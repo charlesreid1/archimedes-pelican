@@ -1,0 +1,57 @@
+{% extends 'base_angular.html' %}
+
+{% set mytitle="Hello1" %}
+
+{# ----------- title -------------- #}
+
+{% block title %}{{ mytitle }}{% endblock %}
+
+{# ----------- content ------------- #}
+
+{% block content %}
+
+{% include 'hello3.md' %}
+
+<hr />
+
+<div ng-app="notesApp">
+
+    <div ng-controller="NotesCtrl">
+        <table class="table table-striped table-hover">
+            <tr ng-repeat-start="note in notes">
+                <td>[[note.label]]</td>
+            </tr>
+            <tr ng-repeat-end>
+                <td>Done: [[note.done]]</td>
+            </tr>
+        </table>
+    </div>
+
+</div>
+
+
+<script type="text/javascript">
+
+(function() {
+
+    function NotesCtrl($scope) {
+        $scope.notes = [
+            {id: 1, label: 'First Note', done: false},
+            {id: 2, label: 'Second Note', done: false},
+            {id: 3, label: 'Third Note', done: true}
+        ];
+    };
+
+    var a = angular.module("notesApp", [], function($interpolateProvider) {
+                $interpolateProvider.startSymbol('[[');
+                $interpolateProvider.endSymbol(']]');
+            }
+        );
+    var c = a.controller("NotesCtrl", ["$scope", NotesCtrl]);
+
+})();
+
+</script>
+{% endblock %}
+
+
