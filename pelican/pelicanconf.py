@@ -11,7 +11,7 @@ SITEURL = ''
 
 AUTHOR = u'charlesreid1'
 SITENAME = u'Archimedes Pelican'
-SITEURL = '/archimedes-pelican'
+#SITEURL = '/archimedes-pelican'
 
 PATH = 'content'
 
@@ -30,7 +30,7 @@ THEME = 'archimedes-theme'
 
 PLUGIN_PATHS = ['/home/charles/codes/pelican-plugins/','/home/charles/codes/pelican-ipynb/']
 PLUGINS = ['liquid_tags','render_math','ipynb']
-EXTRA_HEADER = open('_nb_header.html').read().decode('utf-8')
+#EXTRA_HEADER = open('_nb_header.html').read().decode('utf-8')
 
 
 
@@ -57,8 +57,9 @@ EXTRA_TEMPLATES_PATHS = ['angular']
 #
 # Figure out how to replace angular's {{ }} with << >>
 
-TEMPLATE_PAGES['test1.html'] = 'test1/index.html'
-
+TEMPLATE_PAGES = {}
+TEMPLATE_PAGES['controller-click-message.html'] = 'click/index.html'
+TEMPLATE_PAGES['helloangular.html'] = 'hello/index.html'
 
 
 ###########################################

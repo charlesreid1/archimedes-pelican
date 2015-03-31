@@ -10,34 +10,41 @@
 
 {% block content %}
 
-<!-- File: chapter2/controller-click-message.html -->
-<div ng-app="notesApp">
+<div ng-app="myApp">
 
-<div ng-controller="MainCtrl as ctrl">
-  {{ctrl.message}} AngularJS.
+    <div ng-controller="MainController">
+        Message: [[message]]
+    
+        <button ng-click="changeMessage()">
+          Change Message
+        </button>
+    
+    </div>
 
-<button ng-click="ctrl.changeMessage()">
-  Change Message
-</button>
+</div>
 
-<script
-  src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.11/angular.js">
-</script>
 
 <script type="text/javascript">
-  angular.module('notesApp', [])
-    .controller('MainCtrl', [function() {
-      var self = this;
-      self.message= 'Hello ';
-      self.changeMessage = function() {
-        self.message = 'Goodbye';
-      };
-  }]);
+
+(function() {
+
+    function MainController($scope) {
+        $scope.message = "Hello, Michael";
+
+        $scope.changeMessage = function() {
+            $scope.message = "Hello, Charkies";
+        };
+    };
+
+    var a = angular.module("myApp", [], function($interpolateProvider) {
+                $interpolateProvider.startSymbol('[[');
+                $interpolateProvider.endSymbol(']]');
+            }
+        );
+    var c = a.controller("MainController", ["$scope", MainController]);
+
+})();
+
 </script>
-
-</div>
-
-</div>
-
 {% endblock %}
 
