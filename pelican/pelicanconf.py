@@ -11,7 +11,7 @@ SITEURL = ''
 
 AUTHOR = u'charlesreid1'
 SITENAME = u'Archimedes Pelican'
-#SITEURL = '/archimedes-pelican'
+SITEURL = '/archimedes-pelican'
 
 PATH = 'content'
 

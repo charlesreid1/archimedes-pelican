@@ -38,32 +38,26 @@ themes, plugins, and complex logic for building up pages for sites
 
 ## What's Wrong with Node/Jekyll?
 
-Let's compoare the Pelican process with the "other guys": Node.js (Javascript) and Jekyll (Ruby).
+Let's compare the Pelican process with the "other guys": Node.js (Javascript) and Jekyll (Ruby).
 
 Jekyll uses equal parts Ruby scripts and dark magic. It just works, until one day it breaks,
 and cannot be fixed. Then you google madly for whatever error you're getting and hope you can
 copy and paste some white magic into the command line to fix it.
-If you ever actually peek 
-at the ruby Rakefiles or config files or any of the clutter that Jekyll
-creates, you'll be deeply troubled by what you find - lots of hackish,
-fragile scripts.
 
 With Node.js, you'll need to start by compiling node, which will take you 
 about 45 minutes. Once that's done, you'll need to install Bower, Grunt,
 Gulp, Mustache, Brunch, and a hundred other libraries whose names
-and actual functions all blur together. Trying to figure out what each
-library does is as difficult as figuring out what a "business consultant" 
-does. All you get are some vague, ill-defined nouns and verbs strung together.
+and actual functions all blur together. 
 
 Assuming all of this goes smoothly for you 
 (it took me [three tries and at least as many hours](http://charlesreid1.com/wiki/Angular) 
 to install the Node.js ecosystem on a stock Ubuntu server running 14.04),
-you will then have a barely-functioning toolset. No support for Markdown.
-No ability to deal with complex logic for assembling sites. No clear 
-documentation on how to get to this point, or how to proceed.
+you will then have a barely-functioning toolset. No markdown support,
+no Python scripting, and no helpful documentation.
 
-The choice to go with Pelican was clear from the beginning. It required sacrificing
-the built-in Javascript unit tests, but this was worth the cost of not dealing with Node.
+The choice to go with Pelican was clear from the beginning. 
+While it does sacrifice Javascript unit tests,
+this cost was worth the benefit of not dealing with Node.
 
 <br />
 
