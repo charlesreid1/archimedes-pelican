@@ -58,34 +58,10 @@ EXTRA_TEMPLATES_PATHS = ['angular']
 # Figure out how to replace angular's {{ }} with << >>
 
 TEMPLATE_PAGES = {}
-TEMPLATE_PAGES['controller-click-message.html'] = 'click/index.html'
-TEMPLATE_PAGES['helloangular.html'] = 'hello/index.html'
 
+TEMPLATE_PAGES['hello1.html'] = 'hello1/index.html'
+TEMPLATE_PAGES['hello2.html'] = 'hello2/index.html'
 
-###########################################
-# Maps
-
-### # Common
-### TEMPLATE_PAGES['mapstyles.css'] = 'mapstyles.css'
-### TEMPLATE_PAGES['common.js'] = 'common.js'
-### 
-### # Maps
-### TEMPLATE_PAGES['nycstreets.html'] = 'nycstreets/index.html'
-### TEMPLATE_PAGES['nycstreets.js']   = 'nycstreets.js'
-### 
-### # Add all the geojson for education maps
-### geojson_paths = ["maps/educationca.geojson",
-###                  "maps/educationaz.geojson",
-###                  "maps/educationma.geojson",
-###                  "maps/educationnc.geojson",
-###                  "maps/educationor.geojson",
-###                  "maps/educationut.geojson",
-###                  "maps/educationwa.geojson"]
-### for geojson_path in geojson_paths:
-###     EXTRA_TEMPLATES_PATHS += [geojson_path]
-###     for f in os.listdir(geojson_path):
-###         if f.endswith(".json"):
-###             TEMPLATE_PAGES[f] = f
 
 
 

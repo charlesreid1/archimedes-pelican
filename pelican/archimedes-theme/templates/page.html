@@ -33,6 +33,18 @@
         </div>
     </div>
 
+{% else %}
+
+    <div class="row">
+        <div class="col-md-8">
+
+                <p>&nbsp;</p>
+                {{ page.content }}
+                <p>&nbsp;</p>
+
+        </div>
+    </div>
+
 {% endif %}
 
 {% endblock %}

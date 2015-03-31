@@ -1,0 +1,52 @@
+{% extends 'base_angular.html' %}
+
+{% set mytitle="Hello2" %}
+
+{# ----------- title -------------- #}
+
+{% block title %}{{ mytitle }}{% endblock %}
+
+{# ----------- content ------------- #}
+
+{% block content %}
+
+<div ng-app="myApp">
+
+    <div ng-controller="HelloCtrl2">
+        <p>
+        Angular has something to say: [[message]]
+        </p>
+    
+        <button ng-click="changeMessage()">
+          Change Message
+        </button>
+    
+    </div>
+
+</div>
+
+
+<script type="text/javascript">
+
+(function() {
+
+    function HelloCtrl2($scope) {
+        $scope.message = "Hello Cruel Angular World!";
+
+        $scope.changeMessage = function() {
+            $scope.message = "Goodbye Cruel Angular World!";
+        };
+    };
+
+    var a = angular.module("myApp", [], function($interpolateProvider) {
+                $interpolateProvider.startSymbol('[[');
+                $interpolateProvider.endSymbol(']]');
+            }
+        );
+    var c = a.controller("HelloCtrl2", ["$scope", HelloCtrl2]);
+
+})();
+
+</script>
+{% endblock %}
+
