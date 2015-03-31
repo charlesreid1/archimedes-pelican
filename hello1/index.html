@@ -40,6 +40,28 @@
 
 
 
+    <!-- map header -->
+
+    <!-- load the leaflet library -->
+    <link rel="stylesheet" href="/archimedes-pelican/theme/css/leaflet.css" />
+    <script src="/archimedes-pelican/theme/js/leaflet.js"></script>
+
+    <!-- load my style sheet -->
+    <!--
+    <link rel="stylesheet" type="text/css" href="/archimedes-pelican/mapstyles.css">
+    -->
+
+    <!-- load common vars -->
+    <!--
+    <script src="/archimedes-pelican/common.js"></script>
+    -->
+
+    <!-- angular -->
+    <script src="/archimedes-pelican/theme/js/angular.js"></script>
+
+    <!-- end map header -->
+
+
 </head>
 
 <body>
@@ -123,16 +145,34 @@
 
 <div class="container" id="bodycontainer">
 
-<div>
-	<article role="article">
-    	<header>
-    		<h1 class="entry-title">Blog Tags</h1>
-    	</header>
 
-	<p>
-	</p>
-	</article>
+<div ng-app="myApp">
+
+    <div ng-controller="HelloCtrl1">
+        Angular has something to say: [[message]]
+    </div>
+
 </div>
+
+
+<script type="text/javascript">
+
+(function() {
+
+    function HelloCtrl1($scope) {
+        $scope.message = "Hello Cruel Angular World!";
+    };
+
+    var a = angular.module("myApp", [], function($interpolateProvider) {
+                $interpolateProvider.startSymbol('[[');
+                $interpolateProvider.endSymbol(']]');
+            }
+        );
+    var c = a.controller("HelloCtrl1", ["$scope", HelloCtrl1]);
+
+})();
+
+</script>
 
 
 </div><!--container-->
@@ -148,4 +188,5 @@
 
 </body>
 </html>
+
 

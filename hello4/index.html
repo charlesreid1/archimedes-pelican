@@ -40,6 +40,28 @@
 
 
 
+    <!-- map header -->
+
+    <!-- load the leaflet library -->
+    <link rel="stylesheet" href="/archimedes-pelican/theme/css/leaflet.css" />
+    <script src="/archimedes-pelican/theme/js/leaflet.js"></script>
+
+    <!-- load my style sheet -->
+    <!--
+    <link rel="stylesheet" type="text/css" href="/archimedes-pelican/mapstyles.css">
+    -->
+
+    <!-- load common vars -->
+    <!--
+    <script src="/archimedes-pelican/common.js"></script>
+    -->
+
+    <!-- angular -->
+    <script src="/archimedes-pelican/theme/js/angular.js"></script>
+
+    <!-- end map header -->
+
+
 </head>
 
 <body>
@@ -123,16 +145,50 @@
 
 <div class="container" id="bodycontainer">
 
-<div>
-	<article role="article">
-    	<header>
-    		<h1 class="entry-title">Blog Tags</h1>
-    	</header>
 
-	<p>
-	</p>
-	</article>
+This example uses Angular's <code>ng-repeat</code> directive across tags 
+(in this case, table row and column tags) to assemble a table from an 
+array of data.
+<hr />
+
+<div ng-app="notesApp">
+
+    <div ng-controller="NotesCtrl">
+        <table class="table table-striped table-hover">
+            <tr ng-repeat-start="note in notes">
+                <td>[[note.label]]</td>
+            </tr>
+            <tr ng-repeat-end>
+                <td>Done: [[note.done]]</td>
+            </tr>
+        </table>
+    </div>
+
 </div>
+
+
+<script type="text/javascript">
+
+(function() {
+
+    function NotesCtrl($scope) {
+        $scope.notes = [
+            {id: 1, label: 'First Note', done: false},
+            {id: 2, label: 'Second Note', done: false},
+            {id: 3, label: 'Third Note', done: true}
+        ];
+    };
+
+    var a = angular.module("notesApp", [], function($interpolateProvider) {
+                $interpolateProvider.startSymbol('[[');
+                $interpolateProvider.endSymbol(']]');
+            }
+        );
+    var c = a.controller("NotesCtrl", ["$scope", NotesCtrl]);
+
+})();
+
+</script>
 
 
 </div><!--container-->
@@ -148,4 +204,5 @@
 
 </body>
 </html>
+
 
