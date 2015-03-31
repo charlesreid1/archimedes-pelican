@@ -26,24 +26,66 @@ DEFAULT_LANG = u'en'
 
 SITETAGLINE = "Angular.js and Pelican"
 
-#THEME = 'svbtle'
-THEME = 'voidy-bootstrap'
+THEME = 'archimedes-theme'
 
 PLUGIN_PATHS = ['/home/charles/codes/pelican-plugins/','/home/charles/codes/pelican-ipynb/']
 PLUGINS = ['liquid_tags','render_math','ipynb']
+EXTRA_HEADER = open('_nb_header.html').read().decode('utf-8')
+
 
 
 # ipython notebooks
 MARKUP = ('md', 'ipynb')
 
-STATIC_PATHS = ['images','notebooks']
 
-EXTRA_HEADER = open('_nb_header.html').read().decode('utf-8')
+
+# This is stuff that goes into content/ that's copied into the website 
+STATIC_PATHS = ['images']
 
 
 
 # Don't try to turn HTML files into pages
 READERS = {'html': None}
+
+
+
+EXTRA_TEMPLATES_PATHS = ['angular']
+
+
+#########################################
+# Test out apps from AngularJS book
+#
+# Figure out how to replace angular's {{ }} with << >>
+
+TEMPLATE_PAGES['test1.html'] = 'test1/index.html'
+
+
+
+###########################################
+# Maps
+
+### # Common
+### TEMPLATE_PAGES['mapstyles.css'] = 'mapstyles.css'
+### TEMPLATE_PAGES['common.js'] = 'common.js'
+### 
+### # Maps
+### TEMPLATE_PAGES['nycstreets.html'] = 'nycstreets/index.html'
+### TEMPLATE_PAGES['nycstreets.js']   = 'nycstreets.js'
+### 
+### # Add all the geojson for education maps
+### geojson_paths = ["maps/educationca.geojson",
+###                  "maps/educationaz.geojson",
+###                  "maps/educationma.geojson",
+###                  "maps/educationnc.geojson",
+###                  "maps/educationor.geojson",
+###                  "maps/educationut.geojson",
+###                  "maps/educationwa.geojson"]
+### for geojson_path in geojson_paths:
+###     EXTRA_TEMPLATES_PATHS += [geojson_path]
+###     for f in os.listdir(geojson_path):
+###         if f.endswith(".json"):
+###             TEMPLATE_PAGES[f] = f
+
 
 
 

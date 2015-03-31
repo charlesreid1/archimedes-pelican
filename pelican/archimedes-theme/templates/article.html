@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block title %}{{ article.title|striptags }} - {{ SITENAME }}{% endblock %}
+{% block content %}
+
+    <div class="row">
+
+        <div class="col-md-8" >
+            <div class="well">
+
+                <article class="hentry" role="article">
+                    {% include '_includes/article.html' %}
+                </article>
+
+            </div>
+        </div>
+
+        <div class="col-md-4" >
+            {% include '_includes/blog_archive_minipage.html' %}
+        </div>
+
+    </div>
+
+
+{% endblock %}

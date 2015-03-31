@@ -1,0 +1,40 @@
+div#bodycontainer {
+    width: 970px !important;
+}
+
+/* Template-specific stuff
+ *
+ * Customizations just for the template; these are not necessary for anything
+ * with disabling the responsiveness.
+ */
+
+body,
+.navbar-fixed-top,
+.navbar-fixed-bottom {
+  min-width: 970px;
+}
+
+
+/* Finesse the page header spacing
+.page-header {
+  margin-bottom: 30px;
+}
+.page-header .lead {
+  margin-bottom: 10px;
+}
+*/
+
+
+
+/* Non-responsive overrides
+ *
+ * Utilitze the following CSS to disable the responsive-ness of the container,
+ * grid system, and navbar.
+ */
+
+/* Reset the container */
+.container {
+  width: 970px;
+  max-width: none !important;
+}
+

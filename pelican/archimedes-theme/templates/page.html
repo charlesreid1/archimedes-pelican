@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block title %}{{ page.title }} - {{ SITENAME }}{% endblock %}
+{% block content %}
+
+{% if page.pagestyle=='well' %}
+
+    {# 
+    pages are simply <div class="well"> with page content
+    #}
+
+    <div class="row">
+        <div class="col-md-8 offset4" >
+            <div class="well">
+
+                <h1 class="entry-title">{{ page.title }}</h1>
+                    
+                <p>&nbsp;</p>
+
+                {{ page.content }}
+            </div>
+        </div>
+    </div>
+
+{% elif page.pagestyle=='clear' %}
+
+    <div class="row">
+        <div class="col-md-8">
+
+                <p>&nbsp;</p>
+                {{ page.content }}
+                <p>&nbsp;</p>
+
+        </div>
+    </div>
+
+{% endif %}
+
+{% endblock %}
+
