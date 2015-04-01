@@ -28,7 +28,10 @@ SITETAGLINE = "Angular.js and Pelican"
 
 THEME = 'archimedes-theme'
 
-PLUGIN_PATHS = ['/home/charles/codes/pelican-plugins/','/home/charles/codes/pelican-ipynb/']
+HOME = os.environ.get('HOME')
+
+PLUGIN_PATHS = [HOME+'/codes/pelican-plugins/',
+                HOME+'/codes/pelican-ipynb/']
 PLUGINS = ['liquid_tags','render_math','ipynb']
 #EXTRA_HEADER = open('_nb_header.html').read().decode('utf-8')
 
