@@ -41,6 +41,29 @@
 
 
 
+    <!-- map header -->
+
+    <!-- load the leaflet library -->
+    <link rel="stylesheet" href="/archimedes-pelican/theme/css/leaflet.css" />
+    <script src="/archimedes-pelican/theme/js/leaflet.js"></script>
+    <script src="/archimedes-pelican/theme/js/d3.js"></script>
+
+    <!-- load my style sheet -->
+    <!--
+    <link rel="stylesheet" type="text/css" href="/archimedes-pelican/mapstyles.css">
+    -->
+
+    <!-- load common vars -->
+    <!--
+    <script src="/archimedes-pelican/common.js"></script>
+    -->
+
+    <!-- angular -->
+    <script src="/archimedes-pelican/theme/js/angular.js"></script>
+
+    <!-- end map header -->
+
+
 </head>
 
 <body>
@@ -125,60 +148,61 @@
 <div class="container" id="bodycontainer">
 
 
+To use D3 with Angular, we will define custom
+HTML tags called Angular directives.
 
+This simple example illustrates how to use 
+a directive to define a hello world tag.
 
-    <div class="row">
-        <div class="col-md-8 offset4" >
-            <div class="well">
+<hr />
 
-                <h1 class="entry-title">About</h1>
-                    
-                <p>&nbsp;</p>
+<div ng-app="myApp">
 
-                <h2>What is Archimedes Pelican?</h2>
-<p>Archimedes Pelican was a project forged in the dark and excruciating forges 
-of my anger, fueled by my interactions with <a href="https://nodejs.org/">Node.js</a>, 
-(see <a href="charlesreid1.com/wiki/Angular">my wiki for notes on Angular</a>).</p>
-<p>My goal was to rip Node.js out from the usual Angular.js workflow, and replace it 
-with something in Python - in particular, the superb, simple <a href="http://blog.getpelican.com/">Pelican</a>.</p>
-<p><br /></p>
-<h2>What is Angular.js?</h2>
-<p>Angular.js is a Javascript Model-View-Controller framework library.
-It allows you to connect your HTML pages (the view) with your data structures
-(the model), with the interaction governed by an abstraction layer (the controller).</p>
-<p>This allows you to control ana change your pages without ever touching
-the HTML itself (a.k.a. the DOM, domain object model).</p>
-<p><br /></p>
-<h2>What is Pelican?</h2>
-<p>Pelican is a refreshingly lightweight, simple library for generating
-static content sites with Python.</p>
-<p>Pelican takes less than a minute to install, and gets you immediately
-up and running with Markdown, integration of CSS and Javascript, 
-themes, plugins, and complex logic for building up pages for sites 
-(all the complex logic is implemented in Python, making it a snap.)</p>
-<p><br /></p>
-<h2>What's Wrong with Node/Jekyll?</h2>
-<p>Let's compare the Pelican process with the "other guys": Node.js (Javascript) and Jekyll (Ruby).</p>
-<p>Jekyll uses equal parts Ruby scripts and dark magic. It just works, until one day it breaks,
-and cannot be fixed. Then you google madly for whatever error you're getting and hope you can
-copy and paste some white magic into the command line to fix it.</p>
-<p>With Node.js, you'll need to start by compiling node, which will take you 
-about 45 minutes. Once that's done, you'll need to install Bower, Grunt,
-Gulp, Mustache, Brunch, and a hundred other libraries whose names
-and actual functions all blur together. </p>
-<p>Assuming all of this goes smoothly for you 
-(it took me <a href="http://charlesreid1.com/wiki/Angular">three tries and at least as many hours</a> 
-to install the Node.js ecosystem on a stock Ubuntu server running 14.04),
-you will then have a barely-functioning toolset. No markdown support,
-no Python scripting, and no helpful documentation.</p>
-<p>The choice to go with Pelican was clear from the beginning. 
-While it does sacrifice Javascript unit tests,
-this cost was worth the benefit of not dealing with Node.</p>
-<p><br /></p>
-            </div>
-        </div>
+    <div ng-controller="Ctrl1">
+        <p>
+        Angular has something to say:
+        </p>
+        
+        <helloworld>[[message]]</helloworld>
     </div>
 
+</div>
+
+<script type="text/javascript">
+
+(function() {
+
+    function Ctrl1($scope) {
+        $scope.message = "Hello Cruel Angular World!";
+    };
+
+    var mod = angular.module('myApp',[],function($interpolateProvider) {
+            $interpolateProvider.startSymbol('[[');
+            $interpolateProvider.endSymbol(']]');
+        }
+    );
+
+    var dir = mod.directive('helloworld',function() {
+
+        // TODO: finish 
+        function link(scope, element, attr) { 
+            scope.message = "hey, whatever, man."
+        };
+
+        // restrict 'E' means, use element name <hello-world></hello-world>
+        // restrict 'C' means, use class <div class="hello-world"></div>
+        // 
+        return {
+            link: link,
+            restrict: 'E'
+        };
+    });
+
+    var c = mod.controller("Ctrl1", ["$scope", Ctrl1]);
+
+})();
+
+</script>
 
 
 
@@ -195,4 +219,5 @@ this cost was worth the benefit of not dealing with Node.</p>
 
 </body>
 </html>
+
 
