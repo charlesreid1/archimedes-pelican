@@ -1,5 +1,5 @@
 {% extends 'base_angular.html' %}
-{% set mytitle="Dangular 2" %}
+{% set mytitle="Dangular 4" %}
 
 {# ----------- title -------------- #}
 {% block title %}{{ mytitle }}{% endblock %}
@@ -7,15 +7,21 @@
 {# ----------- content ------------- #}
 {% block content %}
 
-{% include 'd2.md' %}
+{% include 'd3.md' %}
 <hr />
 
 <div ng-app="myApp">
-    <div ng-controller="Ctrl1">
-        <p>
-        Dangular made a donut!
-        </p>
-        <donut-chart></donut-chart>
+
+    <div ng-controller="Ctrl1" ng-init="myData=[10,20,30]">
+
+        <p>A dynamic donut chart:</p>
+
+        <input type="range" style="width: 300px;" ng-model="myData[0]">
+        <input type="range" style="width: 300px;" ng-model="myData[1]"> 
+        <input type="range" style="width: 300px;" ng-model="myData[2]"> 
+
+        <donut-chart data="myData"></donut-chart>
+
     </div>
 </div>
 
@@ -24,7 +30,6 @@
 (function() {
 
     function Ctrl1($scope) {
-        $scope.message = "Hello Cruel Angular World!";
     };
 
     var mod = angular.module('myApp',[],function($interpolateProvider) {
@@ -34,32 +39,51 @@
     );
 
     var dir = mod.directive('donutChart', function() {
+
         function link(scope, element, attr) {
-            // D3 code here
+
+            // this is where your D3 code goes
+
+            var data = scope.data;
             var color = d3.scale.category10();
-            var data = [10, 20, 30];
+
+            // canvas size
             var width = 300;
             var height = 300;
-            var min = Math.min(width, height);
+
+            // make the SVG drawing
             var svg = d3.select(element[0]).append('svg');
-            var pie = d3.layout.pie().sort(null);
+            var pie = d3.layout.pie();//.sort(null);
+
+            // arc generation
+            var min = Math.min(width, height);
             var arc = d3.svg.arc()
                   .outerRadius(min / 2 * 0.9)
                   .innerRadius(min / 2 * 0.5);
+
             svg.attr({width: width, height: height});
+
             var g = svg.append('g')
                 // center the donut chart
                 .attr('transform', 'translate(' + width / 2 + ',' + height / 2 + ')');
-            // add the <path>s for each arc slice
-            g.selectAll('path').data(pie(data))
+
+            var arcs = g.selectAll('path').data(pie(data))
                 .enter().append('path')
-            .style('stroke', 'white')
-            .attr('d', arc)
-            .attr('fill', function(d, i){ return color(i) });
+                .style('stroke','white')
+                .attr('fill',function(d,i){ return color(i) });
+
+            // this is added so the pie chart will listen for changes in the data
+            scope.$watch('data',function(){
+                arcs.data(pie(data)).attr('d',arc);
+            }, true);
         }
+
         return {
             link: link,
-            restrict: 'E'
+            restrict: 'E',
+            scope: { 
+                data: '=' 
+            }
         }
     });
 

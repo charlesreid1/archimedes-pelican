@@ -72,6 +72,7 @@ TEMPLATE_PAGES['hello5.html'] = 'hello5/index.html'
 TEMPLATE_PAGES['dangular1.html'] = 'dangular1/index.html'
 TEMPLATE_PAGES['dangular2.html'] = 'dangular2/index.html'
 TEMPLATE_PAGES['dangular3.html'] = 'dangular3/index.html'
+TEMPLATE_PAGES['dangular4.html'] = 'dangular4/index.html'
 
 
 

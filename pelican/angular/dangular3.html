@@ -7,23 +7,19 @@
 {# ----------- content ------------- #}
 {% block content %}
 
-<div ng-app="myApp" ng-init="ourSharedData=[8,2,9]">
+{% include 'd3.md' %}
+<hr />
+
+<div ng-app="myApp" ng-init="chartData=[1,2,3]">
     <div ng-controller="Ctrl1">
         <p>
         Dangular made some donuts!
         </p>
 
         <p>&nbsp;</p>
-        <p>These donuts share data from our app:</p>
-        <donut-chart data="ourSharedData"></donut-chart>
-        <donut-chart data="ourSharedData"></donut-chart>
-        <donut-chart data="ourSharedData"></donut-chart>
+        <p>Here is a donut:</p>
+        <donut-chart data="chartData"></donut-chart>
 
-        <p>&nbsp;</p>
-        <p>These donuts each have their own data:</p>
-        <donut-chart data="[8,3,7]"></donut-chart>
-        <donut-chart data="[2,5,9]"></donut-chart>
-        <donut-chart data="[6,2,3]"></donut-chart>
     </div>
 </div>
 
@@ -62,6 +58,7 @@
             var g = svg.append('g')
                 // center the donut chart
                 .attr('transform', 'translate(' + width / 2 + ',' + height / 2 + ')');
+
             // add the <path>s for each arc slice
             g.selectAll('path').data(pie(data))
                 .enter().append('path')
