@@ -1,0 +1,71 @@
+{% extends 'base_angular.html' %}
+{% set mytitle="Dangular 2" %}
+
+{# ----------- title -------------- #}
+{% block title %}{{ mytitle }}{% endblock %}
+
+{# ----------- content ------------- #}
+{% block content %}
+
+<div ng-app="myApp">
+    <div ng-controller="Ctrl1">
+        <p>
+        Dangular made a donut!
+        </p>
+        <donut-chart></donut-chart>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+(function() {
+
+    function Ctrl1($scope) {
+        $scope.message = "Hello Cruel Angular World!";
+    };
+
+    var mod = angular.module('myApp',[],function($interpolateProvider) {
+            $interpolateProvider.startSymbol('[[');
+            $interpolateProvider.endSymbol(']]');
+        }
+    );
+
+    var dir = mod.directive('donutChart', function() {
+        function link(scope, element, attr) {
+            // D3 code here
+            var color = d3.scale.category10();
+            var data = [10, 20, 30];
+            var width = 300;
+            var height = 300;
+            var min = Math.min(width, height);
+            var svg = d3.select(element[0]).append('svg');
+            var pie = d3.layout.pie().sort(null);
+            var arc = d3.svg.arc()
+                  .outerRadius(min / 2 * 0.9)
+                  .innerRadius(min / 2 * 0.5);
+            svg.attr({width: width, height: height});
+            var g = svg.append('g')
+                // center the donut chart
+                .attr('transform', 'translate(' + width / 2 + ',' + height / 2 + ')');
+            // add the <path>s for each arc slice
+            g.selectAll('path').data(pie(data))
+                .enter().append('path')
+            .style('stroke', 'white')
+            .attr('d', arc)
+            .attr('fill', function(d, i){ return color(i) });
+        }
+        return {
+            link: link,
+            restrict: 'E'
+        }
+    });
+
+    var c = mod.controller("Ctrl1", ["$scope", Ctrl1]);
+
+})();
+
+</script>
+
+{% endblock %}
+
+

@@ -1,0 +1,66 @@
+{% extends 'base_angular.html' %}
+
+{% set mytitle="Dangular 1" %}
+
+{# ----------- title -------------- #}
+
+{% block title %}{{ mytitle }}{% endblock %}
+
+{# ----------- content ------------- #}
+
+{% block content %}
+
+{% include 'dangular1.md' %}
+
+<hr />
+
+<div ng-app="myApp">
+
+    <div ng-controller="Ctrl1">
+        <p>
+        Angular has something to say:
+        </p>
+        
+        <helloworld>[[message]]</helloworld>
+    </div>
+
+</div>
+
+<script type="text/javascript">
+
+(function() {
+
+    function Ctrl1($scope) {
+        $scope.message = "Hello Cruel Angular World!";
+    };
+
+    var mod = angular.module('myApp',[],function($interpolateProvider) {
+            $interpolateProvider.startSymbol('[[');
+            $interpolateProvider.endSymbol(']]');
+        }
+    );
+
+    var dir = mod.directive('helloworld',function() {
+
+        // TODO: finish 
+        function link(scope, element, attr) { 
+            scope.message = "hey, whatever, man."
+        };
+
+        // restrict 'E' means, use element name <hello-world></hello-world>
+        // restrict 'C' means, use class <div class="hello-world"></div>
+        // 
+        return {
+            link: link,
+            restrict: 'E'
+        };
+    });
+
+    var c = mod.controller("Ctrl1", ["$scope", Ctrl1]);
+
+})();
+
+</script>
+
+{% endblock %}
+
