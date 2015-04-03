@@ -199,7 +199,7 @@ This data is then used to construct pie charts.
 
             // make the SVG drawing
             var svg = d3.select(element[0]).append('svg');
-            var pie = d3.layout.pie();//.sort(null);
+            var pie = d3.layout.pie().sort(null);
 
             // arc generation
             var min = Math.min(width, height);
