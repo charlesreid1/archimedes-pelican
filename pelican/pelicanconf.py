@@ -73,6 +73,12 @@ TEMPLATE_PAGES['dangular1.html'] = 'dangular1/index.html'
 TEMPLATE_PAGES['dangular2.html'] = 'dangular2/index.html'
 TEMPLATE_PAGES['dangular3.html'] = 'dangular3/index.html'
 TEMPLATE_PAGES['dangular4.html'] = 'dangular4/index.html'
+TEMPLATE_PAGES['dangular5.html'] = 'dangular5/index.html'
+TEMPLATE_PAGES['dangular6.html'] = 'dangular6/index.html'
+TEMPLATE_PAGES['dangular7.html'] = 'dangular7/index.html'
+
+TEMPLATE_PAGES['data6.csv'] = 'dangular6/data6.csv'
+TEMPLATE_PAGES['data7.csv'] = 'dangular7/data7.csv'
 
 
 

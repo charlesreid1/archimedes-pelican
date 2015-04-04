@@ -43,4 +43,15 @@ save_as: index.html
 <a href="dangular4/">Dangular Makes an Interactive Donut</a>
 </p>
 
+<p>
+<a href="dangular5/">Interactive Donut with Push/Pop/Reset Controls</a>
+</p>
+
+<p>
+<a href="dangular6/">Pie Chart from CSV Data</a>
+</p>
+
+<p>
+<a href="dangular7/">Live-Updating Pie Chart from CSV Data</a>
+</p>
 
