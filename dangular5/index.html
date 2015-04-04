@@ -148,22 +148,36 @@
 <div class="container" id="bodycontainer">
 
 
-Here you go - an interactive D3 pie chart!
+This Dangular example adds the ability to push and pop elements 
+of the data array, which in turn controls the pie chart.
 
-This example links data from the HTML sliders with data in the chart.
-Angular takes care of the nuances of getting and setting 
-watchers, so you get instant-updating baked in!
+The controller begins by initializing the data array.
+Agnular then loops over each element of this array,
+and creates an HTML inptu widget for each array value.
+Each input widget is linked to the array value.
+
+Next we create buttons that are linked to various
+actions on the controller - reset, push, and pop.
+Each of these modifies our array of data.
+
+We then create our Angular directive, which utilizes the 
+data to draw a pie chart with D3. This is using the 
+same array of data that is linked to our HTML input widgets,
+and the same array of data that is being manipulated
+when we click the buttons on the page.
 <hr />
 
 <div ng-app="myApp">
 
-    <div ng-controller="Ctrl1" ng-init="myData=[10,20,30]">
+    <div ng-controller="Ctrl1">
 
         <p>A dynamic donut chart:</p>
 
-        <input type="range" style="width: 300px;" ng-model="myData[0]">
-        <input type="range" style="width: 300px;" ng-model="myData[1]"> 
-        <input type="range" style="width: 300px;" ng-model="myData[2]"> 
+        <input type="range" style="width: 100px;" ng-model="slice.value" ng-repeat="slice in myData track by $index" />
+
+        <p><a class="btn btn-large btn-primary" ng-click="dostuff()">reset stuff</a> </p>
+        <p><a class="btn btn-large btn-primary" ng-click="pushstuff()">push stuff</a> </p>
+        <p><a class="btn btn-large btn-primary" ng-click="popstuff()">pop stuff</a> </p>
 
         <donut-chart data="myData"></donut-chart>
 
@@ -175,6 +189,28 @@ watchers, so you get instant-updating baked in!
 (function() {
 
     function Ctrl1($scope) {
+
+        $scope.myData = [
+            { 'value' : 10 },
+            { 'value' : 20 },
+            { 'value' : 70 }
+        ];
+
+        $scope.dostuff = function() {
+            console.log("Doing stuff");
+            $scope.myData = [
+                { 'value' : 10},
+                { 'value' : 20},
+                { 'value' : 70}
+            ];
+        };
+        $scope.pushstuff = function() {
+            console.log("pushing stuff");
+            $scope.myData.push( {'value':20} );
+        };
+        $scope.popstuff = function() {
+            $scope.myData.pop();
+        };
     };
 
     var mod = angular.module('myApp',[],function($interpolateProvider) {
@@ -200,6 +236,8 @@ watchers, so you get instant-updating baked in!
             var svg = d3.select(element[0]).append('svg');
             var pie = d3.layout.pie().sort(null);
 
+            pie.value(function(d){ return d.value; });
+
             // arc generation
             var min = Math.min(width, height);
             var arc = d3.svg.arc()
@@ -212,15 +250,24 @@ watchers, so you get instant-updating baked in!
                 // center the donut chart
                 .attr('transform', 'translate(' + width / 2 + ',' + height / 2 + ')');
 
-            var arcs = g.selectAll('path').data(pie(data))
-                .enter().append('path')
-                .style('stroke','white')
-                .attr('fill',function(d,i){ return color(i+3) });
+            var arcs = g.selectAll('path');
 
             // this is added so the pie chart will listen for changes in the data
-            scope.$watch('data',function(){
-                arcs.data(pie(data)).attr('d',arc);
+            scope.$watch('data',function(data) {
+
+                arcs = arcs.data(pie(data));
+
+                arcs.enter().append('path')
+                  .style('stroke', 'white')
+                  .attr('fill', function(d, i){ return color(i) });
+
+                arcs.exit().remove();
+                arcs.attr('d', arc);
+
             }, true);
+
+
+
         }
 
         return {
