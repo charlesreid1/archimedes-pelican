@@ -1,5 +1,5 @@
 {% extends 'base_angular.html' %}
-{% set mytitle="Dangular 7" %}
+{% set mytitle="Hanging Dangular 2" %}
 
 {# ----------- title -------------- #}
 {% block title %}{{ mytitle }}{% endblock %}
@@ -7,21 +7,26 @@
 {# ----------- content ------------- #}
 {% block content %}
 
-{% include 'd7.md' %}
+{#
+{% include 'h2.md' %}
 <hr />
+#}
 
 <div ng-app="myApp">
 
-    <div ng-controller="Ctrl1">
+    <div ng-controller="WinsCtrl">
+
+        <h2><b>Giants Wins</b></h2>
 
         <p>A live-updated, dynamic donut chart:</p>
 
-        <input type="range" style="width: 100px;" ng-model="slice.value" ng-repeat="slice in myData track by $index" />
+        <p>
+        <a class="btn btn-large btn-primary" ng-click="fwd()">fwd</a>
+        &nbsp;&nbsp;&nbsp;
+        <a class="btn btn-large btn-primary" ng-click="back()">back</a>
+        </p>
 
-        <p><a class="btn btn-large btn-primary" ng-click="resetstuff()">reset stuff</a> </p>
-        <p><a class="btn btn-large btn-primary" ng-click="countstuff()">count stuff</a> </p>
-
-        <donut-chart data="myData"></donut-chart>
+        <donut-chart data="giantsWins"></donut-chart>
 
     </div>
 </div>
@@ -30,46 +35,84 @@
 
 (function() {
 
-    function Ctrl1($scope,$http,$interval) {
 
-        var counter = 0;
+    /////////////////////////
+    // Controller
 
-        $interval(function(){
-            counter = counter + 1;
-        }, 1000);
+    function WinsCtrl($scope,$http,$interval) {
 
+        $scope.counter = 0;
+        $scope.all_data = [];
+
+        // we load all of the giants win/loss records into memory,
+        // and loop through them.
         $scope.load_data = function() {
-            d3.csv('data7.csv',function(err,dat){
+
+            d3.csv('datah2.csv',function(err,dat){
+
                 if(err){throw err;}
 
-                $scope.myData = [
-                    {'value': dat[0]['W']},
-                    {'value': dat[0]['L']}
-                ];
+                all_data = [];
+                dat.forEach(function(r){
+                    record = {  'W' : r['W'],
+                                'L' : r['L'],
+                                'Yr' : r['Yr']
+                            };
+                    all_data.push(record);
+                });
+
+                //this.all_data = all_data;
+                $scope.all_data = all_data;
 
                 // this forces angular to check for changes in data
                 $scope.$apply();
 
             });
+
         };
 
-        $scope.countstuff = function() { 
-            console.log(counter);
+        $scope.fwd = function() {
+            //$scope.all_data = all_data;
+            if($scope.counter > 0) {
+                $scope.counter -= 1;
+                console.log("Fwd: "+$scope.counter);
+            }
         };
 
-        $scope.resetstuff = function() {
-            counter = 0;
+        $scope.back = function() {
+            //$scope.all_data = all_data;
+            // always
+            //if($scope.counter > 0) {
+            $scope.counter += 1;
+            console.log("Back: "+$scope.counter);
+            //}
         };
 
         $scope.load_data();
 
+
+        //// Interval counter counts through years
+        //$interval(function(){
+        //    $scope.counter += 1;
+        //}, 1000);
+
     };
+
+
+
+    /////////////////////////
+    // Module
 
     var mod = angular.module('myApp',[],function($interpolateProvider) {
             $interpolateProvider.startSymbol('[[');
             $interpolateProvider.endSymbol(']]');
         }
     );
+
+
+
+    /////////////////////////
+    // Directive
 
     var dir = mod.directive('donutChart', function() {
 
@@ -127,9 +170,9 @@
         }
     });
 
+    var c = mod.controller("WinsCtrl", ["$scope","$http","$interval",WinsCtrl]);
 
-    var c = mod.controller("Ctrl1", ["$scope","$http","$interval",Ctrl1]);
-    //var c = mod.controller("Ctrl1", function($scope,$http,$interval) {
+    //var c = mod.controller("WinsCtrl", function($scope,$http,$interval) {
     //    $interval(function(){
     //        $http.get('donut-data-api.json').then(function(response){
     //            // your API would presumably send new data each time!
