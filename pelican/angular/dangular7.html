@@ -1,5 +1,5 @@
 {% extends 'base_angular.html' %}
-{% set mytitle="Dangular 6" %}
+{% set mytitle="Dangular 7" %}
 
 {# ----------- title -------------- #}
 {% block title %}{{ mytitle }}{% endblock %}
@@ -7,22 +7,19 @@
 {# ----------- content ------------- #}
 {% block content %}
 
-{#
-{% include 'd5.md' %}
+{% include 'd7.md' %}
 <hr />
-#}
 
 <div ng-app="myApp">
 
     <div ng-controller="Ctrl1">
 
-        <p>A dynamic donut chart:</p>
+        <p>A live-updated, dynamic donut chart:</p>
 
         <input type="range" style="width: 100px;" ng-model="slice.value" ng-repeat="slice in myData track by $index" />
 
-        <p><a class="btn btn-large btn-primary" ng-click="dostuff()">reset stuff</a> </p>
-        <p><a class="btn btn-large btn-primary" ng-click="pushstuff()">push stuff</a> </p>
-        <p><a class="btn btn-large btn-primary" ng-click="popstuff()">pop stuff</a> </p>
+        <p><a class="btn btn-large btn-primary" ng-click="resetstuff()">reset stuff</a> </p>
+        <p><a class="btn btn-large btn-primary" ng-click="countstuff()">count stuff</a> </p>
 
         <donut-chart data="myData"></donut-chart>
 
@@ -33,10 +30,16 @@
 
 (function() {
 
-    function Ctrl1($scope) {
+    function Ctrl1($scope,$http,$interval) {
 
-        $scope.dostuff = function() {
-            d3.csv('data6.csv',function(err,dat){
+        var counter = 0;
+
+        $interval(function(){
+            counter = counter + 1;
+        }, 1000);
+
+        $scope.load_data = function() {
+            d3.csv('data7.csv',function(err,dat){
                 if(err){throw err;}
 
                 $scope.myData = [
@@ -50,15 +53,15 @@
             });
         };
 
-        $scope.pushstuff = function() {
-            $scope.myData.push( {'value':20} );
+        $scope.countstuff = function() { 
+            console.log(counter);
         };
 
-        $scope.popstuff = function() {
-            $scope.myData.pop();
+        $scope.resetstuff = function() {
+            counter = 0;
         };
 
-        $scope.dostuff();
+        $scope.load_data();
 
     };
 
@@ -124,7 +127,19 @@
         }
     });
 
-    var c = mod.controller("Ctrl1", ["$scope", Ctrl1]);
+
+    var c = mod.controller("Ctrl1", ["$scope","$http","$interval",Ctrl1]);
+    //var c = mod.controller("Ctrl1", function($scope,$http,$interval) {
+    //    $interval(function(){
+    //        $http.get('donut-data-api.json').then(function(response){
+    //            // your API would presumably send new data each time!
+    //            var data = response.data.map(function(d){ return d * Math.random() }); $scope.donutData = data;
+    //        }, function(err) { 
+    //            throw err;
+    //        });
+    //    }, 1000);
+    //});
+
 
 })();
 

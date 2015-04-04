@@ -1,5 +1,5 @@
 {% extends 'base_angular.html' %}
-{% set mytitle="Dangular 6" %}
+{% set mytitle="Dangular 5" %}
 
 {# ----------- title -------------- #}
 {% block title %}{{ mytitle }}{% endblock %}
@@ -7,10 +7,8 @@
 {# ----------- content ------------- #}
 {% block content %}
 
-{#
 {% include 'd5.md' %}
 <hr />
-#}
 
 <div ng-app="myApp">
 
@@ -35,31 +33,27 @@
 
     function Ctrl1($scope) {
 
+        $scope.myData = [
+            { 'value' : 10 },
+            { 'value' : 20 },
+            { 'value' : 70 }
+        ];
+
         $scope.dostuff = function() {
-            d3.csv('data6.csv',function(err,dat){
-                if(err){throw err;}
-
-                $scope.myData = [
-                    {'value': dat[0]['W']},
-                    {'value': dat[0]['L']}
-                ];
-
-                // this forces angular to check for changes in data
-                $scope.$apply();
-
-            });
+            console.log("Doing stuff");
+            $scope.myData = [
+                { 'value' : 10},
+                { 'value' : 20},
+                { 'value' : 70}
+            ];
         };
-
         $scope.pushstuff = function() {
+            console.log("pushing stuff");
             $scope.myData.push( {'value':20} );
         };
-
         $scope.popstuff = function() {
             $scope.myData.pop();
         };
-
-        $scope.dostuff();
-
     };
 
     var mod = angular.module('myApp',[],function($interpolateProvider) {
@@ -103,16 +97,20 @@
 
             // this is added so the pie chart will listen for changes in the data
             scope.$watch('data',function(data) {
-                if(!data){ return; }
 
                 arcs = arcs.data(pie(data));
+
                 arcs.enter().append('path')
                   .style('stroke', 'white')
                   .attr('fill', function(d, i){ return color(i) });
+
                 arcs.exit().remove();
                 arcs.attr('d', arc);
 
             }, true);
+
+
+
         }
 
         return {
