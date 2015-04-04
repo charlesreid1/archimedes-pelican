@@ -1,5 +1,5 @@
 {% extends 'base_angular.html' %}
-{% set mytitle="Dangular 4" %}
+{% set mytitle="Dangular 5" %}
 
 {# ----------- title -------------- #}
 {% block title %}{{ mytitle }}{% endblock %}
@@ -7,18 +7,22 @@
 {# ----------- content ------------- #}
 {% block content %}
 
-{% include 'd4.md' %}
+{#
+{% include 'd5.md' %}
 <hr />
+#}
 
 <div ng-app="myApp">
 
-    <div ng-controller="Ctrl1" ng-init="myData=[10,20,30]">
+    <div ng-controller="Ctrl1">
 
         <p>A dynamic donut chart:</p>
 
-        <input type="range" style="width: 300px;" ng-model="myData[0]">
-        <input type="range" style="width: 300px;" ng-model="myData[1]"> 
-        <input type="range" style="width: 300px;" ng-model="myData[2]"> 
+        <input type="range" style="width: 100px;" ng-model="slice.value" ng-repeat="slice in myData track by $index" />
+
+        <p><a class="btn btn-large btn-primary" ng-click="dostuff()">reset stuff</a> </p>
+        <p><a class="btn btn-large btn-primary" ng-click="pushstuff()">push stuff</a> </p>
+        <p><a class="btn btn-large btn-primary" ng-click="popstuff()">pop stuff</a> </p>
 
         <donut-chart data="myData"></donut-chart>
 
@@ -30,6 +34,32 @@
 (function() {
 
     function Ctrl1($scope) {
+
+        $scope.dostuff = function() {
+            d3.csv('data6.csv',function(err,dat){
+                if(err){throw err;}
+
+                $scope.myData = [
+                    {'value': dat[0]['W']},
+                    {'value': dat[0]['L']}
+                ];
+
+                // this forces angular to check for changes in data
+                $scope.$apply();
+
+            });
+        };
+
+        $scope.pushstuff = function() {
+            $scope.myData.push( {'value':20} );
+        };
+
+        $scope.popstuff = function() {
+            $scope.myData.pop();
+        };
+
+        $scope.dostuff();
+
     };
 
     var mod = angular.module('myApp',[],function($interpolateProvider) {
@@ -55,6 +85,8 @@
             var svg = d3.select(element[0]).append('svg');
             var pie = d3.layout.pie().sort(null);
 
+            pie.value(function(d){ return d.value; });
+
             // arc generation
             var min = Math.min(width, height);
             var arc = d3.svg.arc()
@@ -67,14 +99,19 @@
                 // center the donut chart
                 .attr('transform', 'translate(' + width / 2 + ',' + height / 2 + ')');
 
-            var arcs = g.selectAll('path').data(pie(data))
-                .enter().append('path')
-                .style('stroke','white')
-                .attr('fill',function(d,i){ return color(i+3) });
+            var arcs = g.selectAll('path');
 
             // this is added so the pie chart will listen for changes in the data
-            scope.$watch('data',function(){
-                arcs.data(pie(data)).attr('d',arc);
+            scope.$watch('data',function(data) {
+                if(!data){ return; }
+
+                arcs = arcs.data(pie(data));
+                arcs.enter().append('path')
+                  .style('stroke', 'white')
+                  .attr('fill', function(d, i){ return color(i) });
+                arcs.exit().remove();
+                arcs.attr('d', arc);
+
             }, true);
         }
 
@@ -94,5 +131,4 @@
 </script>
 
 {% endblock %}
-
 
