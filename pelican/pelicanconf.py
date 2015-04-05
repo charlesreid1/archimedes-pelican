@@ -81,6 +81,7 @@ TEMPLATE_PAGES['hang2.html'] = 'hang2/index.html'
 TEMPLATE_PAGES['datah1.csv'] = 'hang1/datah1.csv'
 TEMPLATE_PAGES['datah2.csv'] = 'hang2/datah2.csv'
 
+TEMPLATE_PAGES['multi1.html'] = 'multi1/index.html'
 
 
 

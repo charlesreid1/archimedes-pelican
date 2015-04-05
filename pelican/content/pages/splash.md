@@ -3,6 +3,8 @@ Date: 2015-03-30 14:00
 Category: 
 save_as: index.html
 
+
+
 <h1><b>Hello Cruel Angular World! <small>Angular.js</small></b></h1>
 
 A couple of Angular apps that demonstrate some of Angular's capabilities,
@@ -28,6 +30,8 @@ and illustrates how to integrate Pelican with Angular.
 <a href="hello5/">Angular Repeat Extra Variables</a>
 </p>
 
+
+
 <h1><b>Dangular <small>D3 + Angular.js</small></b></h1>
 
 <p>
@@ -50,6 +54,8 @@ and illustrates how to integrate Pelican with Angular.
 <a href="dangular5/">Interactive Donut with Push/Pop/Reset Controls</a>
 </p>
 
+
+
 <h1><b>Hanging Dangulars <small>Dangulars Loading External Files</small></b></h1>
 
 <p>
@@ -58,6 +64,15 @@ and illustrates how to integrate Pelican with Angular.
 
 <p>
 <a href="hang2/">Live-Updating Pie Chart from CSV Data: SF Giants Wins/Losses</a>
+</p>
+
+
+
+
+<h1><b>Multi-Dangulars <small>Multiple Interacting Dangulars</small></b></h1>
+
+<p>
+<a href="multi1/">Two Independent Dangulars</a>
 </p>
 
 
