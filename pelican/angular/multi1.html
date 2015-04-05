@@ -1,0 +1,225 @@
+{% extends 'base_angular.html' %}
+{% set mytitle="Multi 1" %}
+
+{# ----------- title -------------- #}
+{% block title %}{{ mytitle }}{% endblock %}
+
+{# ----------- content ------------- #}
+{% block content %}
+
+{% include 'm1.md' %}
+<hr />
+
+<style>
+.scatter-container {
+  width: 50%;
+  float: left;
+  height: 400px;
+}
+.detail {
+  width: 50%;
+  float: left;
+  height: 400px;
+}
+scatter {
+  width: 100%;
+  height: 100%;
+  display: block;
+  z-index: 0;
+  overflow: hidden;
+  font-size: 10px;
+}
+circle {
+  fill: yellow;
+  opacity: 1;
+  cursor: pointer;
+  stroke-width: 2;
+}
+circle:hover {
+  stroke: black;
+}
+scatter text{
+/*
+  fill: white;
+  stroke: none;
+*/
+}
+.x-axis path, 
+.y-axis path {
+  stroke: none;
+  fill: none;
+}
+.x-axis line, 
+.y-axis line {
+  stroke: rgba(255, 255, 255, 0.2);
+}
+</style>
+
+<div ng-app="myApp">
+
+    <div ng-controller="Ctrl1">
+
+        <p>An iris scatter plot:</p>
+
+        <div class="scatter-container">
+            <iris data="irisData" selected-point="irisSelected">
+            </iris>
+        </div>
+
+        <div class="detail-container">
+            <div ng-show="irisSelected">
+                <h2>[[irisSelected.class]]</h2>
+                <h3>sepal width: [[irisSelected.sepal_width]]</h3>
+                <h3>petal width: [[irisSelected.petal_width]]</h3>
+            </div>
+            <div ng-show="!irisSelected">
+                <h2>Hover over a point.</h2>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script type="text/javascript">
+
+(function() {
+
+    /////////////////////////
+    // Controller
+
+    function Ctrl1($scope,$http,$interval) {
+
+        // we load all of the giants win/loss records into memory,
+        // and loop through them.
+        $scope.load_data = function() {
+            d3.csv('iris.csv',function(err,dat){
+                if(err){throw err;}
+
+                var irisData = [];
+                dat.forEach(function(r){
+
+                    var item = {'sepal_width': r['sepal_width'],
+                                'petal_width': r['petal_width'],
+                                'class': r['class']};
+                    irisData.push(item);
+                });
+                $scope.irisData = irisData;
+
+                // this forces angular to check for changes in data
+                $scope.$apply();
+
+            });
+        };
+        $scope.load_data();
+    };
+
+
+
+    /////////////////////////
+    // Module
+
+    var mod = angular.module('myApp',[],function($interpolateProvider) {
+            $interpolateProvider.startSymbol('[[');
+            $interpolateProvider.endSymbol(']]');
+        }
+    );
+
+
+
+    /////////////////////////
+    // Directive
+
+    var dir = mod.directive('iris', function() {
+
+        function link(scope, element, attr) {
+
+            var el = element[0];
+            var svg = d3.select(el).append('svg').attr('class','scatter');
+
+            var w = 400;
+            var h = 400;
+            svg.attr({width: w, height: h});
+
+            var xAxisG = svg.append('g').attr('class', 'x-axis');
+            var yAxisG = svg.append('g').attr('class', 'y-axis');
+            var points = svg.append('g').attr('class', 'points').selectAll('g.point');
+            var x = d3.scale.linear();
+            var y = d3.scale.linear();
+            var xAxis = d3.svg.axis().scale(x).orient('bottom');
+            var yAxis = d3.svg.axis().scale(y).orient('left');
+            var m = 50;
+
+            x.range([m, w - m]);
+            y.range([h - m, m]);
+            xAxisG.attr('transform', 'translate(' + [0, y.range()[0] + 0.5] + ')');
+            yAxisG.attr('transform', 'translate(' + [x.range()[0], 0] + ')');
+            update();
+
+            scope.$watch('data', update);
+
+            function update(){
+              if(!scope.data){ return };
+              var data = scope.data;
+
+              var x_min = d3.min(data,function(d){return d.sepal_width;});
+              var x_max = d3.max(data,function(d){return d.sepal_width;});
+              x.domain([x_min,x_max]);
+
+              var y_min = d3.min(data,function(d){return d.petal_width;});
+              var y_max = d3.max(data,function(d){return d.petal_width;});
+              y.domain([y_min,y_max]);
+
+              points = points.data(data);
+              points.exit().remove();
+              var point = points.enter().append('g').attr('class', 'point');
+
+              point.append('circle')
+                .attr('r', 5)
+                .on('mouseover', function(d){
+                  scope.$apply(function(){
+                    scope.selectedPoint = d;
+                  });
+                });
+
+              // update the position of all the points
+              points.attr('transform', function(d){
+                return 'translate(' + [x(d.sepal_width), y(d.petal_width)] + ')';
+              });
+
+              xAxisG.call(xAxis);
+              yAxisG.call(yAxis);
+
+            };
+
+        }
+
+        return {
+            link: link,
+            restrict: 'E',
+            scope: { 
+                data: '=',
+                selectedPoint: '='
+            }
+        }
+    });
+
+    var c = mod.controller("Ctrl1", ["$scope","$http","$interval",Ctrl1]);
+
+    //var c = mod.controller("Ctrl1", function($scope,$http,$interval) {
+    //    $interval(function(){
+    //        $http.get('donut-data-api.json').then(function(response){
+    //            // your API would presumably send new data each time!
+    //            var data = response.data.map(function(d){ return d * Math.random() }); $scope.donutData = data;
+    //        }, function(err) { 
+    //            throw err;
+    //        });
+    //    }, 1000);
+    //});
+
+
+})();
+
+</script>
+
+{% endblock %}
+
