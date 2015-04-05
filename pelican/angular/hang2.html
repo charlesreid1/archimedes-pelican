@@ -7,26 +7,36 @@
 {# ----------- content ------------- #}
 {% block content %}
 
-{#
-{% include 'h2.md' %}
+{% include 'hg2.md' %}
 <hr />
-#}
 
 <div ng-app="myApp">
 
     <div ng-controller="WinsCtrl">
 
-        <h2><b>Giants Wins</b></h2>
+        <h2><b>Giants Wins &amp; Losses</b></h2>
 
-        <p>A live-updated, dynamic donut chart:</p>
+        <div style="width:400px; text-align: center;">
 
-        <p>
-        <a class="btn btn-large btn-primary" ng-click="fwd()">fwd</a>
-        &nbsp;&nbsp;&nbsp;
-        <a class="btn btn-large btn-primary" ng-click="back()">back</a>
-        </p>
+            <p>
+            <a class="btn btn-large btn-primary" ng-click="fwd()">Fwd 1 Yr</a>
+            &nbsp;&nbsp;&nbsp;
+            <a class="btn btn-large btn-primary" ng-click="back()">Back 1 Yr</a>
+            </p>
 
-        <donut-chart data="giantsWins"></donut-chart>
+            <p>
+            <a class="btn btn-large btn-primary" ng-click="pause()">Pause</a>
+            &nbsp;&nbsp;&nbsp;
+            <a class="btn btn-large btn-primary" ng-click="resume()">Resume</a>
+            </p>
+
+            <p><b>
+            <span ng-bind="myYear"></span>
+            </b></p>
+
+            <donut-chart data="giantsWins"></donut-chart>
+
+        </div>
 
     </div>
 </div>
@@ -42,59 +52,60 @@
     function WinsCtrl($scope,$http,$interval) {
 
         $scope.counter = 0;
-        $scope.all_data = [];
+        $scope.paused = false;
 
         // we load all of the giants win/loss records into memory,
         // and loop through them.
         $scope.load_data = function() {
-
             d3.csv('datah2.csv',function(err,dat){
-
                 if(err){throw err;}
 
-                all_data = [];
-                dat.forEach(function(r){
-                    record = {  'W' : r['W'],
-                                'L' : r['L'],
-                                'Yr' : r['Yr']
-                            };
-                    all_data.push(record);
-                });
+                if( $scope.counter < dat.length ) {
 
-                //this.all_data = all_data;
-                $scope.all_data = all_data;
+                    $scope.myYear = dat[$scope.counter]['Year'];
 
-                // this forces angular to check for changes in data
-                $scope.$apply();
+                    $scope.giantsWins = [
+                        {'value': dat[$scope.counter]['W']},
+                        {'value': dat[$scope.counter]['L']}
+                    ];
+
+                    // this forces angular to check for changes in data
+                    $scope.$apply();
+                }
 
             });
 
         };
 
         $scope.fwd = function() {
-            //$scope.all_data = all_data;
             if($scope.counter > 0) {
                 $scope.counter -= 1;
-                console.log("Fwd: "+$scope.counter);
+                $scope.load_data()
             }
         };
 
         $scope.back = function() {
-            //$scope.all_data = all_data;
-            // always
-            //if($scope.counter > 0) {
             $scope.counter += 1;
-            console.log("Back: "+$scope.counter);
-            //}
+            $scope.load_data()
+        };
+
+        $scope.pause = function() {
+            $scope.paused = true;
+        };
+
+        $scope.resume = function() {
+            $scope.paused = false;
         };
 
         $scope.load_data();
 
 
-        //// Interval counter counts through years
-        //$interval(function(){
-        //    $scope.counter += 1;
-        //}, 1000);
+        // Interval counter counts through years
+        $interval(function(){
+            if( $scope.paused == false ) {
+                $scope.back();
+            }
+        }, 1000);
 
     };
 
@@ -116,6 +127,8 @@
 
     var dir = mod.directive('donutChart', function() {
 
+        var pie = d3.layout.pie().sort(null);
+
         function link(scope, element, attr) {
 
             // this is where your D3 code goes
@@ -129,7 +142,6 @@
 
             // make the SVG drawing
             var svg = d3.select(element[0]).append('svg');
-            var pie = d3.layout.pie().sort(null);
 
             pie.value(function(d){ return d.value; });
 
