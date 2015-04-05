@@ -30,28 +30,22 @@ scatter {
   font-size: 10px;
 }
 circle {
-  fill: yellow;
-  opacity: 1;
   cursor: pointer;
-  stroke-width: 2;
 }
 circle:hover {
   stroke: black;
 }
 scatter text{
-/*
-  fill: white;
-  stroke: none;
-*/
 }
 .x-axis path, 
 .y-axis path {
-  stroke: none;
+  stroke: black;
   fill: none;
 }
 .x-axis line, 
 .y-axis line {
-  stroke: rgba(255, 255, 255, 0.2);
+  stroke: black;
+  fill: none;
 }
 </style>
 
@@ -145,8 +139,8 @@ scatter text{
             var points = svg.append('g').attr('class', 'points').selectAll('g.point');
             var x = d3.scale.linear();
             var y = d3.scale.linear();
-            var xAxis = d3.svg.axis().scale(x).orient('bottom');
-            var yAxis = d3.svg.axis().scale(y).orient('left');
+            var xAxis = d3.svg.axis().scale(x).orient('bottom').ticks(5);
+            var yAxis = d3.svg.axis().scale(y).orient('left').ticks(5);
             var m = 50;
 
             x.range([m, w - m]);
@@ -173,8 +167,13 @@ scatter text{
               points.exit().remove();
               var point = points.enter().append('g').attr('class', 'point');
 
+              var cValue = function(d) { return d.class },
+                  color = d3.scale.category10();
+
               point.append('circle')
                 .attr('r', 5)
+                .style('opacity',0.5)
+                .style('fill', function(d) { return color(cValue(d));}) 
                 .on('mouseover', function(d){
                   scope.$apply(function(){
                     scope.selectedPoint = d;
