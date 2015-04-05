@@ -3,7 +3,10 @@ Date: 2015-03-30 14:00
 Category: 
 save_as: index.html
 
-<h2>Hello Cruel Angular World!</h2>
+<h1><b>Hello Cruel Angular World! <small>Angular.js</small></b></h1>
+
+A couple of Angular apps that demonstrate some of Angular's capabilities,
+and illustrates how to integrate Pelican with Angular.
 
 <p>
 <a href="hello1/">Basic Hello Angular App</a>
@@ -25,7 +28,7 @@ save_as: index.html
 <a href="hello5/">Angular Repeat Extra Variables</a>
 </p>
 
-<h2>Dangular: D3 + Angular.js</h2>
+<h1><b>Dangular <small>D3 + Angular.js</small></b></h1>
 
 <p>
 <a href="dangular1/">Dangular Custom Directive</a>
@@ -47,11 +50,16 @@ save_as: index.html
 <a href="dangular5/">Interactive Donut with Push/Pop/Reset Controls</a>
 </p>
 
+<h1><b>Hanging Dangulars <small>Dangulars Loading External Files</small></b></h1>
+
 <p>
-<a href="dangular6/">Pie Chart from CSV Data</a>
+<a href="hang1/">Pie Chart from CSV Data</a>
 </p>
 
 <p>
-<a href="dangular7/">Live-Updating Pie Chart from CSV Data</a>
+<a href="hang2/">Live-Updating Pie Chart from CSV Data: SF Giants Wins/Losses</a>
 </p>
+
+
+
 
