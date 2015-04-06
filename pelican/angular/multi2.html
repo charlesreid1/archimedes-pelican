@@ -1,5 +1,5 @@
 {% extends 'base_angular.html' %}
-{% set mytitle="Multi 1" %}
+{% set mytitle="Multi 2" %}
 
 {# ----------- title -------------- #}
 {% block title %}{{ mytitle }}{% endblock %}
@@ -7,47 +7,10 @@
 {# ----------- content ------------- #}
 {% block content %}
 
-{% include 'm1.md' %}
+{% include 'm2.md' %}
 <hr />
 
-<style>
-.scatter-container {
-  width: 50%;
-  float: left;
-  height: 400px;
-}
-.detail {
-  width: 50%;
-  float: left;
-  height: 400px;
-}
-scatter {
-  width: 100%;
-  height: 100%;
-  display: block;
-  z-index: 0;
-  overflow: hidden;
-  font-size: 10px;
-}
-circle {
-  cursor: pointer;
-}
-circle:hover {
-  stroke: black;
-}
-scatter text{
-}
-.x-axis path, 
-.y-axis path {
-  stroke: black;
-  fill: none;
-}
-.x-axis line, 
-.y-axis line {
-  stroke: black;
-  fill: none;
-}
-</style>
+<link href="{{ SITEURL }}/multi2/multi2.css" rel="stylesheet" type="text/css" >
 
 <div ng-app="myApp">
 
@@ -56,21 +19,21 @@ scatter text{
         <p>An iris scatter plot:</p>
 
         <div class="scatter-container">
-            <iris data="irisData" selected-point="irisSelected">
+            <iris 
+            data="irisData" 
+            selected-point="irisSelected"
+            xlabel="sepal_width"
+            ylabel="petal_width">
             </iris>
         </div>
 
-        <div class="detail-container">
-
-            <div ng-show="irisSelected">
-                <h2>[[irisSelected.class]]</h2>
-                <h3>sepal width: [[irisSelected.sepal_width]]</h3>
-                <h3>petal width: [[irisSelected.petal_width]]</h3>
-            </div>
-            <div ng-show="!irisSelected">
-                <h2>Hover over a point.</h2>
-            </div>
-
+        <div class="scatter-container">
+            <iris 
+            data="irisData" 
+            selected-point="irisSelected"
+            xlabel="sepal_length"
+            ylabel="petal_length">
+            </iris>
         </div>
 
     </div>
@@ -88,16 +51,15 @@ scatter text{
         // we load all of the giants win/loss records into memory,
         // and loop through them.
         $scope.load_data = function() {
+
             d3.csv('iris.csv',function(err,dat){
                 if(err){throw err;}
 
                 var irisData = [];
                 dat.forEach(function(r){
 
-                    var item = {'sepal_width': r['sepal_width'],
-                                'petal_width': r['petal_width'],
-                                'class': r['class']};
-                    irisData.push(item);
+                    console.log(r)
+                    irisData.push(r);
 
                 });
                 $scope.irisData = irisData;
@@ -124,12 +86,18 @@ scatter text{
 
 
 
+
+
+
     /////////////////////////
     // Directive <iris>
 
     var dir = mod.directive('iris', function() {
 
         function link(scope, element, attr) {
+
+            scope.xlabel = attr.xlabel;
+            scope.ylabel = attr.ylabel;
 
             var el = element[0];
             var svg = d3.select(el).append('svg').attr('class','scatter');
@@ -143,12 +111,14 @@ scatter text{
             var points = svg.append('g').attr('class', 'points').selectAll('g.point');
             var x = d3.scale.linear();
             var y = d3.scale.linear();
-            var xAxis = d3.svg.axis().scale(x).orient('bottom').ticks(5);
-            var yAxis = d3.svg.axis().scale(y).orient('left').ticks(5);
-            var m = 50;
 
+            var m = 50;
             x.range([m, w - m]);
             y.range([h - m, m]);
+
+            var xAxis = d3.svg.axis().scale(x).orient('bottom').ticks(5);
+            var yAxis = d3.svg.axis().scale(y).orient('left').ticks(5);
+
             xAxisG.attr('transform', 'translate(' + [0, y.range()[0] + 0.5] + ')');
             yAxisG.attr('transform', 'translate(' + [x.range()[0], 0] + ')');
             update();
@@ -159,12 +129,12 @@ scatter text{
               if(!scope.data){ return };
               var data = scope.data;
 
-              var x_min = d3.min(data,function(d){return d.sepal_width;});
-              var x_max = d3.max(data,function(d){return d.sepal_width;});
+              var x_min = d3.min(data,function(d){return d[scope.xlabel];});
+              var x_max = d3.max(data,function(d){return d[scope.xlabel];});
               x.domain([x_min,x_max]);
 
-              var y_min = d3.min(data,function(d){return d.petal_width;});
-              var y_max = d3.max(data,function(d){return d.petal_width;});
+              var y_min = d3.min(data,function(d){return d[scope.ylabel];});
+              var y_max = d3.max(data,function(d){return d[scope.ylabel];});
               y.domain([y_min,y_max]);
 
               points = points.data(data);
@@ -184,9 +154,16 @@ scatter text{
                   });
                 });
 
+              console.log(scope.xlabel);
+              console.log(scope.ylabel);
+
               // update the position of all the points
               points.attr('transform', function(d){
-                return 'translate(' + [x(d.sepal_width), y(d.petal_width)] + ')';
+                      console.log(d);
+                      console.log( scope.xlabel );
+                      //console.log( d[scope.xlabel] );
+                      //console.log( x( d[scope.xlabel] ) );
+                      return 'translate(' + [x( d[scope.xlabel] ), y(d[scope.ylabel])] + ')';
               });
 
               xAxisG.call(xAxis);
@@ -201,7 +178,9 @@ scatter text{
             restrict: 'E',
             scope: { 
                 data: '=',
-                selectedPoint: '='
+                selectedPoint: '=',
+                xlabel: '=',
+                ylabel: '='
             }
         }
     });

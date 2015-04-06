@@ -82,8 +82,11 @@ TEMPLATE_PAGES['datah1.csv'] = 'hang1/datah1.csv'
 TEMPLATE_PAGES['datah2.csv'] = 'hang2/datah2.csv'
 
 TEMPLATE_PAGES['multi1.html'] = 'multi1/index.html'
-TEMPLATE_PAGES['iris.csv'] = 'multi1/iris.csv'
+TEMPLATE_PAGES['iris1.csv']    = 'multi1/iris.csv'
 
+TEMPLATE_PAGES['multi2.html'] = 'multi2/index.html'
+TEMPLATE_PAGES['multi2.css']  = 'multi2/multi2.css'
+TEMPLATE_PAGES['iris2.csv']    = 'multi2/iris.csv'
 
 
 
