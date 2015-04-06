@@ -1,0 +1,363 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Archimedes Pelican</title>
+    <meta name="author" content="charlesreid1">
+
+
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+      <link href="/archimedes-pelican/favicon.png" rel="icon">
+
+
+
+    <!--
+    my CSS styles
+    -->
+    <link href="/archimedes-pelican/theme/css/bootstrap.css"       rel="stylesheet" type="text/css">
+    <link href="/archimedes-pelican/theme/css/sandstone.css"       rel="stylesheet" type="text/css"/>
+    <link href="/archimedes-pelican/theme/css/navbar.css"          rel="stylesheet" type="text/css"/>
+    <link href="/archimedes-pelican/theme/css/main.css"            rel="stylesheet" type="text/css"/>
+    <link href="/archimedes-pelican/theme/css/font-awesome.css"    rel="stylesheet" type="text/css"/>
+
+    <!--
+    <link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic"
+          rel="stylesheet" type="text/css"/>
+    <link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic"
+          rel="stylesheet" type="text/css"/>
+    -->
+
+
+    <link href="/archimedes-pelican/theme/css/pygment.css" rel="stylesheet" type="text/css"/>
+
+    <script src="/archimedes-pelican/theme/js/jquery.min.js"></script>
+    <script src="/archimedes-pelican/theme/js/bootstrap.min.js"></script>
+
+
+
+    <!-- map header -->
+
+    <!-- load the leaflet library -->
+    <link rel="stylesheet" href="/archimedes-pelican/theme/css/leaflet.css" />
+    <script src="/archimedes-pelican/theme/js/leaflet.js"></script>
+    <script src="/archimedes-pelican/theme/js/d3.js"></script>
+
+    <!-- load my style sheet -->
+    <!--
+    <link rel="stylesheet" type="text/css" href="/archimedes-pelican/mapstyles.css">
+    -->
+
+    <!-- load common vars -->
+    <!--
+    <script src="/archimedes-pelican/common.js"></script>
+    -->
+
+    <!-- angular -->
+    <script src="/archimedes-pelican/theme/js/angular.js"></script>
+
+    <!-- end map header -->
+
+
+</head>
+
+<body>
+
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <!--
+            http://www.w3schools.com/bootstrap/bootstrap_case_navigation.asp
+            -->
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span> 
+            </button>
+            <a class="navbar-brand" href="/archimedes-pelican/index.html" style="margin-right:20px;">Archimedes Pelican</a>
+        </div>
+        <div>
+            <div class="collapse navbar-collapse" id="myNavbar">
+                <ul class="nav navbar-nav">
+
+                    <li class="spacer">
+                        <p>&nbsp;</p>
+                    </li>
+
+
+                    <li>
+                        <a href="/archimedes-pelican/about.html">About</a>
+                    </li>
+
+
+                    <li class="spacer">
+                        <p>&nbsp;</p>
+                    </li>
+
+
+                    <li>
+                        <a href="/archimedes-pelican/index.html">All Angular Examples</a>
+                    </li>
+
+
+                    <li class="spacer">
+                        <p>&nbsp;</p>
+                    </li>
+
+
+                    <!--
+                    <li>
+                        <a href="/archimedes-pelican/blog.html">Blog</a>
+                    </li>
+
+
+                    <li class="spacer">
+                        <p>&nbsp;</p>
+                    </li>
+                    -->
+
+
+                    <li>
+                        <a href="/archimedes-pelican/author.html">Author</a>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+    </div>
+</nav>
+
+
+
+<!-- Main jumbotron -->
+<div class="jumbotron">
+    <div class="container">
+        <h1><i class="fa fa-paper-plane-o"></i>&nbsp;Archimedes Pelican</h1>
+        <p>Angular.js and Pelican</p>
+        <p><a class="btn btn-primary btn-lg btn-large" 
+            href="/archimedes-pelican/about.html" role="button">Learn More About It &nbsp;&nbsp;&nbsp; <i class="fa fa-arrow-circle-right"></i></a></p>
+    </div>
+</div>
+
+
+<div class="container" id="bodycontainer">
+
+
+This illustrates the loading and use of external data from a 
+CSV file. It also illustrates the use of <code>$interval</code>
+for updating the plot at 1-second intervals. The buttons and widgets
+control the state of the chart and the data being displayed.
+<hr />
+
+<div ng-app="myApp">
+
+    <div ng-controller="WinsCtrl">
+
+        <h2><b>Giants Wins &amp; Losses</b></h2>
+
+        <div style="width:400px; text-align: center;">
+
+            <p>
+            <a class="btn btn-large btn-primary" ng-click="fwd()">Fwd 1 Yr</a>
+            &nbsp;&nbsp;&nbsp;
+            <a class="btn btn-large btn-primary" ng-click="back()">Back 1 Yr</a>
+            </p>
+
+            <p>
+            <a class="btn btn-large btn-primary" ng-click="pause()">Pause</a>
+            &nbsp;&nbsp;&nbsp;
+            <a class="btn btn-large btn-primary" ng-click="resume()">Resume</a>
+            </p>
+
+            <p><b>
+            <span ng-bind="myYear"></span>
+            </b></p>
+
+            <donut-chart data="giantsWins"></donut-chart>
+
+        </div>
+
+    </div>
+</div>
+
+<script type="text/javascript">
+
+(function() {
+
+
+    /////////////////////////
+    // Controller
+
+    function WinsCtrl($scope,$http,$interval) {
+
+        $scope.counter = 0;
+        $scope.paused = false;
+
+        // we load all of the giants win/loss records into memory,
+        // and loop through them.
+        $scope.load_data = function() {
+            d3.csv('datah2.csv',function(err,dat){
+                if(err){throw err;}
+
+                if( $scope.counter < dat.length ) {
+
+                    $scope.myYear = dat[$scope.counter]['Year'];
+
+                    $scope.giantsWins = [
+                        {'value': dat[$scope.counter]['W']},
+                        {'value': dat[$scope.counter]['L']}
+                    ];
+
+                    // this forces angular to check for changes in data
+                    $scope.$apply();
+                }
+
+            });
+
+        };
+
+        $scope.fwd = function() {
+            if($scope.counter > 0) {
+                $scope.counter -= 1;
+                $scope.load_data()
+            }
+        };
+
+        $scope.back = function() {
+            $scope.counter += 1;
+            $scope.load_data()
+        };
+
+        $scope.pause = function() {
+            $scope.paused = true;
+        };
+
+        $scope.resume = function() {
+            $scope.paused = false;
+        };
+
+        $scope.load_data();
+
+
+        // Interval counter counts through years
+        $interval(function(){
+            if( $scope.paused == false ) {
+                $scope.back();
+            }
+        }, 1000);
+
+    };
+
+
+
+    /////////////////////////
+    // Module
+
+    var mod = angular.module('myApp',[],function($interpolateProvider) {
+            $interpolateProvider.startSymbol('[[');
+            $interpolateProvider.endSymbol(']]');
+        }
+    );
+
+
+
+    /////////////////////////
+    // Directive
+
+    var dir = mod.directive('donutChart', function() {
+
+        var pie = d3.layout.pie().sort(null);
+
+        function link(scope, element, attr) {
+
+            // this is where your D3 code goes
+
+            var data = scope.data;
+            var color = d3.scale.category10();
+
+            // canvas size
+            var width = 300;
+            var height = 300;
+
+            // make the SVG drawing
+            var svg = d3.select(element[0]).append('svg');
+
+            pie.value(function(d){ return d.value; });
+
+            // arc generation
+            var min = Math.min(width, height);
+            var arc = d3.svg.arc()
+                  .outerRadius(min / 2 * 0.9)
+                  .innerRadius(min / 2 * 0.5);
+
+            svg.attr({width: width, height: height});
+
+            var g = svg.append('g')
+                // center the donut chart
+                .attr('transform', 'translate(' + width / 2 + ',' + height / 2 + ')');
+
+            var arcs = g.selectAll('path');
+
+            // this is added so the pie chart will listen for changes in the data
+            scope.$watch('data',function(data) {
+                if(!data){ return; }
+
+                arcs = arcs.data(pie(data));
+                arcs.enter().append('path')
+                  .style('stroke', 'white')
+                  .attr('fill', function(d, i){ return color(i) });
+                arcs.exit().remove();
+                arcs.attr('d', arc);
+
+            }, true);
+        }
+
+        return {
+            link: link,
+            restrict: 'E',
+            scope: { 
+                data: '=' 
+            }
+        }
+    });
+
+    var c = mod.controller("WinsCtrl", ["$scope","$http","$interval",WinsCtrl]);
+
+    //var c = mod.controller("WinsCtrl", function($scope,$http,$interval) {
+    //    $interval(function(){
+    //        $http.get('donut-data-api.json').then(function(response){
+    //            // your API would presumably send new data each time!
+    //            var data = response.data.map(function(d){ return d * Math.random() }); $scope.donutData = data;
+    //        }, function(err) { 
+    //            throw err;
+    //        });
+    //    }, 1000);
+    //});
+
+
+})();
+
+</script>
+
+
+
+</div><!--container-->
+
+<div class="container text-center">
+    <p>&nbsp;</p>
+    <p>
+    Made with <i class="fa fa-fire-extinguisher fa-2x"></i> by <a href="http://charlesreid1.com">charlesreid1</a>.
+    </p>
+    <p>&nbsp;</p>
+</div>
+
+
+</body>
+</html>
+
+

@@ -1,0 +1,46 @@
+.scatter-container {
+  width: 50%;
+  float: left;
+  height: 400px;
+}
+
+.detail {
+  width: 50%;
+  float: left;
+  height: 400px;
+}
+
+scatter {
+  width: 100%;
+  height: 100%;
+  display: block;
+  z-index: 0;
+  overflow: hidden;
+  font-size: 10px;
+}
+
+circle {
+  cursor: pointer;
+}
+
+
+
+circle.active {
+  stroke: black;
+  fill: red;
+  opacity: 1.0;
+}
+
+
+
+.x-axis path, 
+.y-axis path {
+  stroke: black;
+  fill: none;
+}
+
+.x-axis line, 
+.y-axis line {
+  stroke: black;
+  fill: none;
+}

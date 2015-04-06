@@ -1,0 +1,396 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Archimedes Pelican</title>
+    <meta name="author" content="charlesreid1">
+
+
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+      <link href="/archimedes-pelican/favicon.png" rel="icon">
+
+
+
+    <!--
+    my CSS styles
+    -->
+    <link href="/archimedes-pelican/theme/css/bootstrap.css"       rel="stylesheet" type="text/css">
+    <link href="/archimedes-pelican/theme/css/sandstone.css"       rel="stylesheet" type="text/css"/>
+    <link href="/archimedes-pelican/theme/css/navbar.css"          rel="stylesheet" type="text/css"/>
+    <link href="/archimedes-pelican/theme/css/main.css"            rel="stylesheet" type="text/css"/>
+    <link href="/archimedes-pelican/theme/css/font-awesome.css"    rel="stylesheet" type="text/css"/>
+
+    <!--
+    <link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic"
+          rel="stylesheet" type="text/css"/>
+    <link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic"
+          rel="stylesheet" type="text/css"/>
+    -->
+
+
+    <link href="/archimedes-pelican/theme/css/pygment.css" rel="stylesheet" type="text/css"/>
+
+    <script src="/archimedes-pelican/theme/js/jquery.min.js"></script>
+    <script src="/archimedes-pelican/theme/js/bootstrap.min.js"></script>
+
+
+
+    <!-- map header -->
+
+    <!-- load the leaflet library -->
+    <link rel="stylesheet" href="/archimedes-pelican/theme/css/leaflet.css" />
+    <script src="/archimedes-pelican/theme/js/leaflet.js"></script>
+    <script src="/archimedes-pelican/theme/js/d3.js"></script>
+
+    <!-- load my style sheet -->
+    <!--
+    <link rel="stylesheet" type="text/css" href="/archimedes-pelican/mapstyles.css">
+    -->
+
+    <!-- load common vars -->
+    <!--
+    <script src="/archimedes-pelican/common.js"></script>
+    -->
+
+    <!-- angular -->
+    <script src="/archimedes-pelican/theme/js/angular.js"></script>
+
+    <!-- end map header -->
+
+
+</head>
+
+<body>
+
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <!--
+            http://www.w3schools.com/bootstrap/bootstrap_case_navigation.asp
+            -->
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span> 
+            </button>
+            <a class="navbar-brand" href="/archimedes-pelican/index.html" style="margin-right:20px;">Archimedes Pelican</a>
+        </div>
+        <div>
+            <div class="collapse navbar-collapse" id="myNavbar">
+                <ul class="nav navbar-nav">
+
+                    <li class="spacer">
+                        <p>&nbsp;</p>
+                    </li>
+
+
+                    <li>
+                        <a href="/archimedes-pelican/about.html">About</a>
+                    </li>
+
+
+                    <li class="spacer">
+                        <p>&nbsp;</p>
+                    </li>
+
+
+                    <li>
+                        <a href="/archimedes-pelican/index.html">All Angular Examples</a>
+                    </li>
+
+
+                    <li class="spacer">
+                        <p>&nbsp;</p>
+                    </li>
+
+
+                    <!--
+                    <li>
+                        <a href="/archimedes-pelican/blog.html">Blog</a>
+                    </li>
+
+
+                    <li class="spacer">
+                        <p>&nbsp;</p>
+                    </li>
+                    -->
+
+
+                    <li>
+                        <a href="/archimedes-pelican/author.html">Author</a>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+    </div>
+</nav>
+
+
+
+<!-- Main jumbotron -->
+<div class="jumbotron">
+    <div class="container">
+        <h1><i class="fa fa-paper-plane-o"></i>&nbsp;Archimedes Pelican</h1>
+        <p>Angular.js and Pelican</p>
+        <p><a class="btn btn-primary btn-lg btn-large" 
+            href="/archimedes-pelican/about.html" role="button">Learn More About It &nbsp;&nbsp;&nbsp; <i class="fa fa-arrow-circle-right"></i></a></p>
+    </div>
+</div>
+
+
+<div class="container" id="bodycontainer">
+
+
+An example illustrating the use of two 
+independent Angular components sharing 
+common variables.
+
+<br />
+<br />
+
+These Angular components share the same scope,
+so they are able to access the same data and the same variables. 
+
+<br/>
+<br/>
+
+By adding watch functions for different variables 
+to the Angular directives, we enable the directives
+to act upon the data, and be acted upon by the data,
+independently of one another.
+
+<br/>
+<br/>
+
+This allows us to design modular visualization 
+components, and more rapidly prototype.
+(But first we need to figure out how to 
+organize that code better.)
+<hr />
+
+<style>
+.scatter-container {
+  width: 50%;
+  float: left;
+  height: 400px;
+}
+.detail {
+  width: 50%;
+  float: left;
+  height: 400px;
+}
+scatter {
+  width: 100%;
+  height: 100%;
+  display: block;
+  z-index: 0;
+  overflow: hidden;
+  font-size: 10px;
+}
+circle {
+  cursor: pointer;
+}
+circle:hover {
+  stroke: black;
+}
+scatter text{
+}
+.x-axis path, 
+.y-axis path {
+  stroke: black;
+  fill: none;
+}
+.x-axis line, 
+.y-axis line {
+  stroke: black;
+  fill: none;
+}
+</style>
+
+<div ng-app="myApp">
+
+    <div ng-controller="Ctrl1">
+
+        <p>An iris scatter plot:</p>
+
+        <div class="scatter-container">
+            <iris data="irisData" selected-point="irisSelected">
+            </iris>
+        </div>
+
+        <div class="detail-container">
+
+            <div ng-show="irisSelected">
+                <h2>[[irisSelected.class]]</h2>
+                <h3>sepal width: [[irisSelected.sepal_width]]</h3>
+                <h3>petal width: [[irisSelected.petal_width]]</h3>
+            </div>
+            <div ng-show="!irisSelected">
+                <h2>Hover over a point.</h2>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+<script type="text/javascript">
+
+(function() {
+
+    /////////////////////////
+    // Controller
+
+    function Ctrl1($scope,$http,$interval) {
+
+        // we load all of the giants win/loss records into memory,
+        // and loop through them.
+        $scope.load_data = function() {
+            d3.csv('iris.csv',function(err,dat){
+                if(err){throw err;}
+
+                var irisData = [];
+                dat.forEach(function(r){
+
+                    var item = {'sepal_width': r['sepal_width'],
+                                'petal_width': r['petal_width'],
+                                'class': r['class']};
+                    irisData.push(item);
+
+                });
+                $scope.irisData = irisData;
+
+                // this forces angular to check for changes in data
+                $scope.$apply();
+
+            });
+        };
+        $scope.load_data();
+    };
+
+
+
+    /////////////////////////
+    // Module
+
+    var mod = angular.module('myApp',[],function($interpolateProvider) {
+            $interpolateProvider.startSymbol('[[');
+            $interpolateProvider.endSymbol(']]');
+        }
+    );
+
+
+
+
+    /////////////////////////
+    // Directive <iris>
+
+    var dir = mod.directive('iris', function() {
+
+        function link(scope, element, attr) {
+
+            var el = element[0];
+            var svg = d3.select(el).append('svg').attr('class','scatter');
+
+            var w = 400;
+            var h = 400;
+            svg.attr({width: w, height: h});
+
+            var xAxisG = svg.append('g').attr('class', 'x-axis');
+            var yAxisG = svg.append('g').attr('class', 'y-axis');
+            var points = svg.append('g').attr('class', 'points').selectAll('g.point');
+            var x = d3.scale.linear();
+            var y = d3.scale.linear();
+            var xAxis = d3.svg.axis().scale(x).orient('bottom').ticks(5);
+            var yAxis = d3.svg.axis().scale(y).orient('left').ticks(5);
+            var m = 50;
+
+            x.range([m, w - m]);
+            y.range([h - m, m]);
+            xAxisG.attr('transform', 'translate(' + [0, y.range()[0] + 0.5] + ')');
+            yAxisG.attr('transform', 'translate(' + [x.range()[0], 0] + ')');
+            update();
+
+            scope.$watch('data', update);
+
+            function update(){
+              if(!scope.data){ return };
+              var data = scope.data;
+
+              var x_min = d3.min(data,function(d){return d.sepal_width;});
+              var x_max = d3.max(data,function(d){return d.sepal_width;});
+              x.domain([x_min,x_max]);
+
+              var y_min = d3.min(data,function(d){return d.petal_width;});
+              var y_max = d3.max(data,function(d){return d.petal_width;});
+              y.domain([y_min,y_max]);
+
+              points = points.data(data);
+              points.exit().remove();
+              var point = points.enter().append('g').attr('class', 'point');
+
+              var cValue = function(d) { return d.class },
+                  color = d3.scale.category10();
+
+              point.append('circle')
+                .attr('r', 5)
+                .style('opacity',0.5)
+                .style('fill', function(d) { return color(cValue(d));}) 
+                .on('mouseover', function(d){
+                  scope.$apply(function(){
+                    scope.selectedPoint = d;
+                  });
+                });
+
+              // update the position of all the points
+              points.attr('transform', function(d){
+                return 'translate(' + [x(d.sepal_width), y(d.petal_width)] + ')';
+              });
+
+              xAxisG.call(xAxis);
+              yAxisG.call(yAxis);
+
+            };
+
+        }
+
+        return {
+            link: link,
+            restrict: 'E',
+            scope: { 
+                data: '=',
+                selectedPoint: '='
+            }
+        }
+    });
+
+    var c = mod.controller("Ctrl1", ["$scope","$http","$interval",Ctrl1]);
+
+})();
+
+</script>
+
+
+
+</div><!--container-->
+
+<div class="container text-center">
+    <p>&nbsp;</p>
+    <p>
+    Made with <i class="fa fa-fire-extinguisher fa-2x"></i> by <a href="http://charlesreid1.com">charlesreid1</a>.
+    </p>
+    <p>&nbsp;</p>
+</div>
+
+
+</body>
+</html>
+
+

@@ -41,6 +41,29 @@
 
 
 
+    <!-- map header -->
+
+    <!-- load the leaflet library -->
+    <link rel="stylesheet" href="/archimedes-pelican/theme/css/leaflet.css" />
+    <script src="/archimedes-pelican/theme/js/leaflet.js"></script>
+    <script src="/archimedes-pelican/theme/js/d3.js"></script>
+
+    <!-- load my style sheet -->
+    <!--
+    <link rel="stylesheet" type="text/css" href="/archimedes-pelican/mapstyles.css">
+    -->
+
+    <!-- load common vars -->
+    <!--
+    <script src="/archimedes-pelican/common.js"></script>
+    -->
+
+    <!-- angular -->
+    <script src="/archimedes-pelican/theme/js/angular.js"></script>
+
+    <!-- end map header -->
+
+
 </head>
 
 <body>
@@ -126,80 +149,123 @@
 
 
 
-    <div class="row">
-        <div class="col-md-8">
+<div ng-app="myApp">
 
-                <p>&nbsp;</p>
-                <h1><b>Hello Cruel Angular World! <small>Angular.js</small></b></h1>
+    <div ng-controller="Ctrl1">
 
-<p>A couple of Angular apps that demonstrate some of Angular's capabilities,
-and illustrates how to integrate Pelican with Angular.</p>
-<p>
-<a href="hello1/">Basic Hello Angular App</a>
-</p>
+        <p>A dynamic donut chart:</p>
 
-<p>
-<a href="hello2/">Basic Hello Angular Click App</a>
-</p>
+        <input type="range" style="width: 100px;" ng-model="slice.value" ng-repeat="slice in myData track by $index" />
 
-<p>
-<a href="hello3/">Angular Repeat</a>
-</p>
+        <p><a class="btn btn-large btn-primary" ng-click="dostuff()">reset stuff</a> </p>
+        <p><a class="btn btn-large btn-primary" ng-click="pushstuff()">push stuff</a> </p>
+        <p><a class="btn btn-large btn-primary" ng-click="popstuff()">pop stuff</a> </p>
 
-<p>
-<a href="hello4/">Angular Repeat Across Elements</a>
-</p>
+        <donut-chart data="myData"></donut-chart>
 
-<p>
-<a href="hello5/">Angular Repeat Extra Variables</a>
-</p>
-
-<h1><b>Dangular <small>D3 + Angular.js</small></b></h1>
-
-<p>
-<a href="dangular1/">Dangular Custom Directive</a>
-</p>
-
-<p>
-<a href="dangular2/">Dangular Makes a Donut</a>
-</p>
-
-<p>
-<a href="dangular3/">Dangular Makes a Couple of Donuts</a>
-</p>
-
-<p>
-<a href="dangular4/">Dangular Makes an Interactive Donut</a>
-</p>
-
-<p>
-<a href="dangular5/">Interactive Donut with Push/Pop/Reset Controls</a>
-</p>
-
-<h1><b>Hanging Dangulars <small>Dangulars Loading External Files</small></b></h1>
-
-<p>
-<a href="hang1/">Pie Chart from CSV Data</a>
-</p>
-
-<p>
-<a href="hang2/">Live-Updating Pie Chart from CSV Data: SF Giants Wins/Losses</a>
-</p>
-
-<h1><b>Multi-Dangulars <small>Multiple Interacting Dangulars</small></b></h1>
-
-<p>
-<a href="multi1/">Two Independent Dangulars</a>
-</p>
-
-<p>
-<a href="multi2/">Two Scatterplots Sharing a Selection</a>
-</p>
-                <p>&nbsp;</p>
-
-        </div>
     </div>
+</div>
 
+<script type="text/javascript">
+
+(function() {
+
+    function Ctrl1($scope) {
+
+        $scope.dostuff = function() {
+            d3.csv('datah1.csv',function(err,dat){
+                if(err){throw err;}
+
+                $scope.myData = [
+                    {'value': dat[0]['W']},
+                    {'value': dat[0]['L']}
+                ];
+
+                // this forces angular to check for changes in data
+                $scope.$apply();
+
+            });
+        };
+
+        $scope.pushstuff = function() {
+            $scope.myData.push( {'value':20} );
+        };
+
+        $scope.popstuff = function() {
+            $scope.myData.pop();
+        };
+
+        $scope.dostuff();
+
+    };
+
+    var mod = angular.module('myApp',[],function($interpolateProvider) {
+            $interpolateProvider.startSymbol('[[');
+            $interpolateProvider.endSymbol(']]');
+        }
+    );
+
+    var dir = mod.directive('donutChart', function() {
+
+        function link(scope, element, attr) {
+
+            // this is where your D3 code goes
+
+            var data = scope.data;
+            var color = d3.scale.category10();
+
+            // canvas size
+            var width = 300;
+            var height = 300;
+
+            // make the SVG drawing
+            var svg = d3.select(element[0]).append('svg');
+            var pie = d3.layout.pie().sort(null);
+
+            pie.value(function(d){ return d.value; });
+
+            // arc generation
+            var min = Math.min(width, height);
+            var arc = d3.svg.arc()
+                  .outerRadius(min / 2 * 0.9)
+                  .innerRadius(min / 2 * 0.5);
+
+            svg.attr({width: width, height: height});
+
+            var g = svg.append('g')
+                // center the donut chart
+                .attr('transform', 'translate(' + width / 2 + ',' + height / 2 + ')');
+
+            var arcs = g.selectAll('path');
+
+            // this is added so the pie chart will listen for changes in the data
+            scope.$watch('data',function(data) {
+                if(!data){ return; }
+
+                arcs = arcs.data(pie(data));
+                arcs.enter().append('path')
+                  .style('stroke', 'white')
+                  .attr('fill', function(d, i){ return color(i) });
+                arcs.exit().remove();
+                arcs.attr('d', arc);
+
+            }, true);
+        }
+
+        return {
+            link: link,
+            restrict: 'E',
+            scope: { 
+                data: '=' 
+            }
+        }
+    });
+
+    var c = mod.controller("Ctrl1", ["$scope", Ctrl1]);
+
+})();
+
+</script>
 
 
 
@@ -216,4 +282,5 @@ and illustrates how to integrate Pelican with Angular.</p>
 
 </body>
 </html>
+
 
