@@ -75,6 +75,11 @@ and illustrates how to integrate Pelican with Angular.
 <a href="multi1/">Two Independent Dangulars</a>
 </p>
 
+<p>
+<a href="multi2/">Two Scatterplots Sharing a Selection</a>
+</p>
+
+
 
 
 

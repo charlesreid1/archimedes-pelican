@@ -160,7 +160,7 @@
                       scope.$apply(function(){
                         scope.selectedPoint = d;
                       });
-                      d3.selectAll('circle').classed('active',function(e,j){ return j==i; });
+                      d3.selectAll('circle').classed('active',function(e,j){ return i==e['id']; });
                     }
                   })
                   .on('mouseout', function(){
