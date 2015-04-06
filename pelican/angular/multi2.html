@@ -36,6 +36,15 @@
             </iris>
         </div>
 
+        <div ng-show="irisSelected">
+            <p class="lead">class: [[irisSelected.class]]</p>
+            <p>sepal width: [[irisSelected.sepal_width]]</p>
+            <p>sepal length: [[irisSelected.sepal_length]]</p>
+            <p>peal width: [[irisSelected.petal_width]]</p>
+            <p>peal length: [[irisSelected.petal_length]]</p>
+        </div>
+
+
     </div>
 </div>
 
@@ -48,17 +57,15 @@
 
     function Ctrl1($scope,$http,$interval) {
 
-        // we load all of the giants win/loss records into memory,
-        // and loop through them.
         $scope.load_data = function() {
 
             d3.csv('iris.csv',function(err,dat){
                 if(err){throw err;}
 
                 var irisData = [];
-                dat.forEach(function(r){
+                dat.forEach(function(r,j){
 
-                    console.log(r)
+                    r['id'] = j;
                     irisData.push(r);
 
                 });
@@ -70,6 +77,7 @@
             });
         };
         $scope.load_data();
+        $scope.selectedPoint = false;
     };
 
 
@@ -82,8 +90,6 @@
             $interpolateProvider.endSymbol(']]');
         }
     );
-
-
 
 
 
@@ -126,48 +132,53 @@
             scope.$watch('data', update);
 
             function update(){
-              if(!scope.data){ return };
-              var data = scope.data;
+                if(!scope.data){ return };
+                var data = scope.data;
 
-              var x_min = d3.min(data,function(d){return d[scope.xlabel];});
-              var x_max = d3.max(data,function(d){return d[scope.xlabel];});
-              x.domain([x_min,x_max]);
+                var x_min = d3.min(data,function(d){return d[scope.xlabel];});
+                var x_max = d3.max(data,function(d){return d[scope.xlabel];});
+                x.domain([x_min,x_max]);
 
-              var y_min = d3.min(data,function(d){return d[scope.ylabel];});
-              var y_max = d3.max(data,function(d){return d[scope.ylabel];});
-              y.domain([y_min,y_max]);
+                var y_min = d3.min(data,function(d){return d[scope.ylabel];});
+                var y_max = d3.max(data,function(d){return d[scope.ylabel];});
+                y.domain([y_min,y_max]);
 
-              points = points.data(data);
-              points.exit().remove();
-              var point = points.enter().append('g').attr('class', 'point');
+                points = points.data(data);
+                points.exit().remove();
+                var point = points.enter().append('g').attr('class', 'point');
 
-              var cValue = function(d) { return d.class },
-                  color = d3.scale.category10();
+                var cValue = function(d) { return d.class },
+                    color = d3.scale.category10();
 
-              point.append('circle')
-                .attr('r', 5)
-                .style('opacity',0.5)
-                .style('fill', function(d) { return color(cValue(d));}) 
-                .on('mouseover', function(d){
-                  scope.$apply(function(){
-                    scope.selectedPoint = d;
+                // using attr(fill) instead of style(fill) 
+                // allows active class to take precedence
+                point.append('circle')
+                  .attr('r', 5)
+                  .attr('opacity',0.5)
+                  .attr('fill', function(d) { return color(cValue(d)); })
+                  .on({'mouseover': function(d,i){
+                      scope.$apply(function(){
+                        scope.selectedPoint = d;
+                      });
+                      d3.selectAll('circle').classed('active',function(e,j){ return j==i; });
+                    }
+                  })
+                  .on('mouseout', function(){
+                      /*
+                      scope.$apply(function(){
+                          scope.selectedPoint = {};
+                      });
+                      */
+                      d3.selectAll('circle').classed('active',false);
                   });
+
+                // update the position of all the points
+                points.attr('transform', function(d){
+                          return 'translate(' + [x( d[scope.xlabel] ), y(d[scope.ylabel])] + ')';
                 });
 
-              console.log(scope.xlabel);
-              console.log(scope.ylabel);
-
-              // update the position of all the points
-              points.attr('transform', function(d){
-                      console.log(d);
-                      console.log( scope.xlabel );
-                      //console.log( d[scope.xlabel] );
-                      //console.log( x( d[scope.xlabel] ) );
-                      return 'translate(' + [x( d[scope.xlabel] ), y(d[scope.ylabel])] + ')';
-              });
-
-              xAxisG.call(xAxis);
-              yAxisG.call(yAxis);
+                xAxisG.call(xAxis);
+                yAxisG.call(yAxis);
 
             };
 
