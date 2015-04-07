@@ -122,12 +122,41 @@
             x.range([m, w - m]);
             y.range([h - m, m]);
 
+            // axis
+
             var xAxis = d3.svg.axis().scale(x).orient('bottom').ticks(5);
             var yAxis = d3.svg.axis().scale(y).orient('left').ticks(5);
 
             xAxisG.attr('transform', 'translate(' + [0, y.range()[0] + 0.5] + ')');
             yAxisG.attr('transform', 'translate(' + [x.range()[0], 0] + ')');
             update();
+
+            // x axis label
+
+            var xloc = w - (w/2);
+            var yloc = h - (m/10);
+            svg.append("text")
+                .attr("class", "axislabel")
+                .attr("id", "xaxislabel")
+                .attr("text-anchor", "middle")
+                .attr("x",xloc)
+                .attr("y",yloc)
+                .text(scope.xlabel);
+
+            // y axis label
+
+            var xloc = 0 - (h/2);
+            var yloc = -(m/10);
+            svg.append("text")
+                .attr("class", "axislabel")
+                .attr("id", "yaxislabel")
+                .attr("text-anchor", "middle")
+                .attr("x",xloc)
+                .attr("y",yloc)
+                .attr("dy","1em")
+                .attr("transform","rotate(-90)")
+                .text(scope.ylabel);
+
 
             scope.$watch('data', update);
 
