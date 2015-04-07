@@ -81,12 +81,19 @@ TEMPLATE_PAGES['hang2.html'] = 'hang2/index.html'
 TEMPLATE_PAGES['datah1.csv'] = 'hang1/datah1.csv'
 TEMPLATE_PAGES['datah2.csv'] = 'hang2/datah2.csv'
 
+TEMPLATE_PAGES['iris1.csv']   = 'multi1/iris.csv'
 TEMPLATE_PAGES['multi1.html'] = 'multi1/index.html'
-TEMPLATE_PAGES['iris1.csv']    = 'multi1/iris.csv'
 
+TEMPLATE_PAGES['iris2.csv']   = 'multi2/iris.csv'
 TEMPLATE_PAGES['multi2.html'] = 'multi2/index.html'
 TEMPLATE_PAGES['multi2.css']  = 'multi2/multi2.css'
-TEMPLATE_PAGES['iris2.csv']    = 'multi2/iris.csv'
+
+TEMPLATE_PAGES['wine3.csv']   = 'multi3/wine.csv'
+TEMPLATE_PAGES['multi3.html'] = 'multi3/index.html'
+TEMPLATE_PAGES['multi3.css']  = 'multi3/multi3.css'
+TEMPLATE_PAGES['multi3_controller.js']  = 'multi3/multi3_controller.js'
+TEMPLATE_PAGES['multi3_module.js']  = 'multi3/multi3_module.js'
+TEMPLATE_PAGES['multi3_directives.js']  = 'multi3/multi3_directives.js'
 
 
 

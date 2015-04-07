@@ -79,6 +79,9 @@ and illustrates how to integrate Pelican with Angular.
 <a href="multi2/">Two Scatterplots Sharing a Selection</a>
 </p>
 
+<p>
+<a href="multi3/">Exploring a Multidimensional Dataset with D3</a>
+</p>
 
 
 

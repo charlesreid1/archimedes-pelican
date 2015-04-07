@@ -1,0 +1,95 @@
+{% extends 'base_angular.html' %}
+{% set mytitle="Multi 3" %}
+
+{# ----------- title -------------- #}
+{% block title %}{{ mytitle }}{% endblock %}
+
+{# ----------- content ------------- #}
+{% block content %}
+
+{% include 'm3.md' %}
+<hr />
+
+<link href="{{ SITEURL }}/multi3/multi3.css" rel="stylesheet" type="text/css" >
+
+<div ng-app="myApp">
+
+    <div ng-controller="Ctrl1">
+
+        <div class="row">
+
+            <div class="col-sm-6">
+
+                <p class="lead">Select first plot filter: 
+                <select>
+                    <option>Category 1</option>
+                    <option>Category 2</option>
+                    <option>Category 3</option>
+                </select>
+                </p>
+
+            </div>
+
+            <div class="col-sm-6">
+
+                <p class="lead">Select second plot filter: 
+                <select>
+                    <option>Category 1</option>
+                    <option>Category 2</option>
+                    <option>Category 3</option>
+                </select>
+                </p>
+
+            </div>
+        </div>
+
+
+        <div class="row">
+
+            <div class="col-sm-6">
+                <wine 
+                data="wineData" 
+                selected-point="wineSelected"
+                xlabel="alcohol"
+                ylabel="malic_acid">
+                </wine>
+            </div>
+
+            <div class="col-sm-6">
+                <wine 
+                data="wineData" 
+                selected-point="wineSelected"
+                xlabel="magnesium"
+                ylabel="total_phenols">
+                </wine>
+            </div>
+
+        </div>
+
+
+
+        <div class="row">
+
+            <div class="col-sm-6">
+
+                <div ng-show="wineSelected">
+                    <p class="lead">class: [[wineSelected.class]]</p>
+                    <p>alcohol: [[wineSelected.alcohol]]</p>
+                    <p>malic_acid: [[wineSelected.malic_acid]]</p>
+                    <p>magnesium: [[wineSelected.magnesium]]</p>
+                    <p>total_phenols: [[wineSelected.total_phenols]]</p>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+<script type="text/javascript" src="{{ SITEURL }}/multi3/multi3_controller.js"></script>
+<script type="text/javascript" src="{{ SITEURL }}/multi3/multi3_module.js"></script>
+<script type="text/javascript" src="{{ SITEURL }}/multi3/multi3_directives.js"></script>
+
+{% endblock %}
+
