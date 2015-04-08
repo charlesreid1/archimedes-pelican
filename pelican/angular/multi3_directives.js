@@ -11,6 +11,9 @@ var dir = mod.directive('wine', function() {
         var filter = scope.filter;
 
 
+        var color = d3.scale.category10();
+
+
         var el = element[0];
         var svg = d3.select(el).append('svg').attr('class','scatter');
 
@@ -68,7 +71,12 @@ var dir = mod.directive('wine', function() {
         scope.$watch('filter', update);
 
         function update(){
-            if(!scope.data){ return };
+
+            if(!scope.data){ 
+                return 
+            };
+
+
             var data = scope.data;
 
 
@@ -84,15 +92,14 @@ var dir = mod.directive('wine', function() {
             var y_max = d3.max(data,function(d){return +d[scope.ylabel];});
             y.domain([y_min,y_max]);
 
-
+            // --------------------------
             // filter the data here
             var ix = +scope.filter;
-
-            if(ix>0) {
-                console.log('Filtering on index '+ix);
-            } else {
-                console.log('Updating unfiltered data.');
-            }
+            //if(ix>0) {
+            //    console.log('Filtering on index '+ix);
+            //} else {
+            //    console.log('Updating unfiltered data.');
+            //}
 
             filterfunc = function(d) {
                 var condition = ((ix==0) || (d.class==ix));
@@ -101,14 +108,13 @@ var dir = mod.directive('wine', function() {
 
             data = data.filter(filterfunc);
 
-
             points = points.data(data);
             points.exit().remove();
             var point = points.enter().append('g')
-                .attr('class', 'point');
+                .attr('class', 'point')
+                .attr('id', function(d) { return d.id; } );
 
-            var cValue = function(d) { return d.class },
-                color = d3.scale.category10();
+            var cValue = function(d) { return +d.class; };
 
             // using attr(fill) instead of style(fill) 
             // allows active class to take precedence
@@ -116,7 +122,6 @@ var dir = mod.directive('wine', function() {
               .filter(filterfunc)
               .attr('r', 5)
               .attr('opacity',0.5)
-              .attr('fill', function(d) { return color(cValue(d)); })
               .on({'mouseover': function(d,i){
                   scope.$apply(function(){
                     scope.selectedPoint = d;
@@ -133,10 +138,15 @@ var dir = mod.directive('wine', function() {
                   d3.selectAll('circle').classed('active',false);
               });
 
-            // update the position of all the points
-            points.attr('transform', function(d){
-                      return 'translate(' + [x( d[scope.xlabel] ), y(d[scope.ylabel])] + ')';
-            });
+            // update the position and fill of all the points
+            svg.selectAll('g.point')
+              .attr('transform', function(d){
+                return 'translate(' + [x( d[scope.xlabel] ), y(d[scope.ylabel])] + ')';
+              })
+              .attr('fill', function(d) { 
+                var rat = color( +d.class );
+                return rat;
+              });
 
             xAxisG.call(xAxis);
             yAxisG.call(yAxis);

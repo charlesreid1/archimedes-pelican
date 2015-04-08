@@ -3,12 +3,12 @@
 
 function Ctrl1($scope,$http,$interval) {
 
-    /*
     $scope.initialize = function() {
-        $scope.filter1 = 'all';
-        $scope.filter2 = 'all';
-    }
-    */
+        $scope.filter1 = 0;
+        $scope.filter2 = 0;
+        $scope.filter3 = 0;
+        $scope.filter4 = 0;
+    };
 
     $scope.load_data = function() {
 

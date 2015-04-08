@@ -14,10 +14,8 @@
 
 <div ng-app="myApp">
 
-    {#
     <div ng-controller="Ctrl1" ng-init="initialize()">
-    #}
-    <div ng-controller="Ctrl1" ng-init="filter1=0; filter2=0">
+
 
         <div class="row">
 
@@ -32,6 +30,15 @@
                 </select>
                 </p>
 
+                <wine 
+                data="wineData" 
+                filter="filter1"
+                selected-point="wineSelected"
+                xlabel="alcohol"
+                ylabel="malic_acid">
+                </wine>
+
+
             </div>
 
             <div class="col-sm-6">
@@ -45,23 +52,6 @@
                 </select>
                 </p>
 
-            </div>
-        </div>
-
-
-        <div class="row">
-
-            <div class="col-sm-6">
-                <wine 
-                data="wineData" 
-                filter="filter1"
-                selected-point="wineSelected"
-                xlabel="alcohol"
-                ylabel="malic_acid">
-                </wine>
-            </div>
-
-            <div class="col-sm-6">
                 <wine 
                 data="wineData" 
                 filter="filter2"
@@ -69,9 +59,62 @@
                 xlabel="magnesium"
                 ylabel="total_phenols">
                 </wine>
+
             </div>
 
         </div>
+
+
+
+
+
+        <div class="row">
+
+            <div class="col-sm-6">
+
+                <p class="lead">Select third plot filter: 
+                <select ng-model="filter3">
+                    <option value="0" selected>All</option>
+                    <option value="1">Category 1</option>
+                    <option value="2">Category 2</option>
+                    <option value="3">Category 3</option>
+                </select>
+                </p>
+
+                <wine 
+                data="wineData" 
+                filter="filter3"
+                selected-point="wineSelected"
+                xlabel="ash"
+                ylabel="ash_alcalinity">
+                </wine>
+
+
+            </div>
+
+            <div class="col-sm-6">
+
+                <p class="lead">Select fourth plot filter: 
+                <select ng-model="filter4">
+                    <option value="0" selected>All</option>
+                    <option value="1">Category 1</option>
+                    <option value="2">Category 2</option>
+                    <option value="3">Category 3</option>
+                </select>
+                </p>
+
+                <wine 
+                data="wineData" 
+                filter="filter4"
+                selected-point="wineSelected"
+                xlabel="flavanoids"
+                ylabel="proanthocyanins">
+                </wine>
+
+            </div>
+
+        </div>
+
 
 
 
@@ -85,6 +128,10 @@
                     <p>malic_acid: [[wineSelected.malic_acid]]</p>
                     <p>magnesium: [[wineSelected.magnesium]]</p>
                     <p>total_phenols: [[wineSelected.total_phenols]]</p>
+                    <p>ash: [[wineSelected.ash]]</p>
+                    <p>ash_alcalinity: [[wineSelected.ash_alcalinity]]</p>
+                    <p>flavanoids: [[wineSelected.flavanoids]]</p>
+                    <p>proanthocyanins: [[wineSelected.proanthocyanins]]</p>
                 </div>
 
             </div>
