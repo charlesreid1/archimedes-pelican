@@ -14,17 +14,21 @@
 
 <div ng-app="myApp">
 
-    <div ng-controller="Ctrl1">
+    {#
+    <div ng-controller="Ctrl1" ng-init="initialize()">
+    #}
+    <div ng-controller="Ctrl1" ng-init="filter1=0; filter2=0">
 
         <div class="row">
 
             <div class="col-sm-6">
 
                 <p class="lead">Select first plot filter: 
-                <select>
-                    <option>Category 1</option>
-                    <option>Category 2</option>
-                    <option>Category 3</option>
+                <select ng-model="filter1">
+                    <option value="0" selected>All</option>
+                    <option value="1">Category 1</option>
+                    <option value="2">Category 2</option>
+                    <option value="3">Category 3</option>
                 </select>
                 </p>
 
@@ -33,10 +37,11 @@
             <div class="col-sm-6">
 
                 <p class="lead">Select second plot filter: 
-                <select>
-                    <option>Category 1</option>
-                    <option>Category 2</option>
-                    <option>Category 3</option>
+                <select ng-model="filter2">
+                    <option value="0" selected>All</option>
+                    <option value="1">Category 1</option>
+                    <option value="2">Category 2</option>
+                    <option value="3">Category 3</option>
                 </select>
                 </p>
 
@@ -49,6 +54,7 @@
             <div class="col-sm-6">
                 <wine 
                 data="wineData" 
+                filter="filter1"
                 selected-point="wineSelected"
                 xlabel="alcohol"
                 ylabel="malic_acid">
@@ -58,6 +64,7 @@
             <div class="col-sm-6">
                 <wine 
                 data="wineData" 
+                filter="filter2"
                 selected-point="wineSelected"
                 xlabel="magnesium"
                 ylabel="total_phenols">

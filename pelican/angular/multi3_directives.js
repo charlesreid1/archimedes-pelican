@@ -8,6 +8,9 @@ var dir = mod.directive('wine', function() {
         scope.xlabel = attr.xlabel;
         scope.ylabel = attr.ylabel;
 
+        var filter = scope.filter;
+
+
         var el = element[0];
         var svg = d3.select(el).append('svg').attr('class','scatter');
 
@@ -62,10 +65,13 @@ var dir = mod.directive('wine', function() {
 
 
         scope.$watch('data', update);
+        scope.$watch('filter', update);
 
         function update(){
             if(!scope.data){ return };
             var data = scope.data;
+
+
 
             // NOTE: the +d notation forces D3 to return the data
             // as a float. This is because D3 treats integers as strings
@@ -78,9 +84,28 @@ var dir = mod.directive('wine', function() {
             var y_max = d3.max(data,function(d){return +d[scope.ylabel];});
             y.domain([y_min,y_max]);
 
+
+            // filter the data here
+            var ix = +scope.filter;
+
+            if(ix>0) {
+                console.log('Filtering on index '+ix);
+            } else {
+                console.log('Updating unfiltered data.');
+            }
+
+            filterfunc = function(d) {
+                var condition = ((ix==0) || (d.class==ix));
+                return condition;
+            };
+
+            data = data.filter(filterfunc);
+
+
             points = points.data(data);
             points.exit().remove();
-            var point = points.enter().append('g').attr('class', 'point');
+            var point = points.enter().append('g')
+                .attr('class', 'point');
 
             var cValue = function(d) { return d.class },
                 color = d3.scale.category10();
@@ -88,6 +113,7 @@ var dir = mod.directive('wine', function() {
             // using attr(fill) instead of style(fill) 
             // allows active class to take precedence
             point.append('circle')
+              .filter(filterfunc)
               .attr('r', 5)
               .attr('opacity',0.5)
               .attr('fill', function(d) { return color(cValue(d)); })
@@ -124,6 +150,7 @@ var dir = mod.directive('wine', function() {
         restrict: 'E',
         scope: { 
             data: '=',
+            filter: '=',
             selectedPoint: '=',
             xlabel: '=',
             ylabel: '='
