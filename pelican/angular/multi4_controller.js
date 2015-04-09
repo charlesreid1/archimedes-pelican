@@ -31,6 +31,18 @@ function Ctrl1($scope,$http,$interval) {
 
 
 
+
+    $scope.similarCombo = function() {
+        $scope.myfilter1 = 2;
+        $scope.myfilter2 = 3;
+    }
+    $scope.differentCombo = function() {
+        $scope.myfilter1 = 1;
+        $scope.myfilter2 = 8;
+    }
+
+
+
     // when the user clicks the button to get a random combo,
     // do it
     $scope.getRandomInt = function(min, max) {
