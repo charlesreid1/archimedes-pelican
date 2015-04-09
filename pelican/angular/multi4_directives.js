@@ -144,6 +144,18 @@ var dir = mod.directive('wine', function() {
                 return rat;
               });
 
+            //console.log('---------------');
+            //console.log("color(1): "+color(1));
+            //console.log("color(2): "+color(2));
+            //console.log("color(3): "+color(3));
+            //console.log("color(4): "+color(4));
+            //console.log("color(5): "+color(5));
+            //console.log("color(6): "+color(6));
+            //console.log("color(7): "+color(7));
+            //console.log("color(8): "+color(8));
+            //console.log("color(9): "+color(9));
+            //console.log('---------------');
+
             xAxisG.call(xAxis);
             yAxisG.call(yAxis);
 
