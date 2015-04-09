@@ -148,6 +148,23 @@
 <div class="container" id="bodycontainer">
 
 
+Here we visualize a 13-dimensional data set 
+consisting of characteristics of 13 different
+wines. This data set is a common data set for
+machine learning classification algorithms.
+There are three classes corresponding to three wines
+from the same region of Italy.
+
+<br />
+<br />
+
+This paticular example illustrates how to combine HTML inputs
+in the form of buttons to compare classes of data against 
+one another.
+ 
+By selecting from the nine different categories with HTML buttons,
+the data is automatically filtered for display.
+
 <hr />
 
 <link href="/archimedes-pelican/multi4/multi4.css" rel="stylesheet" type="text/css" >
@@ -158,36 +175,79 @@
 
         <div class="row">
 
-            <div class="col-sm-6">
+
+
+            <div class="col-sm-3">
 
                 <p class="lead">Select first category: 
-                <select ng-model="myfilter1">
-                    <option value="0" selected>None</option>
-                    <option value="1">Category 1</option>
-                    <option value="2">Category 2</option>
-                    <option value="3">Category 3</option>
-                </select>
-                </p>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                    Category [[myfilter1]] <span class="caret"></span>
+                    </button>
+
+                    <ul class="dropdown-menu" role="menu">
+                        <li class="divider"></li>
+                        <li><a ng-click="setFilter1(1)">Category 1</a></li>
+                        <li><a ng-click="setFilter1(2)">Category 2</a></li>
+                        <li><a ng-click="setFilter1(3)">Category 3</a></li>
+                        <li><a ng-click="setFilter1(4)">Category 4</a></li>
+                        <li><a ng-click="setFilter1(5)">Category 5</a></li>
+                        <li><a ng-click="setFilter1(6)">Category 6</a></li>
+                        <li><a ng-click="setFilter1(7)">Category 7</a></li>
+                        <li><a ng-click="setFilter1(8)">Category 8</a></li>
+                        <li><a ng-click="setFilter1(9)">Category 9</a></li>
+                    </ul>
+
+                </div>
 
             </div>
 
-            <div class="col-sm-6">
+            <div class="col-sm-3">
 
                 <p class="lead">Select second category: 
-                <select ng-model="myfilter2">
-                    <option value="0" selected>None</option>
-                    <option value="1">Category 1</option>
-                    <option value="2">Category 2</option>
-                    <option value="3">Category 3</option>
-                </select>
-                </p>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                    Category [[myfilter2]] <span class="caret"></span>
+                    </button>
+
+                    <ul class="dropdown-menu" role="menu">
+                        <li class="divider"></li>
+                        <li><a ng-click="setFilter2(1)">Category 1</a></li>
+                        <li><a ng-click="setFilter2(2)">Category 2</a></li>
+                        <li><a ng-click="setFilter2(3)">Category 3</a></li>
+                        <li><a ng-click="setFilter2(4)">Category 4</a></li>
+                        <li><a ng-click="setFilter2(5)">Category 5</a></li>
+                        <li><a ng-click="setFilter2(6)">Category 6</a></li>
+                        <li><a ng-click="setFilter2(7)">Category 7</a></li>
+                        <li><a ng-click="setFilter2(8)">Category 8</a></li>
+                        <li><a ng-click="setFilter2(9)">Category 9</a></li>
+                    </ul>
+
+                </div>
 
             </div>
 
         </div>
-
-
-
+        <br />
+        <div class="row">
+            <div class="col-md-8">
+                <p>
+                <button class="btn btn-large btn-success" ng-click="randomCombo()">
+                    Generate Random Combo
+                </button>
+                &nbsp;
+                &nbsp;
+                <button class="btn btn-large btn-success" ng-click="similarCombo()">
+                    Similar Data
+                </button>
+                &nbsp;
+                &nbsp;
+                <button class="btn btn-large btn-success" ng-click="differentCombo()">
+                    Dissimilar Data
+                </button>
+                </p>
+            </div>
+        </div>
         <div class="row">
 
             <div class="col-sm-6">
