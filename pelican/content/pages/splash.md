@@ -83,6 +83,13 @@ and illustrates how to integrate Pelican with Angular.
 <a href="multi3/">Exploring a Multidimensional Dataset with D3</a>
 </p>
 
+<p>
+<a href="multi4/">Compare/Contrast Entities with D3</a>
+</p>
+
+
+<h1><b>Stacked Dangulars <small>Tabs to Navigate Datasets</small></b></h1>
+
 
 
 

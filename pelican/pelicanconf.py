@@ -88,12 +88,21 @@ TEMPLATE_PAGES['iris2.csv']   = 'multi2/iris.csv'
 TEMPLATE_PAGES['multi2.html'] = 'multi2/index.html'
 TEMPLATE_PAGES['multi2.css']  = 'multi2/multi2.css'
 
-TEMPLATE_PAGES['wine3.csv']   = 'multi3/wine.csv'
-TEMPLATE_PAGES['multi3.html'] = 'multi3/index.html'
-TEMPLATE_PAGES['multi3.css']  = 'multi3/multi3.css'
+TEMPLATE_PAGES['wine3.csv']             = 'multi3/wine.csv'
+TEMPLATE_PAGES['multi3.html']           = 'multi3/index.html'
+TEMPLATE_PAGES['multi3.css']            = 'multi3/multi3.css'
 TEMPLATE_PAGES['multi3_controller.js']  = 'multi3/multi3_controller.js'
-TEMPLATE_PAGES['multi3_module.js']  = 'multi3/multi3_module.js'
+TEMPLATE_PAGES['multi3_module.js']      = 'multi3/multi3_module.js'
 TEMPLATE_PAGES['multi3_directives.js']  = 'multi3/multi3_directives.js'
+
+TEMPLATE_PAGES['wine4.csv']             = 'multi4/wine.csv'
+TEMPLATE_PAGES['multi4.html']           = 'multi4/index.html'
+TEMPLATE_PAGES['multi4.css']            = 'multi4/multi4.css'
+TEMPLATE_PAGES['multi4_controller.js']  = 'multi4/multi4_controller.js'
+TEMPLATE_PAGES['multi4_module.js']      = 'multi4/multi4_module.js'
+TEMPLATE_PAGES['multi4_directives.js']  = 'multi4/multi4_directives.js'
+
+
 
 
 
