@@ -8,11 +8,7 @@ var dir = mod.directive('wine', function() {
         scope.xlabel = attr.xlabel;
         scope.ylabel = attr.ylabel;
 
-        var filter = scope.filter;
-
-
         var color = d3.scale.category10();
-
 
         var el = element[0];
         var svg = d3.select(el).append('svg').attr('class','scatter');
@@ -67,19 +63,16 @@ var dir = mod.directive('wine', function() {
             .text(scope.ylabel);
 
 
+        scope.$watch('filter1', update);
+        scope.$watch('filter2', update);
         scope.$watch('data', update);
-        scope.$watch('filter', update);
 
         function update(){
-
             if(!scope.data){ 
                 return 
             };
 
-
             var data = scope.data;
-
-
 
             // NOTE: the +d notation forces D3 to return the data
             // as a float. This is because D3 treats integers as strings
@@ -94,14 +87,23 @@ var dir = mod.directive('wine', function() {
 
             // --------------------------
             // filter the data here
-            var ix = +scope.filter;
+
+            var ix1 = +scope.filter1;
+            var ix2 = +scope.filter2;
 
             filterfunc = function(d) {
-                var condition = ((ix==0) || (d.class==ix));
+                var condition=false;
+                if (d.class==ix1) {
+                    condition = true;
+                }
+                if (d.class==ix2) { 
+                    condition = true;
+                }
                 return condition;
             };
 
             data = data.filter(filterfunc);
+
 
             points = points.data(data);
             points.exit().remove();
@@ -114,7 +116,6 @@ var dir = mod.directive('wine', function() {
             // using attr(fill) instead of style(fill) 
             // allows active class to take precedence
             point.append('circle')
-              .filter(filterfunc)
               .attr('r', 5)
               .attr('opacity',0.5)
               .on({'mouseover': function(d,i){
@@ -155,7 +156,8 @@ var dir = mod.directive('wine', function() {
         restrict: 'E',
         scope: { 
             data: '=',
-            filter: '=',
+            filter1: '=',
+            filter2: '=',
             selectedPoint: '=',
             xlabel: '=',
             ylabel: '='

@@ -1,0 +1,114 @@
+{% extends 'base_angular.html' %}
+{% set mytitle="Multi 4" %}
+
+{# ----------- title -------------- #}
+{% block title %}{{ mytitle }}{% endblock %}
+
+{# ----------- content ------------- #}
+{% block content %}
+
+{#
+{% include 'm4.md' %}
+#}
+<hr />
+
+<link href="{{ SITEURL }}/multi4/multi4.css" rel="stylesheet" type="text/css" >
+
+<div ng-app="myApp">
+
+    <div ng-controller="Ctrl1" ng-init="initialize()">
+
+        <div class="row">
+
+            <div class="col-sm-6">
+
+                <p class="lead">Select first category: 
+                <select ng-model="myfilter1">
+                    <option value="0" selected>None</option>
+                    <option value="1">Category 1</option>
+                    <option value="2">Category 2</option>
+                    <option value="3">Category 3</option>
+                </select>
+                </p>
+
+            </div>
+
+            <div class="col-sm-6">
+
+                <p class="lead">Select second category: 
+                <select ng-model="myfilter2">
+                    <option value="0" selected>None</option>
+                    <option value="1">Category 1</option>
+                    <option value="2">Category 2</option>
+                    <option value="3">Category 3</option>
+                </select>
+                </p>
+
+            </div>
+
+        </div>
+
+
+
+        <div class="row">
+
+            <div class="col-sm-6">
+
+                <wine 
+                data="wineData" 
+                filter1="myfilter1"
+                filter2="myfilter2"
+                selected-point="wineSelected"
+                xlabel="ash"
+                ylabel="ash_alcalinity">
+                </wine>
+
+            </div>
+
+            <div class="col-sm-6">
+
+                <wine 
+                data="wineData" 
+                filter1="myfilter1"
+                filter2="myfilter2"
+                selected-point="wineSelected"
+                xlabel="flavanoids"
+                ylabel="proanthocyanins">
+                </wine>
+
+            </div>
+
+        </div>
+
+
+
+
+        <div class="row">
+
+            <div class="col-sm-6">
+
+                <div ng-show="wineSelected">
+                    <p class="lead">class: [[wineSelected.class]]</p>
+                    <p>alcohol: [[wineSelected.alcohol]]</p>
+                    <p>malic_acid: [[wineSelected.malic_acid]]</p>
+                    <p>magnesium: [[wineSelected.magnesium]]</p>
+                    <p>total_phenols: [[wineSelected.total_phenols]]</p>
+                    <p>ash: [[wineSelected.ash]]</p>
+                    <p>ash_alcalinity: [[wineSelected.ash_alcalinity]]</p>
+                    <p>flavanoids: [[wineSelected.flavanoids]]</p>
+                    <p>proanthocyanins: [[wineSelected.proanthocyanins]]</p>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+<script type="text/javascript" src="{{ SITEURL }}/multi4/multi4_controller.js"></script>
+<script type="text/javascript" src="{{ SITEURL }}/multi4/multi4_module.js"></script>
+<script type="text/javascript" src="{{ SITEURL }}/multi4/multi4_directives.js"></script>
+
+{% endblock %}
+
