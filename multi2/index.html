@@ -148,22 +148,31 @@
 <div class="container" id="bodycontainer">
 
 
-Illustrates the use of a custom angular directive 
-that can take arguments for the variables to plot
-on the x and y axis.
+Example illustrating the use of a custom Angular directive
+that takes arguments for the x- and y-axis variables to plot. 
+This is used to make two scatter plots.
 
 <br />
 <br />
 
-To share a selection between the two, the <code>irisSelected</code>
-variable is used. 
+The scatter plots also share a selection via the <code>irisSelected</code>
+variable. Any selected point on a chart is stored in the <code>irisSelected</code> 
+variable. This makes it accessible to other parts of the page.
 
-However, with Angular, <code>ng-init</code> creates
-a new property for each element, meaning there are by default two 
-instances of <code>irisSelected</code> created - one for each 
-Angular scatterplot directive.
+<br />
+<br />
 
+More importantly, the <code>irisSelected</code> variable provides a mechanism for 
+linking charts with shared information independently, obviating the need for 
+hard-coded chart linking through, e.g., mouseover or mouseout events.
 
+<br />
+<br />
+
+With this Angular approach, charts do not need to know about each other.
+They only need to know about the controller. 
+The controller manages the global variable scope and the
+shared variables contained therein.
 <hr />
 
 <link href="/archimedes-pelican/multi2/multi2.css" rel="stylesheet" type="text/css" >
@@ -278,12 +287,41 @@ Angular scatterplot directive.
             x.range([m, w - m]);
             y.range([h - m, m]);
 
+            // axis
+
             var xAxis = d3.svg.axis().scale(x).orient('bottom').ticks(5);
             var yAxis = d3.svg.axis().scale(y).orient('left').ticks(5);
 
             xAxisG.attr('transform', 'translate(' + [0, y.range()[0] + 0.5] + ')');
             yAxisG.attr('transform', 'translate(' + [x.range()[0], 0] + ')');
             update();
+
+            // x axis label
+
+            var xloc = w - (w/2);
+            var yloc = h - (m/10);
+            svg.append("text")
+                .attr("class", "axislabel")
+                .attr("id", "xaxislabel")
+                .attr("text-anchor", "middle")
+                .attr("x",xloc)
+                .attr("y",yloc)
+                .text(scope.xlabel);
+
+            // y axis label
+
+            var xloc = 0 - (h/2);
+            var yloc = -(m/10);
+            svg.append("text")
+                .attr("class", "axislabel")
+                .attr("id", "yaxislabel")
+                .attr("text-anchor", "middle")
+                .attr("x",xloc)
+                .attr("y",yloc)
+                .attr("dy","1em")
+                .attr("transform","rotate(-90)")
+                .text(scope.ylabel);
+
 
             scope.$watch('data', update);
 

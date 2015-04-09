@@ -148,130 +148,105 @@
 <div class="container" id="bodycontainer">
 
 
-This example mashes up the interactive donut chart example
-with importing CSV data from an external file. 
-The interactive controls for the pie chart are the same
-as in a previous example, but the initial pie chart data 
-is loaded from an external CSV file.
 <hr />
+
+<link href="/archimedes-pelican/multi4/multi4.css" rel="stylesheet" type="text/css" >
 
 <div ng-app="myApp">
 
-    <div ng-controller="Ctrl1">
+    <div ng-controller="Ctrl1" ng-init="initialize()">
 
-        <p>A dynamic donut chart:</p>
+        <div class="row">
 
-        <input type="range" style="width: 100px;" ng-model="slice.value" ng-repeat="slice in myData track by $index" />
+            <div class="col-sm-6">
 
-        <p><a class="btn btn-large btn-primary" ng-click="dostuff()">reset stuff</a> </p>
-        <p><a class="btn btn-large btn-primary" ng-click="pushstuff()">push stuff</a> </p>
-        <p><a class="btn btn-large btn-primary" ng-click="popstuff()">pop stuff</a> </p>
+                <p class="lead">Select first category: 
+                <select ng-model="myfilter1">
+                    <option value="0" selected>None</option>
+                    <option value="1">Category 1</option>
+                    <option value="2">Category 2</option>
+                    <option value="3">Category 3</option>
+                </select>
+                </p>
 
-        <donut-chart data="myData"></donut-chart>
+            </div>
+
+            <div class="col-sm-6">
+
+                <p class="lead">Select second category: 
+                <select ng-model="myfilter2">
+                    <option value="0" selected>None</option>
+                    <option value="1">Category 1</option>
+                    <option value="2">Category 2</option>
+                    <option value="3">Category 3</option>
+                </select>
+                </p>
+
+            </div>
+
+        </div>
+
+
+
+        <div class="row">
+
+            <div class="col-sm-6">
+
+                <wine 
+                data="wineData" 
+                filter1="myfilter1"
+                filter2="myfilter2"
+                selected-point="wineSelected"
+                xlabel="ash"
+                ylabel="ash_alcalinity">
+                </wine>
+
+            </div>
+
+            <div class="col-sm-6">
+
+                <wine 
+                data="wineData" 
+                filter1="myfilter1"
+                filter2="myfilter2"
+                selected-point="wineSelected"
+                xlabel="flavanoids"
+                ylabel="proanthocyanins">
+                </wine>
+
+            </div>
+
+        </div>
+
+
+
+
+        <div class="row">
+
+            <div class="col-sm-6">
+
+                <div ng-show="wineSelected">
+                    <p class="lead">class: [[wineSelected.class]]</p>
+                    <p>alcohol: [[wineSelected.alcohol]]</p>
+                    <p>malic_acid: [[wineSelected.malic_acid]]</p>
+                    <p>magnesium: [[wineSelected.magnesium]]</p>
+                    <p>total_phenols: [[wineSelected.total_phenols]]</p>
+                    <p>ash: [[wineSelected.ash]]</p>
+                    <p>ash_alcalinity: [[wineSelected.ash_alcalinity]]</p>
+                    <p>flavanoids: [[wineSelected.flavanoids]]</p>
+                    <p>proanthocyanins: [[wineSelected.proanthocyanins]]</p>
+                </div>
+
+            </div>
+
+        </div>
 
     </div>
 </div>
 
-<script type="text/javascript">
-
-(function() {
-
-    function Ctrl1($scope) {
-
-        $scope.dostuff = function() {
-            d3.csv('datah1.csv',function(err,dat){
-                if(err){throw err;}
-
-                $scope.myData = [
-                    {'value': dat[0]['W']},
-                    {'value': dat[0]['L']}
-                ];
-
-                // this forces angular to check for changes in data
-                $scope.$apply();
-
-            });
-        };
-
-        $scope.pushstuff = function() {
-            $scope.myData.push( {'value':20} );
-        };
-
-        $scope.popstuff = function() {
-            $scope.myData.pop();
-        };
-
-        $scope.dostuff();
-
-    };
-
-    var mod = angular.module('myApp',[],function($interpolateProvider) {
-            $interpolateProvider.startSymbol('[[');
-            $interpolateProvider.endSymbol(']]');
-        }
-    );
-
-    var dir = mod.directive('donutChart', function() {
-
-        function link(scope, element, attr) {
-
-            // this is where your D3 code goes
-
-            var data = scope.data;
-            var color = d3.scale.category10();
-
-            // canvas size
-            var width = 300;
-            var height = 300;
-
-            // make the SVG drawing
-            var svg = d3.select(element[0]).append('svg');
-            var pie = d3.layout.pie().sort(null);
-
-            pie.value(function(d){ return d.value; });
-
-            // arc generation
-            var min = Math.min(width, height);
-            var arc = d3.svg.arc()
-                  .outerRadius(min / 2 * 0.9)
-                  .innerRadius(min / 2 * 0.5);
-
-            svg.attr({width: width, height: height});
-
-            var g = svg.append('g')
-                // center the donut chart
-                .attr('transform', 'translate(' + width / 2 + ',' + height / 2 + ')');
-
-            var arcs = g.selectAll('path');
-
-            // this is added so the pie chart will listen for changes in the data
-            scope.$watch('data',function(data) {
-                if(!data){ return; }
-
-                arcs = arcs.data(pie(data));
-                arcs.enter().append('path')
-                  .style('stroke', 'white')
-                  .attr('fill', function(d, i){ return color(i) });
-                arcs.exit().remove();
-                arcs.attr('d', arc);
-
-            }, true);
-        }
-
-        return {
-            link: link,
-            restrict: 'E',
-            scope: { 
-                data: '=' 
-            }
-        }
-    });
-
-    var c = mod.controller("Ctrl1", ["$scope", Ctrl1]);
-
-})();
-
-</script>
+<script type="text/javascript" src="/archimedes-pelican/multi4/multi4_controller.js"></script>
+<script type="text/javascript" src="/archimedes-pelican/multi4/multi4_module.js"></script>
+<script type="text/javascript" src="/archimedes-pelican/multi4/multi4_directives.js"></script>
 
 
 
