@@ -8,7 +8,22 @@ var dir = mod.directive('wine', function() {
         scope.xlabel = attr.xlabel;
         scope.ylabel = attr.ylabel;
 
-        var color = d3.scale.category10();
+
+
+        ///////////////////////
+        // here, we have to create a linear array, 1..9
+        // then we set that as the domain of the color scale.
+        // otherwise, colors will be assigned on a first-come-first-serve basis.
+        //
+        // also, we should be using coffeescript...
+        // then we could just say
+        // 1..9
+        //
+        var list = [];
+        for (var i = 1; i <= 9; i++) {
+                list.push(i);
+        }
+        var color = d3.scale.category10().domain(list);
 
         var el = element[0];
         var svg = d3.select(el).append('svg').attr('class','scatter');
@@ -72,6 +87,9 @@ var dir = mod.directive('wine', function() {
                 return 
             };
 
+            console.log('==================');
+            console.log('UPDATE()');
+
             var data = scope.data;
 
             // NOTE: the +d notation forces D3 to return the data
@@ -104,26 +122,54 @@ var dir = mod.directive('wine', function() {
 
             data = data.filter(filterfunc);
 
-
             points = points.data(data);
+
             points.exit().remove();
             var point = points.enter().append('g')
-                .attr('class', 'point')
-                .attr('id', function(d) { return d.id; } );
+              .attr('class', 'point');
+              //.attr('id',function(d) {
+              //    console.log(d);
+              //    return d.id;
+              //});
 
-            var cValue = function(d) { return +d.class; };
+            point.append('circle')
+              .attr('r', 5)
+              .attr('opacity',0.5);
+
+              //.attr('id', function(d) {
+              //  var did = d.id;
+              //  return did; 
+              //});
 
             // using attr(fill) instead of style(fill) 
             // allows active class to take precedence
-            point.append('circle')
-              .attr('r', 5)
-              .attr('opacity',0.5)
-              .on({'mouseover': function(d,i){
+
+            // update the position and fill of all the points
+
+            svg.selectAll('g.point')
+              .attr('transform', function(d){
+                return 'translate(' + [x( d[scope.xlabel] ), y(d[scope.ylabel])] + ')';
+              })
+              .attr('id', function(d) {
+                //console.log(d);
+                return d.id; 
+              })
+              .attr('fill', function(d) { 
+                var rat = color( +d.class );
+                return rat;
+              })
+              .on('mouseover', function(d){
                   scope.$apply(function(){
                     scope.selectedPoint = d;
                   });
-                  d3.selectAll('circle').classed('active',function(e,j){ return i==e['id']; });
-                }
+                  d3.selectAll('g.point').classed('active',function(e){
+                      var did = +d['id'];
+                      var eid = e['id'];
+                      if(did==eid) {
+                          console.log(e);
+                      }
+                      return did==eid;
+                  });
               })
               .on('mouseout', function(){
                   /*
@@ -131,30 +177,9 @@ var dir = mod.directive('wine', function() {
                       scope.selectedPoint = {};
                   });
                   */
-                  d3.selectAll('circle').classed('active',false);
+                  d3.selectAll('g.point').classed('active',false);
               });
 
-            // update the position and fill of all the points
-            svg.selectAll('g.point')
-              .attr('transform', function(d){
-                return 'translate(' + [x( d[scope.xlabel] ), y(d[scope.ylabel])] + ')';
-              })
-              .attr('fill', function(d) { 
-                var rat = color( +d.class );
-                return rat;
-              });
-
-            //console.log('---------------');
-            //console.log("color(1): "+color(1));
-            //console.log("color(2): "+color(2));
-            //console.log("color(3): "+color(3));
-            //console.log("color(4): "+color(4));
-            //console.log("color(5): "+color(5));
-            //console.log("color(6): "+color(6));
-            //console.log("color(7): "+color(7));
-            //console.log("color(8): "+color(8));
-            //console.log("color(9): "+color(9));
-            //console.log('---------------');
 
             xAxisG.call(xAxis);
             yAxisG.call(yAxis);

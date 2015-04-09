@@ -16,10 +16,8 @@ function Ctrl1($scope,$http,$interval) {
 
             var wineData = [];
             dat.forEach(function(r,j){
-
                 r['id'] = j;
                 wineData.push(r);
-
             });
             $scope.wineData = wineData;
 
@@ -29,7 +27,7 @@ function Ctrl1($scope,$http,$interval) {
         });
     };
     $scope.load_data();
-    $scope.selectedPoint = false;
+    $scope.selectedPoint = {};
 
 
 

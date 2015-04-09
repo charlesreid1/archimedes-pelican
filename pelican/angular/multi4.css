@@ -1,3 +1,7 @@
+ul.dropdown-menu li { 
+    cursor: pointer; 
+}
+
 .scatter-container {
   width: 50%;
   float: left;
@@ -24,8 +28,7 @@ circle {
 }
 
 
-
-circle.active {
+.active circle {
   stroke: black;
   fill: red;
   opacity: 1.0;
