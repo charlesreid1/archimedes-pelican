@@ -58,34 +58,30 @@ function Ctrl1($scope,$http,$interval) {
     ////////////////////////////
     // Tab Actions
     // (construct the various pages)
-    // 
+    //
+    var elem = $scope.get_root_elem();
+
     $scope.tab_home = function() { 
-        var elem = $scope.get_root_elem();
         construct_home(elem);
     };
 
     $scope.tab_categories = function() { 
-        var elem = $scope.get_root_elem();
         construct_categories(elem);
     };
 
     $scope.tab_singleset = function() { 
-        var elem = $scope.get_root_elem();
         //construct_single(elem);
     };
 
     $scope.tab_sunburst = function() { 
-        var elem = $scope.get_root_elem();
         //construct_sunburst(elem);
     };
 
     $scope.tab_end = function() { 
-        var elem = $scope.get_root_elem();
         //construct_end(elem);
     };
 
     $scope.tab_explore = function() { 
-        var elem = $scope.get_root_elem();
         //construct_explore(elem);
     };
 
