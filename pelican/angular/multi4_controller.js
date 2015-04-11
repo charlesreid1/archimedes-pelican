@@ -3,7 +3,6 @@
 
 function Ctrl1($scope,$http,$interval) {
 
-
     $scope.initialize = function() {
         $scope.myfilter1 = 0;
         $scope.myfilter2 = 0;
