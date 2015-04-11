@@ -103,12 +103,17 @@ TEMPLATE_PAGES['multi4_module.js']      = 'multi4/multi4_module.js'
 TEMPLATE_PAGES['multi4_directives.js']  = 'multi4/multi4_directives.js'
 
 
-
-TEMPLATE_PAGES['tax-data.csv']          = 'page1/wine.csv'
 TEMPLATE_PAGES['page1.html']            = 'page1/index.html'
 TEMPLATE_PAGES['page1.css']             = 'page1/page1.css'
 TEMPLATE_PAGES['page1_module.js']       = 'page1/page1_module.js'
 TEMPLATE_PAGES['page1_controller.js']   = 'page1/page1_controller.js'
+
+TEMPLATE_PAGES['tax-data.csv']        = 'tax/tax-data.csv'
+TEMPLATE_PAGES['tax.html']            = 'tax/index.html'
+TEMPLATE_PAGES['tax.css']             = 'tax/tax.css'
+TEMPLATE_PAGES['tax_module.js']       = 'tax/tax_module.js'
+TEMPLATE_PAGES['tax_controller.js']   = 'tax/tax_controller.js'
+TEMPLATE_PAGES['tax_pages.js']        = 'tax/tax_pages.js'
 
 
 
