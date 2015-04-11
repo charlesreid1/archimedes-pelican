@@ -18,15 +18,18 @@ function Ctrl1($scope,$http,$interval) {
     //
     $scope.load_data = function() {
 
-        d3.csv('tax-data.csv',function(err,dat){
+        d3.json('tax-data2.json',function(err,dat){
             if(err){throw err;}
 
+            $scope.data = dat;
+            /*
             var taxData = [];
             dat.forEach(function(r,j){
                 r['id'] = j;
                 taxData.push(r);
             });
             $scope.taxData = taxData;
+            */
 
             // this forces angular to check for changes in data
             $scope.$apply();
@@ -91,8 +94,6 @@ function Ctrl1($scope,$http,$interval) {
 
 
 
-
-    var n = 3;
 
     // when the user clicks the button to get a random combo,
     // do it

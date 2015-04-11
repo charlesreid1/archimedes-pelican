@@ -1,196 +1,183 @@
-/////////////////////////
-// Directive <wine>
 
-var dir = mod.directive('wine', function() {
+var dir = mod.directive('helloworld',function() {
+    console.log('like yea whatevs');
+    // TODO: finish 
+    function link(scope, element, attr) { 
+        //var template = "<button>whatevs</button>";
+        //var linkFn = $compile(template);
+        //var content = linkFn(scope);
+        //element.append(content);
+        console.log('uhhh whatevs');
+    };
+    return {
+        link: link,
+        restrict: 'E',
+        compile: function(ele,att) {
+            var rat = "<helloworld></helloworld>";
+            var newele = $(rat);
+            ele.append(newele);
+        }
+    };
+});
+
+
+
+/////////////////////////
+// Directive <taxcategories>
+
+var dir2 = mod.directive('taxcategories', function() {
 
     function link(scope, element, attr) {
 
-        scope.xlabel = attr.xlabel;
-        scope.ylabel = attr.ylabel;
+        data = scope.data;
 
-
-
-        ///////////////////////
-        // here, we have to create a linear array, 1..9
-        // then we set that as the domain of the color scale.
-        // otherwise, colors will be assigned on a first-come-first-serve basis.
-        //
-        // also, we should be using coffeescript...
-        // then we could just say
-        // 1..9
-        //
-        var list = [];
-        for (var i = 1; i <= 9; i++) {
-                list.push(i);
-        }
-        var color = d3.scale.category10().domain(list);
-
-        var el = element[0];
-        var svg = d3.select(el).append('svg').attr('class','scatter');
-
-        var w = 400;
-        var h = 400;
-        svg.attr({width: w, height: h});
-
-        var xAxisG = svg.append('g').attr('class', 'x-axis');
-        var yAxisG = svg.append('g').attr('class', 'y-axis');
-        var points = svg.append('g').attr('class', 'points').selectAll('g.point');
-        var x = d3.scale.linear();
-        var y = d3.scale.linear();
-
-        var m = 50;
-        x.range([m, w - m]);
-        y.range([h - m, m]);
-
-        // axis
-
-        var xAxis = d3.svg.axis().scale(x).orient('bottom').ticks(5);
-        var yAxis = d3.svg.axis().scale(y).orient('left').ticks(5);
-
-        xAxisG.attr('transform', 'translate(' + [0, y.range()[0] + 0.5] + ')');
-        yAxisG.attr('transform', 'translate(' + [x.range()[0], 0] + ')');
-        update();
-
-        // x axis label
-
-        var xloc = w - (w/2);
-        var yloc = h - (m/10);
-        svg.append("text")
-            .attr("class", "axislabel")
-            .attr("id", "xaxislabel")
-            .attr("text-anchor", "middle")
-            .attr("x",xloc)
-            .attr("y",yloc)
-            .text(scope.xlabel);
-
-        // y axis label
-
-        var xloc = 0 - (h/2);
-        var yloc = -(m/10);
-        svg.append("text")
-            .attr("class", "axislabel")
-            .attr("id", "yaxislabel")
-            .attr("text-anchor", "middle")
-            .attr("x",xloc)
-            .attr("y",yloc)
-            .attr("dy","1em")
-            .attr("transform","rotate(-90)")
-            .text(scope.ylabel);
-
-
-        scope.$watch('filter1', update);
-        scope.$watch('filter2', update);
-        scope.$watch('data', update);
-
-        function update(){
-            if(!scope.data){ 
-                return 
-            };
-
-            console.log('==================');
-            console.log('UPDATE()');
-
-            var data = scope.data;
-
-            // NOTE: the +d notation forces D3 to return the data
-            // as a float. This is because D3 treats integers as strings
-            // by default.
-            var x_min = d3.min(data,function(d){return +d[scope.xlabel];});
-            var x_max = d3.max(data,function(d){return +d[scope.xlabel];});
-            x.domain([x_min,x_max]);
-
-            var y_min = d3.min(data,function(d){return +d[scope.ylabel];});
-            var y_max = d3.max(data,function(d){return +d[scope.ylabel];});
-            y.domain([y_min,y_max]);
-
-            // --------------------------
-            // filter the data here
-
-            var ix1 = +scope.filter1;
-            var ix2 = +scope.filter2;
-
-            filterfunc = function(d) {
-                var condition=false;
-                if (d.class==ix1) {
-                    condition = true;
-                }
-                if (d.class==ix2) { 
-                    condition = true;
-                }
-                return condition;
-            };
-
-            data = data.filter(filterfunc);
-
-            points = points.data(data);
-
-            points.exit().remove();
-            var point = points.enter().append('g')
-              .attr('class', 'point');
-              //.attr('id',function(d) {
-              //    console.log(d);
-              //    return d.id;
-              //});
-
-            point.append('circle')
-              .attr('r', 5)
-              .attr('opacity',0.5);
-
-              //.attr('id', function(d) {
-              //  var did = d.id;
-              //  return did; 
-              //});
-
-            // using attr(fill) instead of style(fill) 
-            // allows active class to take precedence
-
-            // update the position and fill of all the points
-
-            svg.selectAll('g.point')
-              .attr('transform', function(d){
-                return 'translate(' + [x( d[scope.xlabel] ), y(d[scope.ylabel])] + ')';
-              })
-              .attr('id', function(d) {
-                //console.log(d);
-                return d.id; 
-              })
-              .attr('fill', function(d) { 
-                var rat = color( +d.class );
-                return rat;
-              })
-              .on('mouseover', function(d){
-                  scope.$apply(function(){
-                    scope.selectedPoint = d;
-                  });
-                  d3.selectAll('g.point').classed('active',function(e){
-                      var did = +d['id'];
-                      var eid = e['id'];
-                      if(did==eid) {
-                          console.log(e);
-                      }
-                      return did==eid;
-                  });
-              })
-              .on('mouseout', function(){
-                  /*
-                  scope.$apply(function(){
-                      scope.selectedPoint = {};
-                  });
-                  */
-                  d3.selectAll('g.point').classed('active',false);
-              });
-
-
-            xAxisG.call(xAxis);
-            yAxisG.call(yAxis);
-
+        var margin = {
+            top: 10, 
+            right: 200, 
+            bottom: 10, 
+            left: 100
         };
+        var width = 700 - margin.right - margin.left,
+            height = 800 - margin.top - margin.bottom;
+                   
+        var i = 0,
+            duration = 750,
+            root;
+                   
+        var tree = d3.layout.tree()
+                .size([height, width]);
+                   
+        var diagonal = d3.svg.diagonal()
+            .projection(function(d) { return [d.y, d.x]; });
+                   
+        var svg = element.append("svg")
+                .attr("width", width + margin.right + margin.left)
+                .attr("height", height + margin.top + margin.bottom)
+                .append("g")
+                .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+                   
+        root = JSON.parse(data);
+        root.x0 = height / 2;
+        root.y0 = 0;
+                   
+        function collapse(d) {
+            if (d.children) {
+                d._children = d.children;
+                d._children.forEach(collapse);
+                d.children = null;
+            }
+        }
+                   
+        root.children.forEach(collapse);
+        update(root);
+                   
+        d3.select(self.frameElement).style("height", height + "px");
+                   
+        function update(source) {
+                   
+            // Compute the new tree layout.
+            var nodes = tree.nodes(root).reverse(),
+                links = tree.links(nodes);
+                   
+            // Normalize for fixed-depth.
+            // nodes.forEach(function(d) { d.y = d.depth * 180; });
+                   
+            // Update the nodes…
+            var node = svg.selectAll("g.node")
+                .data(nodes, function(d) { return d.id || (d.id = ++i); });
+                   
+            // Enter any new nodes at the parent's previous position.
+            var nodeEnter = node.enter().append("g")
+                .attr("class", "node")
+                .attr("transform", function(d) { return "translate(" + source.y0 + "," + source.x0 + ")"; })
+                .on("click", click);
+                   
+            nodeEnter.append("circle")
+                .attr("r", 1e-6)
+                .style("fill", function(d) { return d._children ? "lightsteelblue" : "#fff"; });
+                   
+            nodeEnter.append("text")
+                .attr("x", function(d) { return d.children || d._children ? -10 : 10; })
+                .attr("dy", ".35em")
+                .attr("text-anchor", function(d) { return d.children || d._children ? "end" : "start"; })
+                .text(function(d) { return d.name; })
+                .style("fill-opacity", 1e-6);
+                   
+            // Transition nodes to their new position.
+            var nodeUpdate = node.transition()
+                .duration(duration)
+                .attr("transform", function(d) { return "translate(" + d.y + "," + d.x + ")"; });
+                   
+            nodeUpdate.select("circle")
+                .attr("r", 4.5)
+                .style("fill", function(d) { return d._children ? "lightsteelblue" : "#fff"; });
+                   
+            nodeUpdate.select("text")
+                .style("fill-opacity", 1);
+                   
+            // Transition exiting nodes to the parent's new position.
+            var nodeExit = node.exit().transition()
+                .duration(duration)
+                .attr("transform", function(d) { return "translate(" + source.y + "," + source.x + ")"; })
+                .remove();
+                   
+            nodeExit.select("circle")
+                .attr("r", 1e-6);
+                   
+            nodeExit.select("text")
+                .style("fill-opacity", 1e-6);
+                   
+            // Update the links…
+            var link = svg.selectAll("path.link")
+                .data(links, function(d) { return d.target.id; });
+            
+            // Enter any new links at the parent's previous position.
+            link.enter().insert("path", "g")
+                .attr("class", "link")
+                .attr("d", function(d) {
+                    var o = {x: source.x0, y: source.y0};
+                    return diagonal({source: o, target: o});
+                });
+            
+            // Transition links to their new position.
+            link.transition()
+                .duration(duration)
+                .attr("d", diagonal);
+            
+            // Transition exiting nodes to the parent's new position.
+            link.exit().transition()
+                .duration(duration)
+                .attr("d", function(d) {
+                    var o = {x: source.x, y: source.y};
+                    return diagonal({source: o, target: o});
+                })
+                .remove();
+                   
+            // Stash the old positions for transition.
+            nodes.forEach(function(d) {
+                d.x0 = d.x;
+                d.y0 = d.y;
+            });
+        }
+                   
+        // Toggle children on click.
+        function click(d) {
+            if (d.children) {
+                d._children = d.children;
+                d.children = null;
+            } else {
+                d.children = d._children;
+                d._children = null;
+            }
+            update(d);
+        }
 
     }
 
     return {
         link: link,
-        restrict: 'E',
+        restrict: 'E'
+        /*
         scope: { 
             data: '=',
             filter1: '=',
@@ -199,8 +186,7 @@ var dir = mod.directive('wine', function() {
             xlabel: '=',
             ylabel: '='
         }
+        */
     }
 });
-
-var c = mod.controller("Ctrl1", ["$scope","$http","$interval",Ctrl1]);
 

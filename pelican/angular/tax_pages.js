@@ -19,5 +19,10 @@ var construct_categories = function(elem) {
     elem.empty();
     elem.append($("<h2></h2>").text("Categories"));
     elem.append($("<p></p>").text("Hello cruel angular world, this is categories.")); 
+
+
+
+    elem.append( "<helloworld></helloworld>" );
+
 };
 
