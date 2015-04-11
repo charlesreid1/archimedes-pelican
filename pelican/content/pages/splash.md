@@ -90,6 +90,10 @@ and illustrates how to integrate Pelican with Angular.
 
 <h1><b>Stacked Dangulars <small>Tabs to Navigate Datasets</small></b></h1>
 
+<p>
+<a href="page1/">Paging Through Datasets</a>
+</p>
+
 
 
 
