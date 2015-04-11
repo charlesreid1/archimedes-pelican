@@ -7,6 +7,8 @@
 {# ----------- content ------------- #}
 {% block content %}
 
+{% include 'p2.md' %}
+
 <hr />
 
 <link href="{{ SITEURL }}/page2/page2.css" rel="stylesheet" type="text/css" >
@@ -22,23 +24,20 @@
                 <ul class="nav nav-tabs">
 
                     <li class="active"><a href="#home" data-toggle="tab" ng-click="goHome()">Home</a></li>
-                    <li><a href="#go1" data-toggle="tab" ng-click="go1()">go1</a></li>
-                    <li><a href="#go2" data-toggle="tab" ng-click="go2()" populate>go2</a></li>
-                    <li><a href="#go3" data-toggle="tab" ng-click="go3()">go3</a></li>
-                    <li><a href="#go4" data-toggle="tab" ng-click="go4()">go4</a></li>
-                    <li><a href="#go5" data-toggle="tab" ng-click="go5()">go5</a></li>
+                    <li><a href="#go1" data-toggle="tab" ng-click="go1()" populate1>go1</a></li>
+                    <li><a href="#go2" data-toggle="tab" ng-click="go2()" populate2>go2</a></li>
+                    <li><a href="#go3" data-toggle="tab" ng-click="go3()" populate3>go3</a></li>
 
                 </ul>
                 <br />
                 <div id="myTabContent" class="tab-content">
 
                     <div class="tab-pane fade active in" id="home">
-                        <h2>Home</h2>
-                        <p>Hello world</p>
+                        <h1>Home</h1>
+                        <p>Hello world, welcome home.</p>
                     </div>
 
                     <div class="tab-pane fade in" id="go1">
-                        <populatebutton></populatebutton>
                     </div>
 
                     <div class="tab-pane fade in" id="go2">
@@ -47,11 +46,6 @@
                     <div class="tab-pane fade in" id="go3">
                     </div>
 
-                    <div class="tab-pane fade in" id="go4">
-                    </div>
-
-                    <div class="tab-pane fade in" id="go5">
-                    </div>
 
                 </div>
 
