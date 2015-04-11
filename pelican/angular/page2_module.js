@@ -7,5 +7,5 @@ var mod = angular.module("myApp",[],function($interpolateProvider) {
     }
 );
 
-var c = mod.controller("Ctrl1", ["$scope","$http","$interval",Ctrl1]);
+var c = mod.controller("Ctrl1", ["$scope",Ctrl1]);
 
