@@ -102,18 +102,25 @@ TEMPLATE_PAGES['multi4_controller.js']  = 'multi4/multi4_controller.js'
 TEMPLATE_PAGES['multi4_module.js']      = 'multi4/multi4_module.js'
 TEMPLATE_PAGES['multi4_directives.js']  = 'multi4/multi4_directives.js'
 
-
 TEMPLATE_PAGES['page1.html']            = 'page1/index.html'
 TEMPLATE_PAGES['page1.css']             = 'page1/page1.css'
 TEMPLATE_PAGES['page1_module.js']       = 'page1/page1_module.js'
 TEMPLATE_PAGES['page1_controller.js']   = 'page1/page1_controller.js'
 
+TEMPLATE_PAGES['page2.html']            = 'page2/index.html'
+TEMPLATE_PAGES['page2.css']             = 'page2/page2.css'
+TEMPLATE_PAGES['page2_module.js']       = 'page2/page2_module.js'
+TEMPLATE_PAGES['page2_controller.js']   = 'page2/page2_controller.js'
+TEMPLATE_PAGES['page2_directives.js']   = 'page2/page2_directives.js'
+
 TEMPLATE_PAGES['tax-data.csv']        = 'tax/tax-data.csv'
+TEMPLATE_PAGES['tax-data2.json']      = 'tax/tax-data2.json'
 TEMPLATE_PAGES['tax.html']            = 'tax/index.html'
 TEMPLATE_PAGES['tax.css']             = 'tax/tax.css'
 TEMPLATE_PAGES['tax_module.js']       = 'tax/tax_module.js'
 TEMPLATE_PAGES['tax_controller.js']   = 'tax/tax_controller.js'
-TEMPLATE_PAGES['tax_pages.js']   = 'tax/tax_pages.js'
+TEMPLATE_PAGES['tax_directives.js']   = 'tax/tax_directives.js'
+TEMPLATE_PAGES['tax_pages.js']        = 'tax/tax_pages.js'
 
 
 
