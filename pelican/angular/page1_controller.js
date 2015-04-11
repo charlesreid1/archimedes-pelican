@@ -1,11 +1,26 @@
+// hipster jesus api
+// for some hipster ipsum
+var hipster_ipsum = function(N,tagname) {
+    $.getJSON('http://hipsterjesus.com/api?paras='+N+'&html=true', function(data) {
+        $(tagname).html( data.text );
+    });
+};
+
+
 /////////////////////////
 // Controller
 
 function Ctrl1($scope,$http,$interval) {
 
+
     $scope.initialize = function() {
         $scope.testvariable = "Hello cruel angular world";
+        $scope.goHome();
     };
+
+
+
+
 
     /*
     $scope.load_data = function() {
@@ -31,6 +46,7 @@ function Ctrl1($scope,$http,$interval) {
 
 
 
+    var n = 3;
 
     // when the user clicks the button to get a random combo,
     // do it
@@ -41,26 +57,32 @@ function Ctrl1($scope,$http,$interval) {
 
     $scope.goHome = function() {
         $scope.testvariable = "goHome: the number "+$scope.getRandomInt(1,10);
+        hipster_ipsum(n,'div#home');
     }
 
     $scope.go1 = function() {
         $scope.testvariable = "go1: the number "+$scope.getRandomInt(1,10);
+        hipster_ipsum(n,'div#go1');
     }
 
     $scope.go2 = function() {
         $scope.testvariable = "go2: the number "+$scope.getRandomInt(1,10);
+        hipster_ipsum(n,'div#go2');
     }
 
     $scope.go3 = function() {
         $scope.testvariable = "go3: the number "+$scope.getRandomInt(1,10);
+        hipster_ipsum(n,'div#go3');
     }
 
     $scope.go4 = function() {
         $scope.testvariable = "go4: the number "+$scope.getRandomInt(1,10);
+        hipster_ipsum(n,'div#go4');
     }
 
     $scope.go5 = function() {
         $scope.testvariable = "go5: the number "+$scope.getRandomInt(1,10);
+        hipster_ipsum(n,'div#go5');
     }
 
 };

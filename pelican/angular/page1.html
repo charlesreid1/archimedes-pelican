@@ -7,13 +7,15 @@
 {# ----------- content ------------- #}
 {% block content %}
 
+{% include 'p1.md' %}
+
 <hr />
 
 <link href="{{ SITEURL }}/page1/page1.css" rel="stylesheet" type="text/css" >
 
 <div ng-app="myApp">
 
-    <div ng-controller="Ctrl1" ng-init="">
+    <div ng-controller="Ctrl1" ng-init="initialize()">
 
         <div class="row">
 
@@ -21,59 +23,29 @@
 
                 <ul class="nav nav-tabs">
 
-                  <li class="active"><a href="#home" data-toggle="tab" ng-click="goHome()">Home</a></li>
-                  <li><a href="#go1" data-toggle="tab" ng-click="go1()">go1</a></li>
-                  <li><a href="#go2" data-toggle="tab" ng-click="go2()">go2</a></li>
-                  <li><a href="#go3" data-toggle="tab" ng-click="go3()">go3</a></li>
-                  <li><a href="#go4" data-toggle="tab" ng-click="go4()">go4</a></li>
+                    <li class="active"><a href="#home" data-toggle="tab" ng-click="goHome()">Home</a></li>
+                    <li><a href="#go1" data-toggle="tab" ng-click="go1()">go1</a></li>
+                    <li><a href="#go2" data-toggle="tab" ng-click="go2()">go2</a></li>
+                    <li><a href="#go3" data-toggle="tab" ng-click="go3()">go3</a></li>
+                    <li><a href="#go4" data-toggle="tab" ng-click="go4()">go4</a></li>
+                    <li><a href="#go5" data-toggle="tab" ng-click="go5()">go5</a></li>
 
                 </ul>
                 <div id="myTabContent" class="tab-content">
-                    <div class="tab-pane fade active in" id="home">
-                        <p>Blog meditation occaecat mustache banjo, hella forage craft beer commodo eu normcore Portland. Sed asymmetrical sapiente, roof party you probably haven't heard of them cornhole est Echo Park non fixie hella duis. DIY in Williamsburg, taxidermy Kickstarter sapiente reprehenderit letterpress. Street art forage irure beard sed. Wayfarers Blue Bottle adipisicing, odio you probably haven't heard of them hoodie Bushwick. Taxidermy actually selfies, qui cred non 8-bit locavore mumblecore. Ea odio bespoke, Carles delectus jean shorts pork belly DIY.
-                        </p>
 
-                        <p>Messenger bag fanny pack PBR, ut mlkshk magna meh umami Shoreditch four dollar toast selfies Neutra Godard. Mixtape semiotics fingerstache, single-origin coffee four loko twee qui aliqua Tumblr try-hard next level 3 wolf moon freegan health goth proident. Small batch organic qui, master cleanse bespoke taxidermy nostrud typewriter excepteur tofu. Crucifix nesciunt meh, butcher cred laborum artisan. Kale chips shabby chic gentrify, nesciunt fashion axe exercitation Banksy accusamus sriracha mixtape nulla meh Vice. Dreamcatcher slow-carb placeat church-key, Godard street art locavore. Officia quis cray 90's direct trade, jean shorts quinoa gentrify Wes Anderson Williamsburg.
-                        </p>
+                    <div class="tab-pane fade active in" id="home">
                     </div>
                     <div class="tab-pane fade in" id="go1">
-                        <p>Hashtag +1 pickled American Apparel photo booth. Schlitz disrupt plaid letterpress irony. Veniam non sed magna synth sint pug Shoreditch banjo. Twee freegan 90's American Apparel bitters tofu sriracha officia, minim deserunt swag lomo. Heirloom tousled consequat, yr skateboard distillery organic four dollar toast fashion axe pork belly selfies street art. Nihil kogi beard tattooed ennui tote bag Williamsburg flannel. Esse crucifix mlkshk, salvia shabby chic Godard sapiente 3 wolf moon trust fund before they sold out paleo fashion axe hoodie et chambray.
-                        </p>
-
-                        <p>Photo booth crucifix gentrify, selfies literally sunt forage tattooed ex scenester PBR bicycle rights. Kickstarter eiusmod keytar hoodie, sriracha salvia typewriter leggings esse Odd Future. DIY ullamco quinoa beard, nisi +1 jean shorts cronut pug Etsy four loko four dollar toast Tumblr. Adipisicing gentrify readymade vero mlkshk, wolf banh mi single-origin coffee. Eu next level deserunt, High Life cred Marfa qui proident. Food truck cray exercitation disrupt mixtape minim. Quinoa Etsy sed distillery selfies migas.
-                        </p>
-                  </div>
-                  <div class="tab-pane fade in" id="go2">
-                        <p>Mollit VHS organic, farm-to-table letterpress vero literally shabby chic Wes Anderson Tumblr Thundercats. Four dollar toast ethical McSweeney's literally. Pug selfies flexitarian pop-up tofu. Skateboard locavore elit, Carles tousled fingerstache hoodie polaroid cillum excepteur. +1 occaecat Neutra hashtag ethical tattooed consectetur DIY McSweeney's seitan, veniam vero viral kale chips cred. XOXO reprehenderit consequat ullamco, freegan messenger bag chambray kitsch Truffaut incididunt. Echo Park twee consectetur tote bag, pug organic pickled stumptown lomo meggings.
-                        </p>
-
-                        <p>8-bit 90's messenger bag banjo. Selfies minim sint, jean shorts salvia cornhole duis farm-to-table irony veniam incididunt crucifix. Cardigan art party wayfarers fingerstache, lo-fi cornhole tousled skateboard. Laborum kale chips Vice mustache Godard. Raw denim fingerstache literally retro sunt. Dolor synth bicycle rights PBR&B, 90's deep v XOXO commodo gentrify hoodie 8-bit four dollar toast. Forage crucifix Schlitz, authentic ut craft beer ullamco kale chips.
-                        </p>
-                  </div>
-                  <div class="tab-pane fade in" id="go3">
-                        <p>Mollit VHS organic, farm-to-table letterpress vero literally shabby chic Wes Anderson Tumblr Thundercats. Four dollar toast ethical McSweeney's literally. Pug selfies flexitarian pop-up tofu. Skateboard locavore elit, Carles tousled fingerstache hoodie polaroid cillum excepteur. +1 occaecat Neutra hashtag ethical tattooed consectetur DIY McSweeney's seitan, veniam vero viral kale chips cred. XOXO reprehenderit consequat ullamco, freegan messenger bag chambray kitsch Truffaut incididunt. Echo Park twee consectetur tote bag, pug organic pickled stumptown lomo meggings.
-                        </p>
-
-                        <p>8-bit 90's messenger bag banjo. Selfies minim sint, jean shorts salvia cornhole duis farm-to-table irony veniam incididunt crucifix. Cardigan art party wayfarers fingerstache, lo-fi cornhole tousled skateboard. Laborum kale chips Vice mustache Godard. Raw denim fingerstache literally retro sunt. Dolor synth bicycle rights PBR&B, 90's deep v XOXO commodo gentrify hoodie 8-bit four dollar toast. Forage crucifix Schlitz, authentic ut craft beer ullamco kale chips.
-                        </p>
-                  </div>
-                  <div class="tab-pane fade in" id="go4">
-                        <p>Mollit VHS organic, farm-to-table letterpress vero literally shabby chic Wes Anderson Tumblr Thundercats. Four dollar toast ethical McSweeney's literally. Pug selfies flexitarian pop-up tofu. Skateboard locavore elit, Carles tousled fingerstache hoodie polaroid cillum excepteur. +1 occaecat Neutra hashtag ethical tattooed consectetur DIY McSweeney's seitan, veniam vero viral kale chips cred. XOXO reprehenderit consequat ullamco, freegan messenger bag chambray kitsch Truffaut incididunt. Echo Park twee consectetur tote bag, pug organic pickled stumptown lomo meggings.
-                        </p>
-
-                        <p>8-bit 90's messenger bag banjo. Selfies minim sint, jean shorts salvia cornhole duis farm-to-table irony veniam incididunt crucifix. Cardigan art party wayfarers fingerstache, lo-fi cornhole tousled skateboard. Laborum kale chips Vice mustache Godard. Raw denim fingerstache literally retro sunt. Dolor synth bicycle rights PBR&B, 90's deep v XOXO commodo gentrify hoodie 8-bit four dollar toast. Forage crucifix Schlitz, authentic ut craft beer ullamco kale chips.
-                        </p>
-                  </div>
-                  <div class="tab-pane fade in" id="go5">
-                        <p>Mollit VHS organic, farm-to-table letterpress vero literally shabby chic Wes Anderson Tumblr Thundercats. Four dollar toast ethical McSweeney's literally. Pug selfies flexitarian pop-up tofu. Skateboard locavore elit, Carles tousled fingerstache hoodie polaroid cillum excepteur. +1 occaecat Neutra hashtag ethical tattooed consectetur DIY McSweeney's seitan, veniam vero viral kale chips cred. XOXO reprehenderit consequat ullamco, freegan messenger bag chambray kitsch Truffaut incididunt. Echo Park twee consectetur tote bag, pug organic pickled stumptown lomo meggings.
-                        </p>
-
-                        <p>8-bit 90's messenger bag banjo. Selfies minim sint, jean shorts salvia cornhole duis farm-to-table irony veniam incididunt crucifix. Cardigan art party wayfarers fingerstache, lo-fi cornhole tousled skateboard. Laborum kale chips Vice mustache Godard. Raw denim fingerstache literally retro sunt. Dolor synth bicycle rights PBR&B, 90's deep v XOXO commodo gentrify hoodie 8-bit four dollar toast. Forage crucifix Schlitz, authentic ut craft beer ullamco kale chips.
-                        </p>
-                  </div>
+                    </div>
+                    <div class="tab-pane fade in" id="go2">
+                    </div>
+                    <div class="tab-pane fade in" id="go3">
+                    </div>
+                    <div class="tab-pane fade in" id="go4">
+                    </div>
+                    <div class="tab-pane fade in" id="go5">
+                    </div>
                 </div>
-
-
 
             </div>
 
