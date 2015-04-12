@@ -95,7 +95,11 @@ and illustrates how to integrate Pelican with Angular.
 </p>
 
 <p>
-<a href="page2/">Appending Angular Directives On-The-Fly</a>
+<a href="page2/">Appending Angular Directives to Tabs On-The-Fly</a>
+</p>
+
+<p>
+<a href="page3/">Angular Directives to Build Pages On-The-Fly</a>
 </p>
 
 <p>

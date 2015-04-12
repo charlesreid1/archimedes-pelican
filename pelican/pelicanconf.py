@@ -52,7 +52,7 @@ READERS = {'html': None}
 
 
 
-EXTRA_TEMPLATES_PATHS = ['angular','angular/tax']
+EXTRA_TEMPLATES_PATHS = ['angular','angular/page3','angular/tax']
 
 
 
@@ -111,6 +111,12 @@ TEMPLATE_PAGES['page2.css']             = 'page2/page2.css'
 TEMPLATE_PAGES['page2_module.js']       = 'page2/page2_module.js'
 TEMPLATE_PAGES['page2_controller.js']   = 'page2/page2_controller.js'
 TEMPLATE_PAGES['page2_directives.js']   = 'page2/page2_directives.js'
+
+TEMPLATE_PAGES['page3.html']            = 'page3/index.html'
+TEMPLATE_PAGES['page3.css']             = 'page3/page3.css'
+TEMPLATE_PAGES['page3_module.js']       = 'page3/page3_module.js'
+TEMPLATE_PAGES['page3_controller.js']   = 'page3/page3_controller.js'
+TEMPLATE_PAGES['page3_directives.js']   = 'page3/page3_directives.js'
 
 TEMPLATE_PAGES['tax-data.csv']        = 'tax/tax-data.csv'
 TEMPLATE_PAGES['tax-data2.json']      = 'tax/tax-data2.json'
