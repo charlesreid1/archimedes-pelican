@@ -1,5 +1,5 @@
 {% extends 'base_angular.html' %}
-{% set mytitle="Taxes" %}
+{% set mytitle="Page 3" %}
 
 {# ----------- title -------------- #}
 {% block title %}{{ mytitle }}{% endblock %}
@@ -7,13 +7,9 @@
 {# ----------- content ------------- #}
 {% block content %}
 
-{#
-{% include 'tax.md' %}
-#}
-
 <hr />
 
-<link href="{{ SITEURL }}/tax/tax.css" rel="stylesheet" type="text/css" >
+<link href="{{ SITEURL }}/page3/page3.css" rel="stylesheet" type="text/css" >
 
 <div ng-app="myApp">
 
@@ -25,7 +21,7 @@
 
                 <ul class="nav nav-pills nav-stacked">
 
-                    <li><a class="navpills" intro>Introduction</a></li>
+                    <li><a class="navpills" home>Introduction</a></li>
                     <li><a class="navpills" categories>Categories</a></li>
                     <li><a class="navpills" singleset>One Category</a></li>
                     <li><a class="navpills" sunburst>Every Category</a></li>
@@ -49,9 +45,9 @@
 
 </div>
 
-<script type="text/javascript" src="{{ SITEURL }}/tax/tax_controller.js"></script>
-<script type="text/javascript" src="{{ SITEURL }}/tax/tax_module.js"></script>
-<script type="text/javascript" src="{{ SITEURL }}/tax/tax_directives.js"></script>
+<script type="text/javascript" src="{{ SITEURL }}/page3/page3_controller.js"></script>
+<script type="text/javascript" src="{{ SITEURL }}/page3/page3_module.js"></script>
+<script type="text/javascript" src="{{ SITEURL }}/page3/page3_directives.js"></script>
 
 
 {% endblock %}

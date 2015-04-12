@@ -36,14 +36,9 @@ function Ctrl1($scope) {
     // (called by ng-init)
     //
     $scope.initialize = function() {
-        $scope.home();
+        //$scope.tab_home();
     };
 
-    $scope.home = function() {
-        myid = 'div#myContent';
-        $(myid).append($("<h2></h2>").text("Home"))
-               .append($("<p></p>").text("Use the navigation elements to the left to explore the tax dataset."));
-    };
 
     // // //////////////////////////////
     // // // Get Page Element
