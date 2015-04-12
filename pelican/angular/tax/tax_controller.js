@@ -7,29 +7,62 @@ function Ctrl1($scope) {
     // Load data
     // (done right away)
     //
-    $scope.load_data = function() {
+    $scope.load_csv_data = function() {
 
-        d3.json('tax-data2.json',function(err,dat){
+        d3.csv('tax-data.csv',function(err,dat){
+
             if(err){throw err;}
 
-            $scope.data = dat;
+            //dat.forEach(function(d){
+            //    console.log(d.omb_cat);
+            //});
 
-            /*
             var taxData = [];
             dat.forEach(function(r,j){
                 r['id'] = j;
                 taxData.push(r);
             });
+
             $scope.taxData = taxData;
-            */
 
             // this forces angular to check for changes in data
             $scope.$apply();
 
         });
+
     };
 
-    $scope.load_data();
+    $scope.create_category_data = function() { 
+
+        /*
+        $scope.taxData.forEach( function(r,j) {
+            console.log(j);
+        });
+        */
+
+
+        /*
+                if( categories_lvl1.indexOf(r['omb_cat']) < 0 ) {
+                    categories_lvl1.push(r['omb_cat']);
+                };
+
+                if( categories_lvl2.indexOf(r['name']) < 0 ) {
+                    categories_lvl2.push(r['name']);
+                };
+
+            });
+
+        d3.json('tax-data2.json',function(err,dat) {
+            $scope.data = dat;
+            $scope.$apply();
+        });
+        */
+
+    };
+
+    $scope.load_csv_data();
+    $scope.create_category_data();
+
 
 
     //////////////////////////////

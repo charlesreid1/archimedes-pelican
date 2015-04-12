@@ -96,7 +96,7 @@ var dir2 = mod.directive('taxcategories', function() {
         var i = 0,
             duration = 750,
             root;
-                   
+
         var tree = d3.layout.tree()
                 .size([height, width]);
                    
