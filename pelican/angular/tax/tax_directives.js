@@ -1,24 +1,31 @@
-
-var dir = mod.directive('helloworld',function() {
-    console.log('like yea whatevs');
-    // TODO: finish 
-    function link(scope, element, attr) { 
-        //var template = "<button>whatevs</button>";
-        //var linkFn = $compile(template);
-        //var content = linkFn(scope);
-        //element.append(content);
-        console.log('uhhh whatevs');
-    };
+var dir_helloworld = mod.directive("helloworld", function(){
     return {
-        link: link,
-        restrict: 'E',
-        compile: function(ele,att) {
-            var rat = "<helloworld></helloworld>";
-            var newele = $(rat);
-            ele.append(newele);
-        }
+        restrict: "E",
+        template: "<p><b>Hello cruel angular world! This is <code>helloworld</code> talking.</b></p>"
+    }
+});
+
+var myid = 'myContent';
+
+var ngd1 = mod.directive("home", function($compile){
+    return function(scope, element, attrs){
+        element.bind("click", function(){
+            angular.element(document.getElementById(myid)).empty();
+            angular.element(document.getElementById(myid)).append($compile("<div><h1>Hello world</h1><p>Welcome home. This message populated by a directive.</p><helloworld></helloworld></div>")(scope));
+        });
     };
 });
+
+var ngd2 = mod.directive("categories", function($compile){
+    return function(scope, element, attrs){
+        element.bind("click", function(){
+            angular.element(document.getElementById(myid)).empty();
+            angular.element(document.getElementById(myid)).append($compile("<div><h1>Hello world</h1><p>Now category page has been populated from a directive.</p><helloworld></helloworld></div>")(scope));
+        });
+    };
+});
+
+
 
 
 

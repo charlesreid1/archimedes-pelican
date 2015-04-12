@@ -1,4 +1,5 @@
-ul.dropdown-menu li { 
+ul.dropdown-menu li,
+a.navpills { 
     cursor: pointer; 
 }
 

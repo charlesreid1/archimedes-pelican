@@ -7,7 +7,9 @@
 {# ----------- content ------------- #}
 {% block content %}
 
+{#
 {% include 'tax.md' %}
+#}
 
 <hr />
 
@@ -23,12 +25,13 @@
 
                 <ul class="nav nav-pills nav-stacked">
 
-                    <li class="active"><a data-toggle="tab" ng-click="tab_home()">Introduction</a></li>
-                    <li><a data-toggle="tab" ng-click="tab_categories()">Categories</a></li>
-                    <li><a data-toggle="tab" ng-click="tab_singleset()">One Category</a></li>
-                    <li><a data-toggle="tab" ng-click="tab_sunburst()">Every Category</a></li>
-                    <li><a data-toggle="tab" ng-click="tab_end()">Conclusion</a></li>
-                    <li><a data-toggle="tab" ng-click="tab_explore()">Explore</a></li>
+                    <li><a class="navpills" home>Introduction</a></li>
+                    <li><a class="navpills" categories>Categories</a></li>
+                    <li><a class="navpills" singleset>One Category</a></li>
+                    <li><a class="navpills" sunburst>Every Category</a></li>
+                    <li><a class="navpills" end>Conclusion</a></li>
+                    <li><a class="navpills" explore>Explore</a></li>
+
 
                 </ul>
 
