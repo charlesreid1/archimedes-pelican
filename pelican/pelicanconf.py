@@ -52,8 +52,7 @@ READERS = {'html': None}
 
 
 
-EXTRA_TEMPLATES_PATHS = ['angular']
-
+EXTRA_TEMPLATES_PATHS = ['angular','angular/tax']
 
 
 
