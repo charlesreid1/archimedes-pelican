@@ -66,6 +66,14 @@ and illustrates how to integrate Pelican with Angular.
 <a href="hang2/">Live-Updating Pie Chart from CSV Data: SF Giants Wins/Losses</a>
 </p>
 
+<p>
+<a href="dangular6/">Watching from a Directive</a>
+</p>
+
+<p>
+<a href="dangular7/">Loading Directives After Loading Large CSV Files</a>
+</p>
+
 
 
 
