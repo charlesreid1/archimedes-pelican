@@ -13,6 +13,7 @@ function Ctrl1($scope) {
             if(err){throw err;}
 
             $scope.data = dat;
+
             /*
             var taxData = [];
             dat.forEach(function(r,j){
@@ -41,47 +42,9 @@ function Ctrl1($scope) {
 
     $scope.home = function() {
         myid = 'div#myContent';
-        $(myid).append($("<h2></h2>").text("Home"))
-               .append($("<p></p>").text("Use the navigation elements to the left to explore the tax dataset."));
+        $(myid).append( $("<h1></h1>").append( $("<b></b>").text("Home") ) )
+               .append( $("<p></p>").text("Use the navigation elements to the left to explore the tax dataset.") );
     };
 
-    // // //////////////////////////////
-    // // // Get Page Element
-    // // // (get the element where the page content will go)
-    // // //
-    // // $scope.get_root_elem = function() { 
-    // //     tagname = 'div#myContent';
-    // //     return $(tagname);
-    // // };
-
-    // // ////////////////////////////
-    // // // Tab Actions
-    // // // (construct the various pages)
-    // // //
-    // // var elem = $scope.get_root_elem();
-
-    // // $scope.tab_home = function() { 
-    // //     construct_home(elem);
-    // // };
-
-    // // $scope.tab_categories = function() { 
-    // //     construct_categories(elem);
-    // // };
-
-    // // $scope.tab_singleset = function() { 
-    // //     //construct_single(elem);
-    // // };
-
-    // // $scope.tab_sunburst = function() { 
-    // //     //construct_sunburst(elem);
-    // // };
-
-    // // $scope.tab_end = function() { 
-    // //     //construct_end(elem);
-    // // };
-
-    // // $scope.tab_explore = function() { 
-    // //     //construct_explore(elem);
-    // // };
 };
 

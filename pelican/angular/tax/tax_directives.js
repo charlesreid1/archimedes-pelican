@@ -22,9 +22,7 @@ var ngd2 = mod.directive("categories", function($compile){
     return function(scope, element, attrs){
         element.bind("click", function(){
             $(myid).empty();
-            $(myid).append($compile(
-                    "<div><h1>Hello world</h1><p>Now category page has been populated from a directive.</p><helloworld></helloworld></div>"
-            )(scope));
+            $(myid).append( $compile( "<div><h1><b>Tax Break Categories</b></h1><taxcategories></taxcategories></div>" )(scope) );
         });
     };
 });
@@ -105,13 +103,14 @@ var dir2 = mod.directive('taxcategories', function() {
         var diagonal = d3.svg.diagonal()
             .projection(function(d) { return [d.y, d.x]; });
                    
-        var svg = element.append("svg")
+        var el = element[0];
+        var svg = d3.select(el).append('svg')
                 .attr("width", width + margin.right + margin.left)
                 .attr("height", height + margin.top + margin.bottom)
                 .append("g")
                 .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-                   
-        root = JSON.parse(data);
+
+        root = data;
         root.x0 = height / 2;
         root.y0 = 0;
                    
@@ -134,12 +133,14 @@ var dir2 = mod.directive('taxcategories', function() {
             var nodes = tree.nodes(root).reverse(),
                 links = tree.links(nodes);
                    
-            // Normalize for fixed-depth.
-            // nodes.forEach(function(d) { d.y = d.depth * 180; });
+            //// Normalize for fixed-depth.
+            //nodes.forEach(function(d) { d.y = d.depth * 180; });
                    
             // Update the nodes…
             var node = svg.selectAll("g.node")
-                .data(nodes, function(d) { return d.id || (d.id = ++i); });
+                .data(nodes, function(d) { 
+                    return d.id || (d.id = ++i); 
+                });
                    
             // Enter any new nodes at the parent's previous position.
             var nodeEnter = node.enter().append("g")
