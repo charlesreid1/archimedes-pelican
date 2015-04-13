@@ -9,10 +9,6 @@ function Ctrl1($scope) {
     //
     $scope.load_csv_data = function() {
 
-        console.log('setting scope.dummy.');
-        $scope.dummy = "whatevs";
-
-        console.log('loading csv data.');
         d3.csv('tax-data.csv',function(err,dat){
 
             if(err){throw err;}
@@ -39,7 +35,7 @@ function Ctrl1($scope) {
             // this forces angular to check for changes in data
             $scope.$apply();
 
-            console.log('finished loading csv data.');
+            //console.log('finished loading csv data.');
 
         });
 

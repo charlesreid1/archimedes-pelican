@@ -1,0 +1,291 @@
+{% extends 'base_angular.html' %}
+{% set mytitle="Dangular 2" %}
+
+{# ----------- title -------------- #}
+{% block title %}{{ mytitle }}{% endblock %}
+
+{# ----------- content ------------- #}
+{% block content %}
+
+<hr />
+
+<div ng-app="myApp">
+    <div ng-controller="Ctrl1">
+
+        <div class="row">
+            <div class="col-sm-6">
+            </div>
+            <div class="col-sm-6">
+            </div>
+        </div>
+
+
+
+        <p>
+        Dangular made a dendrogram!
+        </p>
+
+        <p>
+        <dendrogram
+        model='model'
+        data='data'></dendrogram>
+        </p>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+function Ctrl1($scope,$http,$interval,$timeout) {
+
+    $scope.data = null;
+    $scope.data_loaded = false;
+
+    $scope.check_data_loaded = function() {
+        return $scope.data_loaded;
+    };
+
+    $scope.$watch(function(){ return $scope.model; },
+            function(v){ 
+                console.log('from controller: '+v); 
+            });
+
+    ////$scope.initialize = function() {
+
+    ////    /*
+    ////    d3.json('dangular6.json',function(err,dat){
+    ////        if(err){throw err;}
+    ////        $scope.data = dat;
+    ////        $scope.data_loaded = true;
+    ////        console.log('data is loaded now!');
+    ////        $scope.$apply();
+    ////    });
+    ////    */
+
+
+    ////    //d3.csv('dangular6.csv',function(err,dat){
+
+    ////    //    if(err){throw err;}
+
+    ////    //    var taxData = [];
+    ////    //    dat.forEach(function(r,j){
+    ////    //        r['id'] = j;
+    ////    //        taxData.push(r);
+    ////    //    });
+
+    ////    //    $scope.data = taxData;
+    ////    //    console.log('data is loaded now!');
+
+    ////    //    // this forces angular to check for changes in data
+    ////    //    $scope.$apply();
+
+    ////    //});
+
+    ////};
+
+    ////$scope.initialize();
+
+    var f = function() { 
+        $scope.model = new Date().getTime() 
+        $timeout(f, 5000);
+    }
+    f();
+
+
+};
+
+var mod = angular.module('myApp',[],function($interpolateProvider) {
+        $interpolateProvider.startSymbol('[[');
+        $interpolateProvider.endSymbol(']]');
+    }
+);
+
+
+
+// directive
+// <dendrogram>
+var dir2 = mod.directive('dendrogram', function() {
+
+    function link(scope, element, attr) { 
+
+        var margin = {
+            top: 10, 
+            right: 200, 
+            bottom: 10, 
+            left: 100
+        };
+
+        var width = 700 - margin.right - margin.left,
+            height = 800 - margin.top - margin.bottom;
+
+        var i = 0,
+            duration = 750,
+            root;
+                   
+        var tree = d3.layout.tree()
+                .size([height, width]);
+                   
+        var diagonal = d3.svg.diagonal()
+            .projection(function(d) { return [d.y, d.x]; });
+                   
+        var el = element[0];
+        var svg = d3.select(el).append('svg')
+                .attr("width", width + margin.right + margin.left)
+                .attr("height", height + margin.top + margin.bottom)
+                .append("g")
+                .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+
+
+        scope.$watch(function(){ return scope.model; },
+                    function(v){ console.log('from directive: '+v); });
+
+
+        function update(){
+
+            console.log('updating...');
+
+            if(!scope.data){ 
+                console.log('nope');
+                return 
+            };
+
+            data = scope.data;
+
+            root = data;
+            root.x0 = height / 2;
+            root.y0 = 0;
+                       
+            function collapse(d) {
+                if (d.children) {
+                    d._children = d.children;
+                    d._children.forEach(collapse);
+                    d.children = null;
+                }
+            }
+                       
+            root.children.forEach(collapse);
+            upup(root);
+                       
+            d3.select(self.frameElement).style("height", height + "px");
+                       
+            function upup(source) {
+                       
+                // Compute the new tree layout.
+                var nodes = tree.nodes(root).reverse(),
+                    links = tree.links(nodes);
+                       
+                //// Normalize for fixed-depth.
+                //nodes.forEach(function(d) { d.y = d.depth * 180; });
+                       
+                // Update the nodes…
+                var node = svg.selectAll("g.node")
+                    .data(nodes, function(d) { 
+                        return d.id || (d.id = ++i); 
+                    });
+                       
+                // Enter any new nodes at the parent's previous position.
+                var nodeEnter = node.enter().append("g")
+                    .attr("class", "node")
+                    .attr("transform", function(d) { return "translate(" + source.y0 + "," + source.x0 + ")"; })
+                    .on("click", click);
+                       
+                nodeEnter.append("circle")
+                    .attr("r", 1e-6)
+                    .style("fill", function(d) { return d._children ? "lightsteelblue" : "#fff"; });
+                       
+                nodeEnter.append("text")
+                    .attr("x", function(d) { return d.children || d._children ? -10 : 10; })
+                    .attr("dy", ".35em")
+                    .attr("text-anchor", function(d) { return d.children || d._children ? "end" : "start"; })
+                    .text(function(d) { return d.name; })
+                    .style("fill-opacity", 1e-6);
+                       
+                // Transition nodes to their new position.
+                var nodeUpdate = node.transition()
+                    .duration(duration)
+                    .attr("transform", function(d) { return "translate(" + d.y + "," + d.x + ")"; });
+                       
+                nodeUpdate.select("circle")
+                    .attr("r", 4.5)
+                    .style("fill", function(d) { return d._children ? "lightsteelblue" : "#fff"; });
+                       
+                nodeUpdate.select("text")
+                    .style("fill-opacity", 1);
+                       
+                // Transition exiting nodes to the parent's new position.
+                var nodeExit = node.exit().transition()
+                    .duration(duration)
+                    .attr("transform", function(d) { return "translate(" + source.y + "," + source.x + ")"; })
+                    .remove();
+                       
+                nodeExit.select("circle")
+                    .attr("r", 1e-6);
+                       
+                nodeExit.select("text")
+                    .style("fill-opacity", 1e-6);
+                       
+                // Update the links…
+                var link = svg.selectAll("path.link")
+                    .data(links, function(d) { return d.target.id; });
+                
+                // Enter any new links at the parent's previous position.
+                link.enter().insert("path", "g")
+                    .attr("class", "link")
+                    .attr("d", function(d) {
+                        var o = {x: source.x0, y: source.y0};
+                        return diagonal({source: o, target: o});
+                    });
+                
+                // Transition links to their new position.
+                link.transition()
+                    .duration(duration)
+                    .attr("d", diagonal);
+                
+                // Transition exiting nodes to the parent's new position.
+                link.exit().transition()
+                    .duration(duration)
+                    .attr("d", function(d) {
+                        var o = {x: source.x, y: source.y};
+                        return diagonal({source: o, target: o});
+                    })
+                    .remove();
+                       
+                // Stash the old positions for transition.
+                nodes.forEach(function(d) {
+                    d.x0 = d.x;
+                    d.y0 = d.y;
+                });
+            }
+                       
+            // Toggle children on click.
+            function click(d) {
+                if (d.children) {
+                    d._children = d.children;
+                    d.children = null;
+                } else {
+                    d.children = d._children;
+                    d._children = null;
+                }
+                update(d);
+            }
+        }
+
+    }
+
+    return {
+        link: link,
+        restrict: 'E',
+        scope: { 
+            data: '=',
+            model: '='
+        }
+    }
+});
+
+var c = mod.controller("Ctrl1", ["$scope","$http","$interval","$timeout",Ctrl1]);
+
+</script>
+
+{% endblock %}
+
+

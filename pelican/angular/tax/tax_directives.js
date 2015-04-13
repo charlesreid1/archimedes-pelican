@@ -111,7 +111,6 @@ var dir2 = mod.directive('taxcategories', function() {
         };
 
         function update() {
-            console.log('in update()');
             $(el).empty();
             $(el).append("<p>this is sketchy.</p>");
         };

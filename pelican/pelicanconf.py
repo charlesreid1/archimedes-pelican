@@ -131,7 +131,6 @@ TEMPLATE_PAGES['tax.css']             = 'tax/tax.css'
 TEMPLATE_PAGES['tax_module.js']       = 'tax/tax_module.js'
 TEMPLATE_PAGES['tax_controller.js']   = 'tax/tax_controller.js'
 TEMPLATE_PAGES['tax_directives.js']   = 'tax/tax_directives.js'
-TEMPLATE_PAGES['tax_pages.js']        = 'tax/tax_pages.js'
 
 
 
