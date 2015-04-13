@@ -13,11 +13,6 @@ function Ctrl1($scope) {
 
             if(err){throw err;}
 
-            //dat.forEach(function(d){
-            //    console.log(d.omb_cat);
-            //});
-
-
             //////////////////////////////////
             // taxData: full data set
             var taxData = [];
@@ -28,16 +23,107 @@ function Ctrl1($scope) {
 
             $scope.taxData = taxData;
 
+        });
+    };
 
-            //////////////////////////////////
-            // taxCategories: full data set
 
-            // this forces angular to check for changes in data
-            $scope.$apply();
+    $scope.create_category_data = function() { 
 
-            //console.log('finished loading csv data.');
+        if(!$scope.taxData) { return };
+
+        var list = [];
+        list.push({
+            name: 'root',
+            parent: null
+        });
+
+        dat = $scope.taxData;
+
+        // -----------------
+        // create a list of tax break categories
+        var categories = [];
+        dat.forEach(function(d) {
+
+            var category = d.omb_cat;
+            if( categories.indexOf(category) < 0 ) {
+                categories.push(category);
+                list.push({
+                    name: category,
+                    parent: 'root'
+                });
+            }
 
         });
+
+        // -----------------
+        // create a list of tax break names
+        var names = [];
+        dat.forEach(function(d) { 
+            var category = d.omb_cat;
+            var name = d.name;
+            if( names.indexOf(name) < 0 ) {
+                names.push(name);
+                list.push({
+                    name: name,
+                    parent: category
+                });
+            }
+        });
+
+        // finished populating list[]
+
+        //console.log(list.length);
+
+
+        //////////////////////////////////
+        // now we turn our flat lists into trees
+
+        // -------------------
+        // treeify function 
+        //
+        // takes a list with keys 'name' and 'parent'
+        //
+        function treeify(the_list,nameAttr,parentAttr,childrenAttr) {
+            if(!nameAttr) nameAttr = 'name';
+            if(!parentAttr) parentAttr = 'parent';
+            if(!childrenAttr) childrenAttr = 'children';
+
+            var treeList = [];
+
+            var lookup = {};
+
+            // create initial list
+            the_list.forEach(function(obj) {
+                obj[childrenAttr] = [];
+                lookup[obj[nameAttr]] = obj;
+            });
+
+            // find parents of each node, 
+            // and push self-references to their children[]
+            the_list.forEach(function(obj) {
+                if( obj[parentAttr] != null ) {
+
+                    // get parent
+                    var pattr = obj[parentAttr]
+                    var p = lookup[pattr];
+
+                    // add ourselves to their children
+                    var z = p[childrenAttr];
+                    z.push(obj);
+
+                } else {
+                    // no parents: this is a root node
+                    treeList.push(obj);
+                }
+            });
+
+            return treeList[0];
+
+        };
+        var t = treeify(list);
+
+        // now turn list into a structured tree of dictionaries
+        $scope.treeified = t;
 
     };
 
