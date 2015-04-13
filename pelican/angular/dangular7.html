@@ -1,0 +1,108 @@
+{% extends 'base_angular.html' %}
+{% set mytitle="Dangular 2" %}
+
+{# ----------- title -------------- #}
+{% block title %}{{ mytitle }}{% endblock %}
+
+{# ----------- content ------------- #}
+{% block content %}
+
+{% include 'd7.md' %}
+
+<hr />
+
+<div ng-app="watchApp">
+    <div ng-controller="WatchController">
+
+        <div class="row">
+            <div class="col-sm-6">
+                <mydirective
+                data='data'>
+                </mydirective>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+function WatchController($scope,$http,$interval,$timeout) {
+
+    $scope.data = null;
+
+    $scope.initialize = function() {
+
+        d3.csv('dangular7.csv',function(err,dat){
+
+            if(err){throw err;}
+
+            var data = [];
+            dat.forEach(function(r,j){
+                r['id'] = j;
+                data.push(r);
+            });
+
+            $scope.data = data;
+            console.log('data is loaded now!');
+
+            // this forces angular to check for changes in data
+            $scope.$apply();
+
+        });
+
+    };
+
+    $scope.initialize();
+
+};
+
+var mod = angular.module('watchApp',[],function($interpolateProvider) {
+        $interpolateProvider.startSymbol('[[');
+        $interpolateProvider.endSymbol(']]');
+    }
+);
+
+
+
+// directive
+// <dendrogram>
+var dir2 = mod.directive('mydirective', function() {
+
+    function link(scope, element, attr) { 
+
+        var el = element[0];
+
+        $(el).empty();
+        $(el).append("<p>Directive <code>mydirective</code> is loading data...");
+
+        scope.$watch(function(){ return scope.data; },
+                    function(v){ 
+                        if(scope.data) {
+                            $(el).empty();
+                            $(el).append("<p>Directive <code>mydirective</code> has finished loading the data!");
+                        }
+                    });
+
+        function update(){
+            console.log('updating...');
+            data = scope.data;
+        }
+
+    }
+
+    return {
+        link: link,
+        restrict: 'E',
+        scope: { 
+            data: '='
+        }
+    }
+});
+
+var c = mod.controller("WatchController", ["$scope","$http","$interval","$timeout",WatchController]);
+
+</script>
+
+{% endblock %}
+
+
