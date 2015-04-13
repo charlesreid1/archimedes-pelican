@@ -21,8 +21,8 @@ var ngd1 = mod.directive("intro", function($compile){
 var ngd2 = mod.directive("categories", function($compile){
     return function(scope, element, attrs){
         element.bind("click", function(){
-            $(myid).empty();
-            $(myid).append( $compile( "<div><h1><b>Tax Break Categories</b></h1><taxcategories></taxcategories></div>" )(scope) );
+            angular.element($(myid)).empty();
+            angular.element($(myid)).append( $compile( '<div><h1><b>Tax Break Categories</b></h1><taxcategories dummy="dummy" taxData="taxData" taxCategories="taxCategories"></taxcategories></div>' )(scope) );
         });
     };
 });
@@ -65,7 +65,7 @@ var ngd6 = mod.directive("explore", function($compile){
         element.bind("click", function(){
             $(myid).empty();
             $(myid).append($compile(
-                    "<div><h1>Hello world</h1><p>Now explore page has been populated from a directive.</p><helloworld></helloworld></div>"
+                    '<div><h1>Hello world</h1><p>Now explore page has been populated from a directive.</p><helloworld></helloworld></div>'
             )(scope));
         });
     };
@@ -81,6 +81,44 @@ var ngd6 = mod.directive("explore", function($compile){
 var dir2 = mod.directive('taxcategories', function() {
 
     function link(scope, element, attr) {
+
+        // not sure why taxData is only available 
+        // to the scope's parent, and not to the scope...
+        // whatevs.
+
+        var el = element[0];
+
+        if(!scope.$parent.taxData) {
+
+            $(el).empty();
+            $(el).append("<p>Directive <code>mydirective</code> is loading data...");
+
+            var watch_target = function() { 
+                return scope.$parent.taxData; 
+            };
+
+            var watch_callback = function() { 
+                if(scope.$parent.taxData) {
+                    update(); 
+                }
+            };
+
+            scope.$watch(watch_target, watch_callback);
+        } else {
+
+            update();
+
+        };
+
+        function update() {
+            console.log('in update()');
+            $(el).empty();
+            $(el).append("<p>this is sketchy.</p>");
+        };
+
+
+
+        /*
 
         data = scope.data;
 
@@ -215,7 +253,9 @@ var dir2 = mod.directive('taxcategories', function() {
                 d.y0 = d.y;
             });
         }
+        */
                    
+        /*
         // Toggle children on click.
         function click(d) {
             if (d.children) {
@@ -227,22 +267,17 @@ var dir2 = mod.directive('taxcategories', function() {
             }
             update(d);
         }
-
+        */
     }
 
     return {
         link: link,
-        restrict: 'E'
-        /*
+        restrict: 'E',
         scope: { 
-            data: '=',
-            filter1: '=',
-            filter2: '=',
-            selectedPoint: '=',
-            xlabel: '=',
-            ylabel: '='
+            dummy: '=',
+            taxData: '=',
+            taxCategories: '='
         }
-        */
     }
 });
 

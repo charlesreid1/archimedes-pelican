@@ -9,6 +9,10 @@ function Ctrl1($scope) {
     //
     $scope.load_csv_data = function() {
 
+        console.log('setting scope.dummy.');
+        $scope.dummy = "whatevs";
+
+        console.log('loading csv data.');
         d3.csv('tax-data.csv',function(err,dat){
 
             if(err){throw err;}
@@ -17,6 +21,9 @@ function Ctrl1($scope) {
             //    console.log(d.omb_cat);
             //});
 
+
+            //////////////////////////////////
+            // taxData: full data set
             var taxData = [];
             dat.forEach(function(r,j){
                 r['id'] = j;
@@ -25,43 +32,22 @@ function Ctrl1($scope) {
 
             $scope.taxData = taxData;
 
+
+            //////////////////////////////////
+            // taxCategories: full data set
+
             // this forces angular to check for changes in data
             $scope.$apply();
 
+            console.log('finished loading csv data.');
+
         });
 
     };
 
-    $scope.create_category_data = function() { 
 
-        /*
-        $scope.taxData.forEach( function(r,j) {
-            console.log(j);
-        });
-        */
-
-
-        /*
-                if( categories_lvl1.indexOf(r['omb_cat']) < 0 ) {
-                    categories_lvl1.push(r['omb_cat']);
-                };
-
-                if( categories_lvl2.indexOf(r['name']) < 0 ) {
-                    categories_lvl2.push(r['name']);
-                };
-
-            });
-
-        d3.json('tax-data2.json',function(err,dat) {
-            $scope.data = dat;
-            $scope.$apply();
-        });
-        */
-
-    };
-
+    // do this first thing - doesn't need to wait for the view.
     $scope.load_csv_data();
-    $scope.create_category_data();
 
 
 
@@ -69,6 +55,13 @@ function Ctrl1($scope) {
     // Initialize
     // (called by ng-init)
     //
+    // this needs the view to be initialized,
+    // which does not happen right away, 
+    // but is done when ng-init is called. 
+    //
+    // if we called $scope.home() from the body,
+    // like with load_csv_data, 
+    // there would be no view.
     $scope.initialize = function() {
         $scope.home();
     };
