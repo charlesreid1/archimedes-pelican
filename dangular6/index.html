@@ -151,65 +151,116 @@
 <div class="container" id="bodycontainer">
 
 
-Welcome to the tabbed navigation example! This uses the [Hipster Jesus API](http://hipsterjesus.com) 
-to generate hipster ipsum, which is what everyone uses nowadays instead of lorem ipsum.
+While this example looks pretty boring, it's what's going on
+under the hood that counts. The controller is incrementing 
+a large number once per second, and a watch is set up on
+that large number variable in two places: the controller,
+and the directive.
 
+<br />
+<br />
+
+Watching the large number variable from the controller is easy,
+since the variable is already in the scope and accessible to 
+the watch function.
+
+<br />
+<br />
+
+Watching the large number variable from the directive is 
+more tricky; because the directive scope is a subset of the 
+controller scope, not every variable will be available to 
+the directive. This requires the use of attributes to pass 
+variables through from the controller scope to the directive
+scope.
+
+<br />
+<br />
+
+Once this is done, the directive can listen for changes to a 
+variable in the controller.
+This is a crucial piece of infrastructure if you need to load
+large CSV or JSON files, and have the directives drawing plots
+from those large data files wait until the data has been loaded.
+In that case, you are loading/processing the data in the controller,
+but implementing watchers on the data in the directives. 
 <hr />
 
-<link href="/archimedes-pelican/page1/page1.css" rel="stylesheet" type="text/css" >
-
-<div ng-app="myApp">
-
-    <div ng-controller="Ctrl1" ng-init="initialize()">
+<div ng-app="watchApp">
+    <div ng-controller="WatchController">
 
         <div class="row">
-
             <div class="col-sm-6">
-
-                <ul class="nav nav-tabs">
-
-                    <li class="active"><a href="#home" data-toggle="tab" ng-click="goHome()">Home</a></li>
-                    <li><a href="#go1" data-toggle="tab" ng-click="go1()">go1</a></li>
-                    <li><a href="#go2" data-toggle="tab" ng-click="go2()">go2</a></li>
-                    <li><a href="#go3" data-toggle="tab" ng-click="go3()">go3</a></li>
-                    <li><a href="#go4" data-toggle="tab" ng-click="go4()">go4</a></li>
-                    <li><a href="#go5" data-toggle="tab" ng-click="go5()">go5</a></li>
-
-                </ul>
-                <div id="myTabContent" class="tab-content">
-
-                    <div class="tab-pane fade active in" id="home">
-                    </div>
-                    <div class="tab-pane fade in" id="go1">
-                    </div>
-                    <div class="tab-pane fade in" id="go2">
-                    </div>
-                    <div class="tab-pane fade in" id="go3">
-                    </div>
-                    <div class="tab-pane fade in" id="go4">
-                    </div>
-                    <div class="tab-pane fade in" id="go5">
-                    </div>
-                </div>
-
+                Watched variable, from controller:<br />
+                <b>[[ controllerlabel ]]</b>
             </div>
 
-
             <div class="col-sm-6">
-
-                <p>[[ testvariable ]]</p>
-
+                Watched variable, from directive:<br />
+                <b>[[ directivelabel ]]</b>
             </div>
+        </div>
 
+        <div class="row">
+            <mydirective
+            model='model'
+            directivelabel='directivelabel'></mydirective>
         </div>
 
     </div>
-
 </div>
 
-<script type="text/javascript" src="/archimedes-pelican/page1/page1_controller.js"></script>
-<script type="text/javascript" src="/archimedes-pelican/page1/page1_module.js"></script>
+<script type="text/javascript">
 
+function WatchController($scope,$http,$interval,$timeout) {
+
+    $scope.controllerlabel = "";
+    $scope.directivelabel = "";
+
+    // Set a watcher from the controller.
+    $scope.$watch(function(){ return $scope.model; },
+            function(v){ 
+                $scope.controllerlabel = v; 
+            });
+
+    // Continuously change the scoped variable "model"
+    var f = function() { 
+        $scope.model = new Date().getTime() 
+        $timeout(f, 1000);
+    }
+    f();
+
+};
+
+var mod = angular.module('watchApp',[],function($interpolateProvider) {
+        $interpolateProvider.startSymbol('[[');
+        $interpolateProvider.endSymbol(']]');
+    }
+);
+
+
+var dir2 = mod.directive('mydirective', function() {
+
+    function link(scope, element, attr) { 
+        scope.$watch(function(){ return scope.model; },
+            function(v){ 
+                scope.directivelabel = v; 
+            });
+    };
+
+    return {
+        link: link,
+        restrict: 'E',
+        scope: { 
+            directivelabel: '=',
+            model: '='
+        }
+    }
+});
+
+var c = mod.controller("WatchController", ["$scope","$http","$interval","$timeout",WatchController]);
+
+</script>
 
 
 

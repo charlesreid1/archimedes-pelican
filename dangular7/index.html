@@ -151,65 +151,114 @@
 <div class="container" id="bodycontainer">
 
 
-Welcome to the tabbed navigation example! This uses the [Hipster Jesus API](http://hipsterjesus.com) 
-to generate hipster ipsum, which is what everyone uses nowadays instead of lorem ipsum.
+A live-updating page demonstrating the use of 
+an Angular watcher from an Angular directive.
+(Using Angular watchers from Angular controllers is a 
+straightforward case, but using them from Angular 
+directives is more tricky.) 
+
+<br />
+<br />
+
+The Angular controller starts loading a large-ish (~2MB) 
+CSV file when the page first loads. This takes a few seconds,
+and a in the meantime the directive is created. The directive
+is created with a loading message that turns into a success 
+message when the data finishes loading. 
 
 <hr />
 
-<link href="/archimedes-pelican/page1/page1.css" rel="stylesheet" type="text/css" >
-
-<div ng-app="myApp">
-
-    <div ng-controller="Ctrl1" ng-init="initialize()">
+<div ng-app="watchApp">
+    <div ng-controller="WatchController">
 
         <div class="row">
-
             <div class="col-sm-6">
-
-                <ul class="nav nav-tabs">
-
-                    <li class="active"><a href="#home" data-toggle="tab" ng-click="goHome()">Home</a></li>
-                    <li><a href="#go1" data-toggle="tab" ng-click="go1()">go1</a></li>
-                    <li><a href="#go2" data-toggle="tab" ng-click="go2()">go2</a></li>
-                    <li><a href="#go3" data-toggle="tab" ng-click="go3()">go3</a></li>
-                    <li><a href="#go4" data-toggle="tab" ng-click="go4()">go4</a></li>
-                    <li><a href="#go5" data-toggle="tab" ng-click="go5()">go5</a></li>
-
-                </ul>
-                <div id="myTabContent" class="tab-content">
-
-                    <div class="tab-pane fade active in" id="home">
-                    </div>
-                    <div class="tab-pane fade in" id="go1">
-                    </div>
-                    <div class="tab-pane fade in" id="go2">
-                    </div>
-                    <div class="tab-pane fade in" id="go3">
-                    </div>
-                    <div class="tab-pane fade in" id="go4">
-                    </div>
-                    <div class="tab-pane fade in" id="go5">
-                    </div>
-                </div>
-
+                <mydirective
+                data='data'>
+                </mydirective>
             </div>
-
-
-            <div class="col-sm-6">
-
-                <p>[[ testvariable ]]</p>
-
-            </div>
-
         </div>
-
     </div>
-
 </div>
 
-<script type="text/javascript" src="/archimedes-pelican/page1/page1_controller.js"></script>
-<script type="text/javascript" src="/archimedes-pelican/page1/page1_module.js"></script>
+<script type="text/javascript">
 
+function WatchController($scope,$http,$interval,$timeout) {
+
+    $scope.data = null;
+
+    $scope.initialize = function() {
+
+        d3.csv('dangular7.csv',function(err,dat){
+
+            if(err){throw err;}
+
+            var data = [];
+            dat.forEach(function(r,j){
+                r['id'] = j;
+                data.push(r);
+            });
+
+            $scope.data = data;
+            console.log('data is loaded now!');
+
+            // this forces angular to check for changes in data
+            $scope.$apply();
+
+        });
+
+    };
+
+    $scope.initialize();
+
+};
+
+var mod = angular.module('watchApp',[],function($interpolateProvider) {
+        $interpolateProvider.startSymbol('[[');
+        $interpolateProvider.endSymbol(']]');
+    }
+);
+
+
+
+// directive
+// <dendrogram>
+var dir2 = mod.directive('mydirective', function() {
+
+    function link(scope, element, attr) { 
+
+        var el = element[0];
+
+        $(el).empty();
+        $(el).append("<p>Directive <code>mydirective</code> is loading data...");
+
+        scope.$watch(function(){ return scope.data; },
+                    function(v){ 
+                        if(scope.data) {
+                            $(el).empty();
+                            $(el).append("<p>Directive <code>mydirective</code> has finished loading the data!");
+                        }
+                    });
+
+        function update(){
+            console.log('updating...');
+            data = scope.data;
+        }
+
+    }
+
+    return {
+        link: link,
+        restrict: 'E',
+        scope: { 
+            data: '='
+        }
+    }
+});
+
+var c = mod.controller("WatchController", ["$scope","$http","$interval","$timeout",WatchController]);
+
+</script>
 
 
 

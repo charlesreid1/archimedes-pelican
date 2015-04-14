@@ -1,4 +1,5 @@
-
+// hipster jesus api
+// for some hipster ipsum
 var hipster_ipsum = function(N,tagname) {
     $.getJSON('http://hipsterjesus.com/api?paras='+N+'&html=true', function(data) {
         $(tagname).html( data.text );
@@ -11,10 +12,15 @@ var hipster_ipsum = function(N,tagname) {
 
 function Ctrl1($scope,$http,$interval) {
 
+
     $scope.initialize = function() {
         $scope.testvariable = "Hello cruel angular world";
         $scope.goHome();
     };
+
+
+
+
 
     /*
     $scope.load_data = function() {

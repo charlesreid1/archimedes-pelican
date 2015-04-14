@@ -1,0 +1,22 @@
+{"name":"node48",
+ "children":[
+    {"name":"node45",
+     "children":[
+        {"name":"node35",
+         "children":[
+            {"name":"node25",
+             "children":[
+                {"name":"Washington","size":1},
+                {"name":"node15","children":[
+                    {"name":"Oregon","size":1},
+                    {"name":"node10","children":[
+                        {"name":"Wyoming","size":1},
+                        {"name":"node6","children":[
+                        {"name":"Oklahoma","size":1},{"name":"Virginia","size":1}]}]}]}]},{"name":"node32","children":[{"name":"Rhode Island","size":1},{"name":"node12","children":[{"name":"Massachusetts","size":1},{"name":"New Jersey","size":1}]}]}]},{"name":"node39","children":[{"name":"node29","children":[{"name":"Missouri","size":1},{"name":"node14","children":[{"name":"Arkansas","size":1},{"name":"Tennessee","size":1}]}]},{"name":"node33","children":[{"name":"Georgia","size":1},{"name":"node20","children":[{"name":"Colorado","size":1},{"name":"Texas","size":1}]}]}]}]},
+    {"name":"node46","children":[{"name":"node30","children":[{"name":"node21","children":[{"name":"Idaho","size":1},{"name":"node13","children":[{"name":"Nebraska","size":1},{"name":"node2","children":[{"name":"Kentucky","size":1},{"name":"Montana","size":1}]}]}]},{"name":"node22","children":[{"name":"node5","children":[{"name":"Ohio","size":1},{"name":"Utah","size":1}]},{"name":"node18","children":[{"name":"node3","children":[{"name":"Indiana","size":1},{"name":"Kansas","size":1}]},{"name":"node7","children":[{"name":"Connecticut","size":1},{"name":"Pennsylvania","size":1}]}]}]}]},{"name":"node43","children":[{"name":"Hawaii","size":1},{"name":"node40","children":[{"name":"node11","children":[{"name":"West Virginia","size":1},{"name":"node8","children":[{"name":"Maine","size":1},{"name":"South Dakota","size":1}]}]},{"name":"node36","children":[{"name":"node16","children":[{"name":"North Dakota","size":1},{"name":"Vermont","size":1}]},{"name":"node28","children":[
+        {"name":"Minnesota","size":1},
+        {"name":"node9","children":[ {"name":"Wisconsin","size":1}, {"name":"node1","children":[ {"name":"Iowa","size":1}, {"name":"New Hampshire","size":1} ]}]}]}]}]}]}
+      ]
+    }
+  ]
+}
