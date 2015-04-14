@@ -52,6 +52,14 @@ function Ctrl1($scope) {
 
     $scope.create_categories_data = function() { 
 
+        // we should actually be setting a watch,
+        // not returning.
+        //
+        // put this into a doit() function,
+        // then check for scope.taxData.
+        // if it doesn't exist, set a watch with 
+        // doit() callback.
+        //
         if(!$scope.taxData) { return };
 
         var list = [];
@@ -96,8 +104,6 @@ function Ctrl1($scope) {
         });
 
         // finished populating list[]
-
-        //console.log(list.length);
 
 
         //////////////////////////////////
@@ -171,11 +177,12 @@ function Ctrl1($scope) {
     // if we called $scope.home() from the body,
     // like with load_csv_data, 
     // there would be no view.
+
     $scope.initialize = function() {
+        $scope.myfilter = "Select a Category";
         $scope.$watch('clicked',function() {
             $scope.clicked();
         });
-
     };
 
 

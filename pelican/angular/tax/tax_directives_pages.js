@@ -83,7 +83,7 @@ var ngd3 = mod.directive("categoriesexplorer", function($compile){
                     "<div>" + 
                     "<categoriesexplorer-title></categoriesexplorer-title>" + 
                     "<categoriesexplorer-lead></categoriesexplorer-lead>" + 
-                    "<full-categories-explorer nname='nname' categorieslist='categorieslist'></full-categories-explorer>" +
+                    "<full-categories-explorer myfilter='myfilter' categorieslist='categorieslist'></full-categories-explorer>" +
                     "</div>"
             )(scope));
         });

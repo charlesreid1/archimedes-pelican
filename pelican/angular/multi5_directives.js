@@ -9,7 +9,7 @@ var cdir1 = mod.directive("categorypicker", function($compile) {
 
         var p = $("<p />", {
             "class" : "lead"
-        }).text("Select first category:")
+        }).text("Select category:")
         .appendTo(el);
 
 
