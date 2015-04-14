@@ -34,7 +34,8 @@ function Ctrl1($scope) {
         var list = [];
         list.push({
             name: 'root',
-            parent: null
+            parent: null,
+            depth: 1
         });
 
         dat = $scope.taxData;
@@ -49,7 +50,8 @@ function Ctrl1($scope) {
                 categories.push(category);
                 list.push({
                     name: category,
-                    parent: 'root'
+                    parent: 'root',
+                    depth: 2
                 });
             }
 
@@ -65,7 +67,8 @@ function Ctrl1($scope) {
                 names.push(name);
                 list.push({
                     name: name,
-                    parent: category
+                    parent: category,
+                    depth: 3
                 });
             }
         });
@@ -94,7 +97,7 @@ function Ctrl1($scope) {
 
             // create initial list
             the_list.forEach(function(obj) {
-                obj[childrenAttr] = [];
+                //obj[childrenAttr] = [];
                 lookup[obj[nameAttr]] = obj;
             });
 
@@ -108,6 +111,10 @@ function Ctrl1($scope) {
                     var p = lookup[pattr];
 
                     // add ourselves to their children
+                    if( !(childrenAttr in p) ) {
+                        p[childrenAttr] = [];
+                    }
+
                     var z = p[childrenAttr];
                     z.push(obj);
 
