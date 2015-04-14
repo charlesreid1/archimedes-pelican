@@ -22,9 +22,16 @@
             <div class="col-sm-3">
 
                 <div id="category1">
+
+                    <category1picker myfilter1='myfilter1'></category1picker>
+
+                    {#
                     <p class="lead">Select first category: 
                     <div class="btn-group">
-                        <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                        <button type="button" 
+                            class="btn btn-success dropdown-toggle" 
+                            data-toggle="dropdown" 
+                            aria-expanded="false">
                         Category [[myfilter1]] <span class="caret"></span>
                         </button>
 
@@ -40,8 +47,11 @@
                             <li><a id="8" cat>Category 8</a></li>
                             <li><a id="9" cat>Category 9</a></li>
                         </ul>
-
                     </div>
+                    #}
+
+
+
                 </div>
 
 

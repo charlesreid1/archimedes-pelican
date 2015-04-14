@@ -2,7 +2,67 @@
 /////////////////////////
 // Directive <category1picker>
 
+var cdir1 = mod.directive("category1picker", function($compile) { 
+    function link(scope, element, attr) {
+
+        var el = "div#category1";
+
+        var p = $("<p />", {
+            "class" : "lead"
+        }).text("Select first category:")
+        .appendTo(el);
+
+
+        // construct button group,
+        // then compile html with angular,
+        // then add to document
+
+        var btn_group = $("<div />", {
+            "class" : "btn-group"
+        });
+
+        var btn = $("<button />", {
+            type : "button",
+            "class" : "btn btn-success dropdown-toggle",
+            "data-toggle" : "dropdown",
+            "aria-expanded" : "false",
+            "html" : 'Category <span class="caret"></span>'
+        }).appendTo(btn_group);
+
+        var ul = $("<ul />", {
+            "class" : "dropdown-menu",
+            role: "menu"
+        }).appendTo(btn_group);
+
+        var divider = $("<li />", {
+            "class" : "divider"
+        }).appendTo(ul);
+
+        for (var i = 1; i <= 9; i++) {
+            var li = $("<li />", {}).appendTo(ul);
+            var a = $("<a />", {
+                "id" : i,
+                cat : ""
+            }).text("Category "+i).appendTo(li);
+        };
+
+        var bg = $compile(btn_group.html())(scope);
+        angular.element($(el)).append(bg);
+
+    };
+
+    return {
+        restrict: "E",
+        link: link,
+        scope: {
+            myfilter1 : '='
+        }
+    }
+});
+
+
 var cdir = mod.directive("cat", function($compile) { 
+    console.log('reached cat directive');
     return function(scope, element, attrs){
         element.bind("click", function(){
             var id = +attrs.id;
