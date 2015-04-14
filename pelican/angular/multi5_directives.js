@@ -2,10 +2,10 @@
 /////////////////////////
 // Directive <category1picker>
 
-var cdir1 = mod.directive("category1picker", function($compile) { 
+var cdir1 = mod.directive("categorypicker", function($compile) { 
     function link(scope, element, attr) {
 
-        var el = "div#category1";
+        var el = element[0];//"div#category1";
 
         var p = $("<p />", {
             "class" : "lead"
@@ -27,7 +27,7 @@ var cdir1 = mod.directive("category1picker", function($compile) {
             "id" : "categorybutton",
             "data-toggle" : "dropdown",
             "aria-expanded" : "false",
-            "html" : 'Category [[myfilter1]] <span class="caret"></span>'
+            "html" : 'Category [[myfilter]] <span class="caret"></span>'
         }).appendTo(btn_group);
 
         var ul = $("<ul />", {
@@ -56,7 +56,7 @@ var cdir1 = mod.directive("category1picker", function($compile) {
         restrict: "E",
         link: link,
         scope: {
-            myfilter1 : '='
+            myfilter : '='
         }
     }
 });
@@ -66,9 +66,8 @@ var cdir = mod.directive("cat", function($compile) {
     return function(scope, element, attrs){
         element.bind("click", function(){
             var id = +attrs.id;
-            scope.myfilter1 = id;
+            scope.myfilter = id;
             scope.$apply();
-            //$("button#categorybutton").html('Category '+id+' <span class="caret"></span>');
         });
     };
 });

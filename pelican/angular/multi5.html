@@ -18,97 +18,15 @@
     <div ng-controller="Ctrl1" ng-init="initialize()">
 
         <div class="row">
-
             <div class="col-sm-3">
-
                 <div id="category1">
-
-                    <category1picker myfilter1='myfilter1'></category1picker>
-
-                    {#
-                    <p class="lead">Select first category: 
-                    <div class="btn-group">
-                        <button type="button" 
-                            class="btn btn-success dropdown-toggle" 
-                            data-toggle="dropdown" 
-                            aria-expanded="false">
-                        Category [[myfilter1]] <span class="caret"></span>
-                        </button>
-
-                        <ul class="dropdown-menu" role="menu">
-                            <li class="divider"></li>
-                            <li><a id="1" cat>Category 1</a></li>
-                            <li><a id="2" cat>Category 2</a></li>
-                            <li><a id="3" cat>Category 3</a></li>
-                            <li><a id="4" cat>Category 4</a></li>
-                            <li><a id="5" cat>Category 5</a></li>
-                            <li><a id="6" cat>Category 6</a></li>
-                            <li><a id="7" cat>Category 7</a></li>
-                            <li><a id="8" cat>Category 8</a></li>
-                            <li><a id="9" cat>Category 9</a></li>
-                        </ul>
-                    </div>
-                    #}
-
-
-
+                    <categorypicker myfilter='myfilter1'></categorypicker>
                 </div>
-
-
-                {#
-                <p class="lead">Select first category: 
-                <div class="btn-group">
-                    <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                    Category [[myfilter1]] <span class="caret"></span>
-                    </button>
-
-                    <ul class="dropdown-menu" role="menu">
-                        <li class="divider"></li>
-                        <li><a ng-click="setFilter1(1)">Category 1</a></li>
-                        <li><a ng-click="setFilter1(2)">Category 2</a></li>
-                        <li><a ng-click="setFilter1(3)">Category 3</a></li>
-                        <li><a ng-click="setFilter1(4)">Category 4</a></li>
-                        <li><a ng-click="setFilter1(5)">Category 5</a></li>
-                        <li><a ng-click="setFilter1(6)">Category 6</a></li>
-                        <li><a ng-click="setFilter1(7)">Category 7</a></li>
-                        <li><a ng-click="setFilter1(8)">Category 8</a></li>
-                        <li><a ng-click="setFilter1(9)">Category 9</a></li>
-                    </ul>
-
-                </div>
-                #}
-
             </div>
-
             <div class="col-sm-3">
-
                 <div id="category2">
+                    <categorypicker myfilter='myfilter2'></categorypicker>
                 </div>
-
-                {#
-                <p class="lead">Select second category: 
-                <div class="btn-group">
-                    <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                    Category [[myfilter2]] <span class="caret"></span>
-                    </button>
-
-                    <ul class="dropdown-menu" role="menu">
-                        <li class="divider"></li>
-                        <li><a ng-click="setFilter2(1)">Category 1</a></li>
-                        <li><a ng-click="setFilter2(2)">Category 2</a></li>
-                        <li><a ng-click="setFilter2(3)">Category 3</a></li>
-                        <li><a ng-click="setFilter2(4)">Category 4</a></li>
-                        <li><a ng-click="setFilter2(5)">Category 5</a></li>
-                        <li><a ng-click="setFilter2(6)">Category 6</a></li>
-                        <li><a ng-click="setFilter2(7)">Category 7</a></li>
-                        <li><a ng-click="setFilter2(8)">Category 8</a></li>
-                        <li><a ng-click="setFilter2(9)">Category 9</a></li>
-                    </ul>
-
-                </div>
-                #}
-
-
             </div>
 
         </div>
