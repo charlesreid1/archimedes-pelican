@@ -81,9 +81,10 @@ var ngd3 = mod.directive("categoriesexplorer", function($compile){
             $(myid).empty();
             $(myid).append($compile(
                     "<div>" + 
-                    "<categoriesexplorer-title></categoriesexplorer-title>" + 
-                    "<categoriesexplorer-lead></categoriesexplorer-lead>" + 
-                    "<full-categories-explorer myfilter='myfilter' categorieslist='categorieslist'></full-categories-explorer>" +
+                    "<categories-explorer-title></categories-explorer-title>" + 
+                    "<categories-explorer-lead></categories-explorer-lead>" + 
+                    "<categories-explorer-button myfilter='myfilter' categorieslist='categorieslist'></categories-explorer-button>" +
+                    "<categories-explorer-chart myfilter='myfilter' taxData='taxData'></categories-explorer-button>" +
                     "</div>"
             )(scope));
         });

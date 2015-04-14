@@ -6,7 +6,7 @@
 // for constructing the categories explore page.
 // 
 
-var categoriesexplorer_title_dir = mod.directive('categoriesexplorerTitle', function($compile) {
+var c_title_dir = mod.directive('categoriesExplorerTitle', function($compile) {
     function link(scope, element, attr) {
         var el = "div#myContent";
 
@@ -23,7 +23,7 @@ var categoriesexplorer_title_dir = mod.directive('categoriesexplorerTitle', func
     }
 });
 
-var categoriesexplorer_lead_dir = mod.directive('categoriesexplorerLead', function($compile) {
+var c_lead_dir = mod.directive('categoriesExplorerLead', function($compile) {
     function link(scope, element, attr) {
         var el = "div#myContent";
 
@@ -47,7 +47,7 @@ var categoriesexplorer_lead_dir = mod.directive('categoriesexplorerLead', functi
 // Construct the categories explorer chart
 //
 
-var categoriesexplorer_dir = mod.directive('fullCategoriesExplorer', function($compile) {
+var c_button_dir = mod.directive('categoriesExplorerButton', function($compile) {
     function link(scope, element, attr) {
 
         var el = element[0];
