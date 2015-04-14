@@ -27,7 +27,9 @@ function Ctrl1($scope) {
     };
 
 
-
+    ///////////////////////
+    // Load categories
+    //
     get_tax_categories = function(dat) { 
         // -----------------
         // create a list of tax break categories
@@ -170,7 +172,6 @@ function Ctrl1($scope) {
     // like with load_csv_data, 
     // there would be no view.
     $scope.initialize = function() {
-
         $scope.$watch('clicked',function() {
             $scope.clicked();
         });

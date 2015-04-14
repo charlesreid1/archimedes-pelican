@@ -133,7 +133,7 @@ TEMPLATE_PAGES['tax_controller.js']             = 'tax/tax_controller.js'
 TEMPLATE_PAGES['tax_directives_pages.js']       = 'tax/tax_directives_pages.js'
 TEMPLATE_PAGES['tax_directives_intro.js']       = 'tax/tax_directives_intro.js'
 TEMPLATE_PAGES['tax_directives_categories.js']  = 'tax/tax_directives_categories.js'
-TEMPLATE_PAGES['tax_directives_categorieslist.js']  = 'tax/tax_directives_categorieslist.js'
+TEMPLATE_PAGES['tax_directives_categoriesexplorer.js']  = 'tax/tax_directives_categoriesexplorer.js'
 
 
 

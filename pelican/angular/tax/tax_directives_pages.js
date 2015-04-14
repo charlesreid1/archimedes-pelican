@@ -69,20 +69,22 @@ var ngd2 = mod.directive("categories", function($compile){
     };
 });
 
-var ngd3 = mod.directive("categorieslist", function($compile){
+var ngd3 = mod.directive("categoriesexplorer", function($compile){
     return function(scope, element, attrs){
         element.bind("click", function(){
 
             // make button active
             $("a.navpills").parent().removeClass("active");
-            $("a#categorieslist").parent().addClass("active");
+            $("a#categoriesexplorer").parent().addClass("active");
 
             // add content and directive
             $(myid).empty();
             $(myid).append($compile(
-                    "<categorieslist-title></categorieslist-title>" + 
-                    "<categorieslist-lead></categorieslist-lead>" + 
-                    "<full-categories-list categorieslist='categorieslist'></full-categories-list>"
+                    "<div>" + 
+                    "<categoriesexplorer-title></categoriesexplorer-title>" + 
+                    "<categoriesexplorer-lead></categoriesexplorer-lead>" + 
+                    "<full-categories-explorer nname='nname' categorieslist='categorieslist'></full-categories-explorer>" +
+                    "</div>"
             )(scope));
         });
     };
