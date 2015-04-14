@@ -95,6 +95,10 @@ and illustrates how to integrate Pelican with Angular.
 <a href="multi4/">Compare/Contrast Entities with D3</a>
 </p>
 
+<p>
+<a href="multi5/">Re-Implementing Compare/Contrast Entities: jQuery + D3</a>
+</p>
+
 
 <h1><b>Stacked Dangulars <small>Tabs to Navigate Datasets</small></b></h1>
 

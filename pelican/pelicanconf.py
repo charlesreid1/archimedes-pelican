@@ -107,6 +107,13 @@ TEMPLATE_PAGES['multi4_controller.js']  = 'multi4/multi4_controller.js'
 TEMPLATE_PAGES['multi4_module.js']      = 'multi4/multi4_module.js'
 TEMPLATE_PAGES['multi4_directives.js']  = 'multi4/multi4_directives.js'
 
+TEMPLATE_PAGES['wine5.csv']             = 'multi5/wine.csv'
+TEMPLATE_PAGES['multi5.html']           = 'multi5/index.html'
+TEMPLATE_PAGES['multi5.css']            = 'multi5/multi5.css'
+TEMPLATE_PAGES['multi5_controller.js']  = 'multi5/multi5_controller.js'
+TEMPLATE_PAGES['multi5_module.js']      = 'multi5/multi5_module.js'
+TEMPLATE_PAGES['multi5_directives.js']  = 'multi5/multi5_directives.js'
+
 TEMPLATE_PAGES['page1.html']            = 'page1/index.html'
 TEMPLATE_PAGES['page1.css']             = 'page1/page1.css'
 TEMPLATE_PAGES['page1_module.js']       = 'page1/page1_module.js'
