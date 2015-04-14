@@ -27,7 +27,7 @@ var cdir1 = mod.directive("category1picker", function($compile) {
             "id" : "categorybutton",
             "data-toggle" : "dropdown",
             "aria-expanded" : "false",
-            "html" : 'Category <span class="caret"></span>'
+            "html" : 'Category [[myfilter1]] <span class="caret"></span>'
         }).appendTo(btn_group);
 
         var ul = $("<ul />", {
@@ -68,7 +68,7 @@ var cdir = mod.directive("cat", function($compile) {
             var id = +attrs.id;
             scope.myfilter1 = id;
             scope.$apply();
-            $("button#categorybutton").html('Category '+id+' <span class="caret"></span>');
+            //$("button#categorybutton").html('Category '+id+' <span class="caret"></span>');
         });
     };
 });
