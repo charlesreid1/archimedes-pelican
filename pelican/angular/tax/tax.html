@@ -25,12 +25,12 @@
 
                 <ul class="nav nav-pills nav-stacked">
 
-                    <li><a class="navpills" intro>Introduction</a></li>
-                    <li><a class="navpills" ng-click="create_category_data()" categories>Categories</a></li>
-                    <li><a class="navpills" singleset>One Category</a></li>
-                    <li><a class="navpills" sunburst>Every Category</a></li>
-                    <li><a class="navpills" end>Conclusion</a></li>
-                    <li><a class="navpills" explore>Explore</a></li>
+                    <li><a class="navpills" id="intro" intro>Introduction</a></li>
+                    <li><a class="navpills" id="categories" ng-click="create_categories_data()" categories>Categories</a></li>
+                    <li><a class="navpills" id="categorieslist" ng-click="create_categories_list()" categorieslist>Explore Categories</a></li>
+
+                    <li><a class="navpills" id="sunburst" sunburst>Every Category</a></li>
+                    <li><a class="navpills" id="explore" explore>Explore</a></li>
 
                 </ul>
 
@@ -51,7 +51,12 @@
 
 <script type="text/javascript" src="{{ SITEURL }}/tax/tax_controller.js"></script>
 <script type="text/javascript" src="{{ SITEURL }}/tax/tax_module.js"></script>
-<script type="text/javascript" src="{{ SITEURL }}/tax/tax_directives.js"></script>
+
+<!-- directives -->
+<script type="text/javascript" src="{{ SITEURL }}/tax/tax_directives_pages.js"></script>
+<script type="text/javascript" src="{{ SITEURL }}/tax/tax_directives_intro.js"></script>
+<script type="text/javascript" src="{{ SITEURL }}/tax/tax_directives_categories.js"></script>
+<script type="text/javascript" src="{{ SITEURL }}/tax/tax_directives_categorieslist.js"></script>
 
 
 {% endblock %}

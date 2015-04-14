@@ -27,15 +27,37 @@ function Ctrl1($scope) {
     };
 
 
-    $scope.create_category_data = function() { 
+
+    get_tax_categories = function(dat) { 
+        // -----------------
+        // create a list of tax break categories
+        var categories = [];
+        dat.forEach(function(d) {
+            var category = d.omb_cat;
+            if( categories.indexOf(category) < 0 ) {
+                categories.push(category);
+            }
+        });
+        return categories;
+    }
+
+
+    $scope.create_categories_list = function() { 
+        if(!$scope.taxData) { return };
+        $scope.categorieslist = get_tax_categories($scope.taxData);
+    };
+
+
+    $scope.create_categories_data = function() { 
 
         if(!$scope.taxData) { return };
 
         var list = [];
+
         list.push({
             name: 'root',
             parent: null,
-            depth: 1
+            depth: 0
         });
 
         dat = $scope.taxData;
@@ -43,18 +65,16 @@ function Ctrl1($scope) {
         // -----------------
         // create a list of tax break categories
         var categories = [];
-        dat.forEach(function(d) {
-
+        dat.forEach(function(d) { 
             var category = d.omb_cat;
             if( categories.indexOf(category) < 0 ) {
                 categories.push(category);
                 list.push({
                     name: category,
                     parent: 'root',
-                    depth: 2
+                    depth: 1
                 });
             }
-
         });
 
         // -----------------
@@ -68,7 +88,7 @@ function Ctrl1($scope) {
                 list.push({
                     name: name,
                     parent: category,
-                    depth: 3
+                    depth: 2
                 });
             }
         });
@@ -97,7 +117,6 @@ function Ctrl1($scope) {
 
             // create initial list
             the_list.forEach(function(obj) {
-                //obj[childrenAttr] = [];
                 lookup[obj[nameAttr]] = obj;
             });
 
@@ -139,7 +158,6 @@ function Ctrl1($scope) {
     $scope.load_csv_data();
 
 
-
     //////////////////////////////
     // Initialize
     // (called by ng-init)
@@ -152,14 +170,13 @@ function Ctrl1($scope) {
     // like with load_csv_data, 
     // there would be no view.
     $scope.initialize = function() {
-        $scope.home();
+
+        $scope.$watch('clicked',function() {
+            $scope.clicked();
+        });
+
     };
 
-    $scope.home = function() {
-        myid = 'div#myContent';
-        $(myid).append( $("<h1></h1>").append( $("<b></b>").text("Home") ) )
-               .append( $("<p></p>").text("Use the navigation elements to the left to explore the tax dataset.") );
-    };
 
 };
 
