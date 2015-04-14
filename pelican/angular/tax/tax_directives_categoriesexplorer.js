@@ -44,54 +44,61 @@ var c_lead_dir = mod.directive('categoriesExplorerLead', function($compile) {
 
 
 // -----------------------------------------------------
-// Construct the categories explorer chart
+// Construct the categories explorer button group
 //
 
 var c_button_dir = mod.directive('categoriesExplorerButton', function($compile) {
     function link(scope, element, attr) {
+        if( !scope.categorieslist ) { 
+            scope.$watch('categorieslist',doit);
+        } else {
+            doit();
+        }
+        function doit() {
 
-        var el = element[0];
+            var el = element[0];
 
-        // construct button group,
-        // then compile html with angular,
-        // then add to document
+            // construct button group,
+            // then compile html with angular,
+            // then add to document
 
-        var btn_group = $("<div />", {
-            "class" : "btn-group"
-        });
+            var btn_group = $("<div />", {
+                "class" : "btn-group"
+            });
 
-        var btn = $("<button />", {
-            type : "button",
-            "class" : "btn btn-success dropdown-toggle",
-            "id" : "categorybutton",
-            "data-toggle" : "dropdown",
-            "aria-expanded" : "false",
-            "html" : '[[myfilter]] <span class="caret"></span>'
-        }).appendTo(btn_group);
+            var btn = $("<button />", {
+                type : "button",
+                "class" : "btn btn-success dropdown-toggle",
+                "id" : "categorybutton",
+                "data-toggle" : "dropdown",
+                "aria-expanded" : "false",
+                "html" : '[[myfilter]] <span class="caret"></span>'
+            }).appendTo(btn_group);
 
-        var ul = $("<ul />", {
-            "class" : "dropdown-menu",
-            role: "menu"
-        }).appendTo(btn_group);
+            var ul = $("<ul />", {
+                "class" : "dropdown-menu",
+                role: "menu"
+            }).appendTo(btn_group);
 
-        var divider = $("<li />", {
-            "class" : "divider"
-        }).appendTo(ul);
+            var divider = $("<li />", {
+                "class" : "divider"
+            }).appendTo(ul);
 
-        scope.categorieslist.forEach(function(c,i) { 
-            var li = $("<li />", {}).appendTo(ul);
-            var a = $("<a />", {
-                "id" : i,
-                cat : ""
-            }).text(c).appendTo(li);
-        });
+            scope.categorieslist.forEach(function(c,i) { 
+                var li = $("<li />", {}).appendTo(ul);
+                var a = $("<a />", {
+                    "id" : i,
+                    cat : ""
+                }).text(c).appendTo(li);
+            });
 
-        var bg = $compile(btn_group.html())(scope);
-        angular.element($(el)).append(bg);
+            var bg = $compile(btn_group.html())(scope);
+            angular.element($(el)).append(bg);
 
-        scope.$apply();
+            scope.$apply();
+
+        }
     };
-
     return {
         restrict: "E",
         link: link,
@@ -112,5 +119,50 @@ var cdir = mod.directive("cat", function($compile) {
         });
     };
 });
+
+
+
+// -----------------------------------------------------
+// Construct the categories explorer chart group
+//
+
+var c_chart_dir = mod.directive('categoriesExplorerChart', function($compile) {
+    function link(scope, element, attr) {
+        var pscope = scope.$parent;
+        if( !pscope.taxData ) { 
+            pscope.$watch('taxData',doit);
+        } else {
+            doit();
+        }
+        function doit() {
+            console.log('This is where you make your D3 chart.');
+            //console.log(pscope.taxData);
+        }
+    };
+    return {
+        link: link,
+        restrict: "E",
+        scope: {
+            myfilter : '=',
+            taxData : '='
+        }
+    };
+
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

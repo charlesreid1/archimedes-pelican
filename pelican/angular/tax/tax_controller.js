@@ -35,9 +35,11 @@ function Ctrl1($scope) {
     $scope.categories_init = function() { 
         if( !$scope.taxData ) { 
             $scope.$watch('taxData',doit);
+        } else {
+            doit();
         }
         function doit() { 
-            t = get_category_tree($scope.taxData);
+            var t = get_category_tree($scope.taxData);
             $scope.treeified = t;
         };
     };
@@ -46,8 +48,15 @@ function Ctrl1($scope) {
     // Categories explorer init funtion
     //
     $scope.categoriesexplorer_init = function() { 
-        if(!$scope.taxData) { return };
-        $scope.categorieslist = get_tax_categories($scope.taxData);
+        if( !$scope.taxData ) { 
+            $scope.$watch('taxData',doit);
+        } else {
+            doit();
+        }
+        function doit() {
+            var cats = get_tax_categories($scope.taxData);
+            $scope.categorieslist = cats;
+        };
     };
 
 
@@ -71,28 +80,6 @@ function Ctrl1($scope) {
         });
         return categories;
     }
-
-    // ------------------------
-    // Load all tax data from CSV
-    //
-    $scope.load_csv_data = function() {
-
-        d3.csv('tax-data.csv',function(err,dat){
-
-            if(err){throw err;}
-
-            //////////////////////////////////
-            // taxData: full data set
-            var taxData = [];
-            dat.forEach(function(r,j){
-                r['id'] = j;
-                taxData.push(r);
-            });
-
-            $scope.taxData = taxData;
-
-        });
-    };
 
     // --------------------------
     // Load category tree 
@@ -143,7 +130,6 @@ function Ctrl1($scope) {
     };
 
 
-
     // ---------------------------
     // Treeify category data
     //
@@ -186,6 +172,30 @@ function Ctrl1($scope) {
 
         return treeList[0];
 
+    };
+
+
+    // ------------------------
+    // Load all tax data from CSV
+    //
+    $scope.load_csv_data = function() {
+
+        d3.csv('tax-data.csv',function(err,dat){
+
+            if(err){throw err;}
+
+            //////////////////////////////////
+            // taxData: full data set
+            var taxData = [];
+            dat.forEach(function(r,j){
+                r['id'] = j;
+                taxData.push(r);
+            });
+
+            console.log('finished loading taxData, now assigning to scope.');
+            $scope.taxData = taxData;
+
+        });
     };
 
 
