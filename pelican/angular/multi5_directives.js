@@ -24,6 +24,7 @@ var cdir1 = mod.directive("category1picker", function($compile) {
         var btn = $("<button />", {
             type : "button",
             "class" : "btn btn-success dropdown-toggle",
+            "id" : "categorybutton",
             "data-toggle" : "dropdown",
             "aria-expanded" : "false",
             "html" : 'Category <span class="caret"></span>'
@@ -62,41 +63,16 @@ var cdir1 = mod.directive("category1picker", function($compile) {
 
 
 var cdir = mod.directive("cat", function($compile) { 
-    console.log('reached cat directive');
     return function(scope, element, attrs){
         element.bind("click", function(){
             var id = +attrs.id;
             scope.myfilter1 = id;
             scope.$apply();
+            $("button#categorybutton").html('Category '+id+' <span class="caret"></span>');
         });
     };
 });
 
-
-
-
-// // // var cat1_dir = mod.directive('cat1', function($compile) {
-// // //     return function(scope, element, attrs){
-// // //         element.bind("click", function(){
-// // //             console.log('in cat1 directive.');
-// // //             console.log(scope);
-// // //             scope.myfilter1 = 1;
-// // //             //angular.element(document.getElementById('go1')).empty();
-// // //             //angular.element(document.getElementById('go1')).append($compile("<div><h1>Hello world</h1><p>Now page 1 has been populated from
-// // //         });
-// // //     };
-// // //     /*
-// // //     function link(scope, element, attr) {
-// // //     };
-// // //     return {
-// // //         link: link,
-// // //         restrict: 'E',
-// // //         scope: { 
-// // //             myfilter1 : '='
-// // //         }
-// // //     }
-// // //     */
-// // // });
 
 
 /////////////////////////
