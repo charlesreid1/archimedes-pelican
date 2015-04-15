@@ -39,8 +39,8 @@ function Ctrl1($scope) {
             doit();
         }
         function doit() { 
-            var t = get_category_tree($scope.taxData);
-            $scope.treeified = t;
+            if(!$scope.taxData){return};
+            $scope.treeified = get_category_tree($scope.taxData);
         };
     };
 
@@ -54,8 +54,9 @@ function Ctrl1($scope) {
             doit();
         }
         function doit() {
-            var cats = get_tax_categories($scope.taxData);
-            $scope.categorieslist = cats;
+            if(!$scope.taxData){return};
+            $scope.categorieslist = get_tax_categories($scope.taxData);
+            $scope.taxDataCat = get_category_aggregate_data($scope.taxData);
         };
     };
 
@@ -66,6 +67,34 @@ function Ctrl1($scope) {
     // Load Data Functions
     //
     //////////////////////////////////////////
+
+
+
+
+    // ------------------------
+    // Load all tax data from CSV
+    // (this is always done, first thing)
+    //
+    $scope.load_csv_data = function() {
+
+        d3.csv('tax-data.csv',function(err,dat){
+
+            if(err){throw err;}
+
+            //////////////////////////////////
+            // taxData: full data set
+            var taxData = [];
+            dat.forEach(function(r,j){
+                r['id'] = j;
+                taxData.push(r);
+            });
+
+            console.log('finished loading taxData, now assigning to scope.');
+            $scope.taxData = taxData;
+
+        });
+    };
+
 
     // ------------------------
     // Load all tax break categories
@@ -175,28 +204,44 @@ function Ctrl1($scope) {
     };
 
 
-    // ------------------------
-    // Load all tax data from CSV
-    //
-    $scope.load_csv_data = function() {
-
-        d3.csv('tax-data.csv',function(err,dat){
-
-            if(err){throw err;}
-
-            //////////////////////////////////
-            // taxData: full data set
-            var taxData = [];
-            dat.forEach(function(r,j){
-                r['id'] = j;
-                taxData.push(r);
-            });
-
-            console.log('finished loading taxData, now assigning to scope.');
-            $scope.taxData = taxData;
-
-        });
+    // aggregate/reduce tax break data
+    // by category
+    // (category explorer page)
+    get_category_aggregate_data = function(dat) {
+        return dat;
     };
+        //if( !$scope.categorieslist ) {
+        //    $scope.$watch('categorieslist',doit);
+        //} else {
+        //    doit();
+        //}
+        //function doit() {
+        //    if(!$scope.categorieslist){return};
+
+        //    dat = $scope.taxData;
+        //    return dat;
+
+        /*
+         0: "omb_cat"
+         1: "name"
+         2: "year"
+         3: "corp"
+         4: "indv"
+         5: "total"
+         6: "gdp"
+         7: "gdp_price_index"
+         8: "corp_adj"
+         9: "indv_adj"
+         10: "total_adj"
+         11: "percent_corp"
+         12: "percent_gdp"
+         13: "percent_indv"
+         14: "percent_omb_cat"
+         15: "percent_total"
+         16: "percent_change"
+         17: "orig_name"
+         18: "id"
+         */
 
 
 

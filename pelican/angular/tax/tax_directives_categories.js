@@ -54,36 +54,25 @@ var categories_lead_dir = mod.directive('categoriesLead', function($compile) {
 var tax_categories_dir = mod.directive('taxcategories', function() {
 
     function link(scope, element, attr) {
-
+        pscope = scope.$parent;
         var watch_target = function() { 
-            return scope.$parent.treeified; 
+            return pscope.treeified; 
         };
-
         var watch_callback = function() { 
-            if(scope.$parent.treeified) {
+            if(pscope.treeified) {
                 $('p#loading').remove();
                 construct();
             }
         };
-
-
-        var el = "div#myContent";
-
-        var txt;
-        if(!scope.$parent.treeified) {
-
-            txt = $("<p />", { 
+        if(!pscope.treeified) {
+            var txt = $("<p />", { 
                 "class": "lead",
                 id : "loading",
                 "html" : "Directive <code>mydirective</code> is loading data..."
             }).appendTo(el);
-
             scope.$watch(watch_target, watch_callback);
-
         } else {
-
             watch_callback();
-
         };
 
         function construct() { 
@@ -96,8 +85,6 @@ var tax_categories_dir = mod.directive('taxcategories', function() {
             var b = $("<b />").text("Tax Break Category List")
                     .appendTo(h1);
 
-
-
             var margin = {
                 top: 10, 
                 right: 100, 
@@ -105,11 +92,11 @@ var tax_categories_dir = mod.directive('taxcategories', function() {
                 left: 100
             };
             
-            var treewidth = 550 - margin.right - margin.left,
-                treeheight = 800 - margin.top - margin.bottom;
-
             var width = 1200 - margin.right - margin.left,
                 height = 800 - margin.top - margin.bottom;
+
+            var treewidth = 550 - margin.right - margin.left,
+                treeheight = 800 - margin.top - margin.bottom;
 
             var i = 0,
                 duration = 550,

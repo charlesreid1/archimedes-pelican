@@ -1,8 +1,11 @@
+.dropdown-menu {
+    top: auto;
+}
+
 ul.dropdown-menu li,
 a.navpills { 
     cursor: pointer; 
 }
-
 
 
 .node circle {
