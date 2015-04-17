@@ -210,40 +210,6 @@ function Ctrl1($scope) {
     get_category_aggregate_data = function(dat) {
         return dat;
     };
-        //if( !$scope.categorieslist ) {
-        //    $scope.$watch('categorieslist',doit);
-        //} else {
-        //    doit();
-        //}
-        //function doit() {
-        //    if(!$scope.categorieslist){return};
-
-        //    dat = $scope.taxData;
-        //    return dat;
-
-        /*
-         0: "omb_cat"
-         1: "name"
-         2: "year"
-         3: "corp"
-         4: "indv"
-         5: "total"
-         6: "gdp"
-         7: "gdp_price_index"
-         8: "corp_adj"
-         9: "indv_adj"
-         10: "total_adj"
-         11: "percent_corp"
-         12: "percent_gdp"
-         13: "percent_indv"
-         14: "percent_omb_cat"
-         15: "percent_total"
-         16: "percent_change"
-         17: "orig_name"
-         18: "id"
-         */
-
-
 
 
     //////////////////////////////////////////////////
