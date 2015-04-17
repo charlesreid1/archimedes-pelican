@@ -24,7 +24,10 @@ var dir_helloworld = mod.directive("helloworld", function(){
 
 var myid = 'div#myContent';
 
-var ngd1 = mod.directive("intro", function($compile){
+var ng;
+var directives = [];
+
+ng = mod.directive("intro", function($compile){
     return function(scope, element, attrs){
 
         scope.clicked = function() { 
@@ -46,8 +49,9 @@ var ngd1 = mod.directive("intro", function($compile){
         element.bind("click",scope.clicked);
     };
 });
+directives.push(ng);
 
-var ngd2 = mod.directive("categories", function($compile){
+ng = mod.directive("categories", function($compile){
     return function(scope, element, attrs){
         element.bind("click", function(){
 
@@ -68,8 +72,9 @@ var ngd2 = mod.directive("categories", function($compile){
         });
     };
 });
+directives.push(ng);
 
-var ngd3 = mod.directive("categoriesexplorer", function($compile){
+ng = mod.directive("categoriesexplorer", function($compile){
     return function(scope, element, attrs){
         element.bind("click", function(){
 
@@ -91,8 +96,32 @@ var ngd3 = mod.directive("categoriesexplorer", function($compile){
         });
     };
 });
+directives.push(ng);
 
-var ngd4 = mod.directive("sunburst", function($compile){
+ng = mod.directive("categoriesexplorerera", function($compile){
+    return function(scope, element, attrs){
+        element.bind("click", function(){
+
+            // make button active
+            $("a.navpills").parent().removeClass("active");
+            $("a#categoriesexplorerera").parent().addClass("active");
+
+            // add content and directive
+            $(myid).empty();
+            $(myid).append($compile(
+                    "<div>" + 
+                    "<categories-explorer-era-title></categories-explorer-era-title>" + 
+                    "<categories-explorer-era-lead></categories-explorer-era-lead>" + 
+                    "<categories-explorer-era-button myfilter='myfilter' categorieslist='categorieslist'></categories-explorer-era-button>" +
+                    "<categories-explorer-era-streamgraph myfilter='myfilter' taxData='taxData'></categories-explorer-era-streamgraph>" +
+                    "</div>"
+            )(scope));
+        });
+    };
+});
+directives.push(ng);
+
+ng = mod.directive("sunburst", function($compile){
     return function(scope, element, attrs){
         element.bind("click", function(){
             $(myid).empty();
@@ -102,8 +131,9 @@ var ngd4 = mod.directive("sunburst", function($compile){
         });
     };
 });
+directives.push(ng);
 
-var ngd5 = mod.directive("end", function($compile){
+ng = mod.directive("end", function($compile){
     return function(scope, element, attrs){
         element.bind("click", function(){
 
@@ -118,8 +148,9 @@ var ngd5 = mod.directive("end", function($compile){
         });
     };
 });
+directives.push(ng);
 
-var ngd6 = mod.directive("explore", function($compile){
+ng = mod.directive("explore", function($compile){
     return function(scope, element, attrs){
         element.bind("click", function(){
 
@@ -134,5 +165,6 @@ var ngd6 = mod.directive("explore", function($compile){
         });
     };
 });
+directives.push(ng);
 
 

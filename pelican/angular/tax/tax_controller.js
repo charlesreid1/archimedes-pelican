@@ -61,6 +61,7 @@ function Ctrl1($scope) {
     };
 
 
+    $scope.categoriesexplorerera_init = $scope.categoriesexplorer_init;
 
     //////////////////////////////////////////
     //
