@@ -32,7 +32,8 @@ HOME = os.environ.get('HOME')
 
 PLUGIN_PATHS = [HOME+'/codes/pelican-plugins/',
                 HOME+'/codes/pelican-ipynb/']
-PLUGINS = ['liquid_tags','render_math','ipynb']
+#PLUGINS = ['liquid_tags','render_math','ipynb']
+PLUGINS = []
 #EXTRA_HEADER = open('_nb_header.html').read().decode('utf-8')
 
 
