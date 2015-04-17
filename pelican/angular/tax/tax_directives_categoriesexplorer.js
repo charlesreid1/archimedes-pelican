@@ -126,8 +126,34 @@ var cdir = mod.directive("cat", function($compile) {
 
 
 
+////////////////////////////////////////////////////
+//    Data fields:
+//    0: "omb_cat"
+//    1: "name"
+//    2: "year"
+//    3: "corp"
+//    4: "indv"
+//    5: "total"
+//    6: "gdp"
+//    7: "gdp_price_index"
+//    8: "corp_adj"
+//    9: "indv_adj"
+//    10: "total_adj"
+//    11: "percent_corp"
+//    12: "percent_gdp"
+//    13: "percent_indv"
+//    14: "percent_omb_cat"
+//    15: "percent_total"
+//    16: "percent_change"
+//    17: "orig_name"
+//    18: "id"
+////////////////////////////////////////////////////
+
+
+
 // -----------------------------------------------------
-// Construct the categories explorer chart group
+// Construct the categories explorer 
+// bar chart
 //
 
 var c_chart_dir = mod.directive('categoriesExplorerBar', function($compile) {
@@ -182,27 +208,6 @@ var c_chart_dir = mod.directive('categoriesExplorerBar', function($compile) {
                 myfilter = pscope.myfilter;
                 categorieslist = pscope.categorieslist;
 
-                /*
-                0: "omb_cat"
-                1: "name"
-                2: "year"
-                3: "corp"
-                4: "indv"
-                5: "total"
-                6: "gdp"
-                7: "gdp_price_index"
-                8: "corp_adj"
-                9: "indv_adj"
-                10: "total_adj"
-                11: "percent_corp"
-                12: "percent_gdp"
-                13: "percent_indv"
-                14: "percent_omb_cat"
-                15: "percent_total"
-                16: "percent_change"
-                17: "orig_name"
-                18: "id"
-                */
 
                 var xkey = 'year';
                 var ykey = 'total';
@@ -220,26 +225,6 @@ var c_chart_dir = mod.directive('categoriesExplorerBar', function($compile) {
                     })
                     .entries(catData);
 
-                /*
-                catData.forEach(function(d) { 
-                    var yr  =  d[xkey];
-                    var tot = +d[ykey];
-                    // if year is not in our dictionary, add it.
-                    // otherwise, increment it.
-                    if(Object.keys(total_yrData).indexOf(yr)<0) {
-                        total_yrData[yr] = tot;
-                    } else {
-                        total_yrData[yr] += tot;
-                    }
-                });
-                data = [];
-                Object.keys(total_yrData).forEach(function(k) {
-                    dat = {}
-                    dat[xkey] = k;
-                    dat[ykey] = total_yrData[k];
-                    data.push(dat);
-                });
-                */
 
                 // Draw a bar chart of amounts:
                 // - nominal $ (total)
@@ -307,6 +292,13 @@ var c_chart_dir = mod.directive('categoriesExplorerBar', function($compile) {
 });
 
 
+
+
+// -----------------------------------------------------
+// Construct the categories explorer 
+// indv/corp streamgraph
+//
+
 var c_indcorp_dir = mod.directive('categoriesExplorerIndcorp', function($compile) {
     function link(scope, element, attr) {
         var pscope = scope.$parent;
@@ -318,8 +310,6 @@ var c_indcorp_dir = mod.directive('categoriesExplorerIndcorp', function($compile
 
         function chartCallback() {
 
-            console.log('in indcorp chart callback');
-
             var margin = {
                 top:    10, 
                 right:  40, 
@@ -329,7 +319,7 @@ var c_indcorp_dir = mod.directive('categoriesExplorerIndcorp', function($compile
 
             var width = 300,
                 height = 200;
-            
+
             var el = element[0];
             var br = d3.select(el).append('br');
             var h2 = d3.select(el).append('h2')
@@ -541,3 +531,122 @@ var c_indcorp_dir = mod.directive('categoriesExplorerIndcorp', function($compile
 });
             
 
+
+var c_indcorp_dir = mod.directive('categoriesExplorerStreamgraph', function($compile) {
+    function link(scope, element, attr) {
+        var pscope = scope.$parent;
+        if( !pscope.taxData ) { 
+            pscope.$watch('taxData', chartCallback);
+        } else {
+            chartCallback();
+        }
+
+        function chartCallback() {
+
+            var margin = {
+                top:    10, 
+                right:  40, 
+                bottom: 10, 
+                left:   40
+            };
+
+            var width = 400,
+                height = 300;
+            
+            var el = element[0];
+            var br = d3.select(el).append('br');
+            var h2 = d3.select(el).append('h2')
+                .attr("id","totalyear")
+                .append('b')
+                .text('Streamgraph');
+            var svg = d3.select(el).append("svg")
+                .attr("width", width)
+                .attr("height", height);
+            
+            pscope.$watch('myfilter',chartUpdate);
+
+            function chartUpdate() {
+
+                taxData = pscope.taxData;
+                myfilter = pscope.myfilter;
+
+
+
+
+                var n = 2, // number of layers
+                    m = 40, // number of samples per layer
+                    stack = d3.layout.stack().offset("wiggle"),
+                    l0 = d3.range(n).map(function() { return bumpLayer(m); });
+                    l1 = d3.range(n).map(function() { return bumpLayer(m); });
+                    layers0 = stack(l0),
+                    layers1 = stack(l1);
+
+                console.log(layers0);
+
+
+                var x = d3.scale.linear()
+                    .domain([0, m - 1])
+                    .range([0, width]);
+                
+                var y = d3.scale.linear()
+                    .domain([0, d3.max(layers0.concat(layers1), function(layer) { return d3.max(layer, function(d) { return d.y0 + d.y; }); })])
+                    .range([height, 0]);
+                
+                var color = d3.scale.linear()
+                    .range(["#aad", "#556"]);
+                
+                var area = d3.svg.area()
+                    .x(function(d) { return x(d.x); })
+                    .y0(function(d) { return y(d.y0); })
+                    .y1(function(d) { return y(d.y0 + d.y); });
+                
+                svg.selectAll("path")
+                    .data(layers0)
+                  .enter().append("path")
+                    .attr("d", area)
+                    .style("fill", function() { return color(Math.random()); });
+                
+                function transition() {
+                  d3.selectAll("path")
+                      .data(function() {
+                        var d = layers1;
+                        layers1 = layers0;
+                        return layers0 = d;
+                      })
+                    .transition()
+                      .duration(2500)
+                      .attr("d", area);
+                }
+                
+                // Inspired by Lee Byron's test data generator.
+                function bumpLayer(n) {
+                
+                  function bump(a) {
+                    var x = 1 / (.1 + Math.random()),
+                        y = 2 * Math.random() - .5,
+                        z = 10 / (.1 + Math.random());
+                    for (var i = 0; i < n; i++) {
+                      var w = (i / n - y) * z;
+                      a[i] += x * Math.exp(-w * w);
+                    }
+                  }
+                
+                  var a = [], i;
+                  for (i = 0; i < n; ++i) a[i] = 0;
+                  for (i = 0; i < 5; ++i) bump(a);
+                  return a.map(function(d, i) { return {x: i, y: Math.max(0, d)}; });
+                }
+            }
+        }
+    };
+
+    return {
+        link: link,
+        restrict: "E",
+        scope: {
+            myfilter : '=',
+            taxData : '='
+        }
+    };
+
+});

@@ -84,8 +84,8 @@ var ngd3 = mod.directive("categoriesexplorer", function($compile){
                     "<categories-explorer-title></categories-explorer-title>" + 
                     "<categories-explorer-lead></categories-explorer-lead>" + 
                     "<categories-explorer-button myfilter='myfilter' categorieslist='categorieslist'></categories-explorer-button>" +
+                    "<categories-explorer-streamgraph myfilter='myfilter' taxData='taxData'></categories-explorer-streamgraph>" +
                     "<categories-explorer-bar myfilter='myfilter' taxData='taxData'></categories-explorer-bar>" +
-                    "<categories-explorer-indcorp myfilter='myfilter' taxData='taxData'></categories-explorer-indcorp>" +
                     "</div>"
             )(scope));
         });
