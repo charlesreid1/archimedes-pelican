@@ -570,7 +570,30 @@ var c_indcorp_dir = mod.directive('categoriesExplorerStreamgraph', function($com
                 taxData = pscope.taxData;
                 myfilter = pscope.myfilter;
 
+                catData = taxData.filter(function(d) { return d['omb_cat'] == myfilter; });
+                newdata = d3.nest()
+                    .key( function(d) { return d.year; } )
+                    .sortKeys(d3.ascending)
+                    .rollup( function(d) {
+                        return {
+                            total: d3.sum(d,function(g){return g.total}),
+                            corp:  d3.sum(d,function(g){return g.corp }),
+                            indv:  d3.sum(d,function(g){return g.indv })
+                        }
+                    })
+                    .entries(catData);
 
+                var xkey = 'year';
+                var ykeys = ['corp','indv'];
+
+                // data_array is a pair of arrays, 
+                // containing time series vectors 
+                // of coordinates (x,y)
+                var data_array = ykeys.map(function (k) {
+                    return newdata.map(function(e, i) { 
+                        return {x: +e.key, y: e.values[k]/1000000}; 
+                    })
+                });
 
 
                 var n = 2, // number of layers
@@ -583,17 +606,31 @@ var c_indcorp_dir = mod.directive('categoriesExplorerStreamgraph', function($com
 
                 console.log(layers0);
 
+                var stacked_array = stack(data_array);
+                console.log(stacked_array);
+                layers0 = stacked_array;
 
+
+                /*
                 var x = d3.scale.linear()
                     .domain([0, m - 1])
                     .range([0, width]);
+                */
+                var x = d3.scale.linear()
+                    .domain([1974,2019])
+                    .range([0, width]);
                 
+                /*
                 var y = d3.scale.linear()
-                    .domain([0, d3.max(layers0.concat(layers1), function(layer) { return d3.max(layer, function(d) { return d.y0 + d.y; }); })])
+                    .domain([0, d3.max(layers0, function(layer) { return d3.max(layer, function(d) { return d.y0 + d.y; }); })])
+                    .range([height, 0]);
+                */
+                var y = d3.scale.linear()
+                    .domain([0, d3.max(layers0, function(layer) { return d3.max(layer, function(d) { return d.y0 + d.y; }); })])
                     .range([height, 0]);
                 
                 var color = d3.scale.linear()
-                    .range(["#aad", "#556"]);
+                    .range(["steelblue", "pink"]);
                 
                 var area = d3.svg.area()
                     .x(function(d) { return x(d.x); })
