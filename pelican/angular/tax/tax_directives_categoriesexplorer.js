@@ -299,239 +299,6 @@ var c_chart_dir = mod.directive('categoriesExplorerBar', function($compile) {
 // indv/corp streamgraph
 //
 
-var c_indcorp_dir = mod.directive('categoriesExplorerIndcorp', function($compile) {
-    function link(scope, element, attr) {
-        var pscope = scope.$parent;
-        if( !pscope.taxData ) { 
-            pscope.$watch('taxData', chartCallback);
-        } else {
-            chartCallback();
-        }
-
-        function chartCallback() {
-
-            var margin = {
-                top:    10, 
-                right:  40, 
-                bottom: 10, 
-                left:   40
-            };
-
-            var width = 300,
-                height = 200;
-
-            var el = element[0];
-            var br = d3.select(el).append('br');
-            var h2 = d3.select(el).append('h2')
-                .attr("id","totalyear")
-                .append('b')
-                .text('Tax Break Totals Streamgraph');
-
-            var color = d3.scale.linear()
-                .range(["#ada", "#565"]);
-
-
-            var svg = d3.select(el).append('svg')
-                .attr("width", width + margin.left + margin.right)
-                .attr("height", height + margin.top + margin.bottom)
-                .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
-                .append("g");
-
-
-
-            pscope.$watch('myfilter', chartUpdate);
-
-            if( !pscope.categorieslist) { 
-                pscope.$watch('categorieslist', chartUpdate);
-            } else {
-                chartUpdate();
-            }
-
-            function chartUpdate() {
-
-                if(!pscope.myfilter){return};
-                if(!pscope.categorieslist){return};
-
-                taxData = pscope.taxData;
-                myfilter = pscope.myfilter;
-                categorieslist = pscope.categorieslist;
-
-                var xkey = 'year';
-                var ykeys = ['corp','indv'];
-
-                var catData = taxData.filter(function(d) { return d['omb_cat'] == myfilter; });
-
-                var newdata = d3.nest()
-                    .key( function(d) { return d.year; } )
-                    .sortKeys(d3.ascending)
-                    .rollup( function(d) {
-                        return {
-                            total: d3.sum(d,function(g){return g.total}),
-                            corp:  d3.sum(d,function(g){return g.corp }),
-                            indv:  d3.sum(d,function(g){return g.indv })
-                        }
-                    })
-                    .entries(catData);
-
-                //console.log(JSON.stringify(newdata));
-
-                // data_array is a pair of arrays, 
-                // containing time series vectors 
-                // of coordinates (x,y)
-                var data_array = ykeys.map(function (k) {
-                
-                    // this returns a set of {x,y} pairs 
-                    // that create a time series
-                    // for our key of interest. 
-                    return newdata.map(function(e, i) { 
-                
-                        // x = year
-                        // y = value of variable (corp/indv) for given year
-                        return {x: +e.key, y: e.values[k]}; 
-                
-                    })
-                
-                });
-
-                /*
-                var xScale = d3.scale.linear()
-                    .domain(
-                        [   d3.min(data_array, function(da) {
-                                return d3.min(da,function(da2){return da2.x}); 
-                            }), 
-                            d3.max(data_array, function(da) {
-                                return d3.max(da,function(da2){return da2.x}); 
-                            }) 
-                        ]
-                    )
-                    .range([0,width]);
-                */
-                var xScale = d3.scale.linear()
-                    .domain([1974,2019])
-                    .range([0,width]);
-
-                /*
-                var yScale = d3.scale.linear()
-                    .domain([
-                            d3.min(data_array, function(da) {
-                                return d3.min(da,function(da2){return da2.y0 + da2.y}); 
-                            }), 
-                            d3.max(data_array, function(da) {
-                                return d3.max(da,function(da2){return da2.y0 + da2.y}); 
-                            }) 
-                    ])
-                    .range([height,0]);
-                */
-                var yScale = d3.scale.linear()
-                    .domain([0,1000000000])
-                    .range([height,0]);
-
-
-                colors = ['steelblue','pink'];
-
-                // now we stack data_array
-                var stack = d3.layout.stack().offset('wiggle');
-                var layers = stack(data_array);
-
-                //console.log(JSON.stringify(layers));
-                
-                //vis type
-                console.log('about to call area.');
-                /*
-                var area = d3.svg.area()
-                    .interpolate('cardinal')
-                    .x(function (d, i) {
-                        return x(d.x);
-                    })
-                    .y0(function (d) {
-                        return y(d.y0);
-                    })
-                    .y1(function (d) {
-                        return y(d.y0 + d.y);
-                    });
-                */
-                /*
-                var area = d3.svg.area()
-                    .interpolate('basis')
-                    .x(function (d) {
-                        return xScale(d.x);
-                    })
-                    .y0(function (d) {
-                        console.log(d.y0);
-                        console.log(yScale(d.y0));
-                        return yScale(d.y0);
-                    })
-                    .y1(function (d) {
-                        return yScale(d.y0 + d.y);
-                    });
-                */
-                /*
-                var area = d3.svg.area()
-                    .interpolate('cardinal');
-
-                area.x(function(d,i) { 
-                        console.log(i);
-                        return xScale(d.x);
-                    });
-
-                area.y0(function (d) {
-                    console.log('d.y0:');
-                    console.log(d.y0);
-                    return y(d.y0);
-                })
-                console.log(area);
-
-                area.y1(function (d) {
-                    return y(d.y0 + d.y);
-                });
-                console.log(area);
-
-                console.log('done with call to area.');
-                */
-                var area = d3.svg.area()
-                    .interpolate(function() { 
-                        console.log('returning interpolation basis');
-                        return 'basis' });
-
-                console.log(area);
-
-                area.x(function(d)  { console.log('whatevs1'); return x(d.x); })
-                    .y0(function(d) { console.log('whatevs2'); return y(d.y0); })
-                    .y1(function(d) { console.log('whatevs3'); return y(d.y0 + d.y); });
-
-
-                console.log('done with call to area.');
-
-                svg.selectAll("path")
-                    .data(layers)
-                    .enter().append("path")
-                    .attr("d", function (d) {
-                        return area(d);
-                    })
-                    .style("fill", function (d,i) {
-                        return color(i);
-                    });
-
-
-
-
-            }
-        }
-    };
-
-    return {
-        link: link,
-        restrict: "E",
-        scope: {
-            myfilter : '=',
-            taxData : '='
-        }
-    };
-
-});
-            
-
-
 var c_indcorp_dir = mod.directive('categoriesExplorerStreamgraph', function($compile) {
     function link(scope, element, attr) {
         var pscope = scope.$parent;
@@ -586,6 +353,10 @@ var c_indcorp_dir = mod.directive('categoriesExplorerStreamgraph', function($com
                 var xkey = 'year';
                 var ykeys = ['corp','indv'];
 
+                var color = d3.scale.ordinal()
+                    .domain(ykeys)
+                    .range(["steelblue", "orange"]);
+
                 // data_array is a pair of arrays, 
                 // containing time series vectors 
                 // of coordinates (x,y)
@@ -595,84 +366,36 @@ var c_indcorp_dir = mod.directive('categoriesExplorerStreamgraph', function($com
                     })
                 });
 
+                var stack = d3.layout.stack().offset("wiggle");
+                layers0 = stack(data_array);
 
-                var n = 2, // number of layers
-                    m = 40, // number of samples per layer
-                    stack = d3.layout.stack().offset("wiggle"),
-                    l0 = d3.range(n).map(function() { return bumpLayer(m); });
-                    l1 = d3.range(n).map(function() { return bumpLayer(m); });
-                    layers0 = stack(l0),
-                    layers1 = stack(l1);
-
-                console.log(layers0);
-
-                var stacked_array = stack(data_array);
-                console.log(stacked_array);
-                layers0 = stacked_array;
-
-
-                /*
                 var x = d3.scale.linear()
-                    .domain([0, m - 1])
+                    .domain([
+                                d3.min( layers0, function(layer) { return d3.min(layer, function(z) { return z.x; }); } ),
+                                d3.max( layers0, function(layer) { return d3.max(layer, function(z) { return z.x; }); } ),
+                            ])
                     .range([0, width]);
-                */
-                var x = d3.scale.linear()
-                    .domain([1974,2019])
-                    .range([0, width]);
-                
-                /*
+
                 var y = d3.scale.linear()
                     .domain([0, d3.max(layers0, function(layer) { return d3.max(layer, function(d) { return d.y0 + d.y; }); })])
                     .range([height, 0]);
-                */
-                var y = d3.scale.linear()
-                    .domain([0, d3.max(layers0, function(layer) { return d3.max(layer, function(d) { return d.y0 + d.y; }); })])
-                    .range([height, 0]);
-                
-                var color = d3.scale.linear()
-                    .range(["steelblue", "pink"]);
                 
                 var area = d3.svg.area()
                     .x(function(d) { return x(d.x); })
                     .y0(function(d) { return y(d.y0); })
                     .y1(function(d) { return y(d.y0 + d.y); });
                 
+                //
+                // i learned my lesson from the bar chart:
+                // use .remove() before .enter() 
+                //
+                svg.selectAll("path").remove();
                 svg.selectAll("path")
                     .data(layers0)
-                  .enter().append("path")
+                    .enter().append("path")
                     .attr("d", area)
-                    .style("fill", function() { return color(Math.random()); });
-                
-                function transition() {
-                  d3.selectAll("path")
-                      .data(function() {
-                        var d = layers1;
-                        layers1 = layers0;
-                        return layers0 = d;
-                      })
-                    .transition()
-                      .duration(2500)
-                      .attr("d", area);
-                }
-                
-                // Inspired by Lee Byron's test data generator.
-                function bumpLayer(n) {
-                
-                  function bump(a) {
-                    var x = 1 / (.1 + Math.random()),
-                        y = 2 * Math.random() - .5,
-                        z = 10 / (.1 + Math.random());
-                    for (var i = 0; i < n; i++) {
-                      var w = (i / n - y) * z;
-                      a[i] += x * Math.exp(-w * w);
-                    }
-                  }
-                
-                  var a = [], i;
-                  for (i = 0; i < n; ++i) a[i] = 0;
-                  for (i = 0; i < 5; ++i) bump(a);
-                  return a.map(function(d, i) { return {x: i, y: Math.max(0, d)}; });
-                }
+                    .attr('fill',function(layer,i) { return color(i) });
+
             }
         }
     };
