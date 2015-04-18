@@ -113,7 +113,7 @@ ng = mod.directive("categoriesexplorerera", function($compile){
                     "<categories-explorer-era-title></categories-explorer-era-title>" + 
                     "<categories-explorer-era-lead></categories-explorer-era-lead>" + 
                     "<categories-explorer-era-button myfilter='myfilter' categorieslist='categorieslist'></categories-explorer-era-button>" +
-                    "<categories-explorer-era-streamgraph myfilter='myfilter' taxData='taxData'></categories-explorer-era-streamgraph>" +
+                    "<categories-explorer-era-streamgraph-group myfilter='myfilter' taxData='taxData'></categories-explorer-era-streamgraph-group>" +
                     "</div>"
             )(scope));
         });
