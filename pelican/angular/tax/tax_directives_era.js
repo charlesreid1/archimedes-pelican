@@ -443,10 +443,11 @@ var c_indcorp_dir = mod.directive('categoriesExplorerEraStreamgraphGroup', funct
                 .key( function(d) { return d.year; } )
                 .sortKeys(d3.ascending)
                 .rollup( function(d) {
+                    var M = 1000000;
                     return {
-                        total: d3.sum(d,function(g){return g.total}),
-                        corp:  d3.sum(d,function(g){return g.corp }),
-                        indv:  d3.sum(d,function(g){return g.indv })
+                        total: d3.sum(d,function(g){return g.total/M}),
+                        corp:  d3.sum(d,function(g){return  g.corp/M}),
+                        indv:  d3.sum(d,function(g){return  g.indv/M})
                     }
                 })
                 .entries(catData);
@@ -458,27 +459,75 @@ var c_indcorp_dir = mod.directive('categoriesExplorerEraStreamgraphGroup', funct
             // data_array is a pair of arrays, 
             // containing time series vectors 
             // of coordinates (x,y)
+            var full_data_array = ykeys.map(function (k,ik) {
+                var ratmap = newdata.map(function(s) {
+                    return {x: +s.key, y: s.values[k]};
+                });
+                return ratmap;
+            });
             var data_array = ykeys.map(function (k,ik) {
                 var ratmap = newdata.filter(function(nd) {
                     return ((nd.key >= prez.year0) && (nd.key <= prez.year1));
                 }).map(function(s) {
-                    return {x: +s.key, y: s.values[k]/1000000};
+                    return {x: +s.key, y: s.values[k]};
                 });
                 return ratmap;
             });
 
             var stack = d3.layout.stack().offset("silhouette");
+            // this is where you fix y0 - find y0 for full dset, 
+            // then apply to cut dset
             layers0 = stack(data_array);
+            layers1 = stack(full_data_array);
+
+            var ysupermax = d3.max(newdata, function(r) { 
+                return r.values['total'];
+            })
+
+            ymin = d3.min(layers0,function(da){ 
+                return d3.min(da, function(dda) { 
+                    return dda.y0;
+                });
+            });
+
+            ymax = d3.max(layers0,function(da){ 
+                return d3.max(da, function(dda) { 
+                    return dda.y0 + dda.y;
+                });
+            });
 
             var x = d3.scale.linear()
+                .domain([prez.year0,prez.year1])
                 .range([0, width]);
             
             var y = d3.scale.linear()
+                .domain([0, ysupermax])
                 .range([height, 0]);
             
             var z = d3.scale.ordinal()
                 .domain(ykeys)
                 .range(["steelblue", "orange"]);
+
+
+
+
+            // shift the streams up to middle of graph
+            //
+            var real_dy = y(ymin) - y(ymax);
+            var real_extra_space = height - real_dy;
+            var real_offset = real_extra_space/2.0;
+
+            var canvas_dy = ymax - ymin;
+            var canvas_extra_space = ysupermax - canvas_dy;
+            var canvas_offset = canvas_extra_space/2.0;
+
+            for(var i=0; i<layers0.length; i+=1) {
+                s0 = layers0[i];
+                for(var j=0; j<s0.length; j+=1) {
+                    s0[j]['y0'] += canvas_offset; 
+                }
+            }
+
 
             var xAxis = d3.svg.axis()
                 .scale(x)
@@ -489,22 +538,6 @@ var c_indcorp_dir = mod.directive('categoriesExplorerEraStreamgraphGroup', funct
             
             var yAxisr = d3.svg.axis()
                 .scale(y);
-
-            x.domain([
-                    d3.min( layers0, function(layer) { 
-                        return d3.min(layer, function(z) { return z.x; }); 
-                    }),
-                    d3.max( layers0, function(layer) { 
-                        return d3.max(layer, function(z) { return z.x; }); 
-                    })
-            ]);
-
-            y.domain([
-                    0, 
-                    d3.max(layers0, function(layer) { 
-                        return d3.max(layer, function(d) { return d.y0 + d.y; }) 
-                    })
-            ]);
 
             var area = d3.svg.area()
                 .x(function(d)  { return x(d.x); })
@@ -552,6 +585,7 @@ var c_indcorp_dir = mod.directive('categoriesExplorerEraStreamgraphGroup', funct
                     d3.select(this)
                         .classed("hover", false);
                 });
+
 
             /*
             
