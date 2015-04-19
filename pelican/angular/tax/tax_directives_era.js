@@ -207,7 +207,8 @@ var c_indcorp_dir = mod.directive('categoriesExplorerEraStreamgraph', function($
                     })
                 });
 
-                var stack = d3.layout.stack().offset("silhouette");
+                //var stack = d3.layout.stack().offset("silhouette");
+                var stack = d3.layout.stack().offset("wiggle");
                 layers0 = stack(data_array);
 
                 var x = d3.scale.linear()
@@ -358,12 +359,13 @@ var c_indcorp_dir = mod.directive('categoriesExplorerEraStreamgraphGroup', funct
         var pscope = scope.$parent;
 
         if( !pscope.taxData ) { 
-            pscope.$watch('taxData', chartCallback);
+            pscope.$watch('taxData', watchFilter);
         } else {
             watchFilter();
         }
 
         function watchFilter() {
+            if(!pscope.taxData) { return };
 
             pscope.$watch('myfilter',chartUpdate);
 

@@ -63,6 +63,22 @@ function Ctrl1($scope) {
 
     $scope.categoriesexplorerera_init = $scope.categoriesexplorer_init;
 
+
+    $scope.sunburst_init = function() {
+        if( !$scope.taxData ) { 
+            $scope.$watch('taxData',doit);
+        }else{ 
+            doit();
+        }
+        function doit() {
+            if(!$scope.taxData){return};
+            $scope.treeified = get_category_tree_yr($scope.taxData,'1974');
+        }
+    };
+
+
+
+
     //////////////////////////////////////////
     //
     // Load Data Functions
@@ -111,6 +127,9 @@ function Ctrl1($scope) {
         return categories;
     }
 
+
+
+
     // --------------------------
     // Load category tree 
     //
@@ -145,6 +164,64 @@ function Ctrl1($scope) {
         dat.forEach(function(d) { 
             var category = d.omb_cat;
             var name = d.name;
+            var tot = d.total
+            if( names.indexOf(name) < 0 ) {
+                names.push(name);
+                list.push({
+                    name: name,
+                    parent: category,
+                    depth: 2
+                });
+            }
+        });
+
+        return treeify(list);
+
+    };
+
+
+
+    // --------------------------
+    // Load category tree, filtering by year
+    //
+    // year is a string
+    // if you change dat.year to +dat.year 
+    // then you can use year as a number
+    //
+    get_category_tree_yr = function(dat,year) { 
+        var list = [];
+        list.push({
+            name: 'root',
+            parent: null,
+            depth: 0
+        });
+
+        // -------
+        // filter data by year before doing anything
+        //dat.filter(function(d) { return dat.year == year } );
+
+        // --------
+        // create a list of tax break categories
+        var categories = [];
+        dat.forEach(function(d) { 
+            var category = d.omb_cat;
+            if( categories.indexOf(category) < 0 ) {
+                categories.push(category);
+                list.push({
+                    name: category,
+                    parent: 'root',
+                    depth: 1
+                });
+            }
+        });
+
+        // --------
+        // create a list of tax break names
+        var names = [];
+        dat.forEach(function(d) { 
+            var category = d.omb_cat;
+            var name = d.name;
+            var tot = d.total
             if( names.indexOf(name) < 0 ) {
                 names.push(name);
                 list.push({

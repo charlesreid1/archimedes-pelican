@@ -124,14 +124,29 @@ directives.push(ng);
 ng = mod.directive("sunburst", function($compile){
     return function(scope, element, attrs){
         element.bind("click", function(){
+
+            // make button active
+            $("a.navpills").parent().removeClass("active");
+            $("a#sunburst").parent().addClass("active");
+
+            // add content and directive
             $(myid).empty();
             $(myid).append($compile(
-                    "<div><h1>Hello world</h1><p>Now every category page has been populated from a directive.</p><helloworld></helloworld></div>"
+                    "<div>" + 
+                    "<sunburst-title></sunburst-title>" + 
+                    "<sunburst-lead></sunburst-lead>" + 
+                    "<sunburst-switch totalcount='totalcount' treeified='treeified'></sunburst-switch>" + 
+                    "<plainsunburst totalcount='totalcount' treeified='treeified'></plainsunburst>" +
+                    //"<sunburst treeified='treeified'></sunburst>" +
+                    "</div>"
             )(scope));
         });
     };
 });
 directives.push(ng);
+
+
+
 
 ng = mod.directive("end", function($compile){
     return function(scope, element, attrs){

@@ -40,7 +40,8 @@
                     <li><a class="navpills" id="categoriesexplorer" ng-click="categoriesexplorer_init()" categoriesexplorer>Explore Categories</a></li>
                     <li><a class="navpills" id="categoriesexplorerera" ng-click="categoriesexplorerera_init()" categoriesexplorerera>Explore Categories by Era</a></li>
 
-                    <li><a class="navpills" id="sunburst" sunburst>Every Category</a></li>
+                    <li><a class="navpills" id="sunburst" ng-click="sunburst_init()" sunburst>Every Category: Sunburst</a></li>
+                    <li><a class="navpills" id="icicle" sunburst>Every Category: Icicle</a></li>
                     <li><a class="navpills" id="explore" explore>Explore</a></li>
 
                 </ul>
@@ -69,6 +70,7 @@
 <script type="text/javascript" src="{{ SITEURL }}/tax/tax_directives_categories.js"></script>
 <script type="text/javascript" src="{{ SITEURL }}/tax/tax_directives_categoriesexplorer.js"></script>
 <script type="text/javascript" src="{{ SITEURL }}/tax/tax_directives_era.js"></script>
+<script type="text/javascript" src="{{ SITEURL }}/tax/tax_directives_sunburst.js"></script>
 
 
 {% endblock %}
