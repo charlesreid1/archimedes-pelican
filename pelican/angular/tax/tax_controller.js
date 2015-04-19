@@ -72,7 +72,7 @@ function Ctrl1($scope) {
         }
         function doit() {
             if(!$scope.taxData){return};
-            $scope.treeified = get_category_tree_yr($scope.taxData,'1974');
+            $scope.treeified = $scope.get_category_tree_yr($scope.taxData,2015);
         }
     };
 
@@ -133,7 +133,7 @@ function Ctrl1($scope) {
     // --------------------------
     // Load category tree 
     //
-    get_category_tree = function(dat) { 
+    $scope.get_category_tree = function(dat) { 
 
         var list = [];
 
@@ -184,11 +184,9 @@ function Ctrl1($scope) {
     // --------------------------
     // Load category tree, filtering by year
     //
-    // year is a string
-    // if you change dat.year to +dat.year 
-    // then you can use year as a number
+    // year is a number
     //
-    get_category_tree_yr = function(dat,year) { 
+    $scope.get_category_tree_yr = function(dat,year) { 
         var list = [];
         list.push({
             name: 'root',
@@ -198,7 +196,9 @@ function Ctrl1($scope) {
 
         // -------
         // filter data by year before doing anything
-        //dat.filter(function(d) { return dat.year == year } );
+        dat = dat.filter(function(d) { 
+            return +d.year == year;
+        });
 
         // --------
         // create a list of tax break categories
@@ -227,6 +227,7 @@ function Ctrl1($scope) {
                 list.push({
                     name: name,
                     parent: category,
+                    total: tot,
                     depth: 2
                 });
             }

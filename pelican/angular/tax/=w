@@ -150,11 +150,6 @@ ng = mod.directive('plainsunburst', function($compile) {
         } else {
             chartCallback();
         }
-        
-        //scope.$watch('sunburst_yr',updateYear);
-        //function updateYear() { 
-        //    pscope.treeified = pscope.get_category_tree_yr(pscope.taxData,scope.sunburst_yr);
-        //}
 
         function chartCallback() {
             //console.log(scope.treeified);
@@ -229,7 +224,7 @@ ng = mod.directive('plainsunburst', function($compile) {
             }
 
             scope.$watch('totalcount', updateFilter);
-
+            
             function updateFilter() { 
                 path.data(partition.value(scope.totalcount).nodes)
                     .transition()
