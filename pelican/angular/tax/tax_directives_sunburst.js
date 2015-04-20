@@ -164,11 +164,13 @@ ng = mod.directive('sunburstYear', function($compile) {
     function link(scope, element, attr) {
 
         var pscope = scope.$parent;
-        if( !pscope.treeified ) { 
-            pscope.$watch('treeified', buildSwitch);
-        } else {
-            buildSwitch();
-        }
+        //if( !pscope.treeified ) { 
+        //    pscope.$watch('treeified', buildSwitch);
+        //} else {
+        //    buildSwitch();
+        //}
+
+        pscope.$watch('sunburst_yr',buildSwitch);
         
         function buildSwitch() {
 
@@ -202,7 +204,8 @@ ng = mod.directive('sunburstYear', function($compile) {
             var backicon = $("<i />", {
                 "id" : "year-back-icon",
                 "class" : "fa fa-step-backward"
-            }).appendTo(backbtn)
+            })
+            .appendTo(backbtn)
 
 
             // ------------------------
@@ -230,6 +233,19 @@ ng = mod.directive('sunburstYear', function($compile) {
                 "id" : "year-fwd",
                 "class" : "fa fa-step-forward",
             }).appendTo(fwdbtn);
+
+            if(pscope.sunburst_yr<=1974) {
+                backbtn.addClass('disabled');
+            } else {
+                backbtn.removeClass('disabled');
+            }
+
+            if(pscope.sunburst_yr>=2019) {
+                fwdbtn.addClass('disabled');
+            } else {
+                fwdbtn.removeClass('disabled');
+            }
+
 
             var bg = $compile(row.html())(scope);
             angular.element($(el)).append(bg);
@@ -314,8 +330,6 @@ ng = mod.directive('plainsunburst', function($compile) {
         var y = d3.scale.sqrt()
             .range([0, radius]);
         
-        var color = d3.scale.category20c();
-        
         var svg = d3.select(el).append("svg")
             .attr("width", width)
             .attr("height", height)
@@ -343,15 +357,14 @@ ng = mod.directive('plainsunburst', function($compile) {
         // We can't use this stash function for switching data,
         // since this only works if your data has the exact same structure.
         function stash0(d) {
-            console.log('in stash0');
             d.x0 = 0;
             d.dx0 = 0;
         }
         function stash(d) {
-            console.log('in stash');
             d.x0 = d.x;
             d.dx0 = d.dx;
         }
+
         /*
         function fakestash(d,i) { 
             if(i==15 || i==30) {
@@ -362,64 +375,61 @@ ng = mod.directive('plainsunburst', function($compile) {
 
         // Tween from zero 
         function arcTweenZero(a, i) {
-          console.log('in arctweendata');
-          var oi = d3.interpolate({x: 0, dx: 0}, a);
-          function tween(t) {
-            var b = oi(t);
-            a.x0  = 0;//b.x;
-            a.dx0 = 0;//b.dx;
-            return arc(b);
-          }
-          if (i == 0) {
-           // If we are on the first arc, adjust the x domain to match the root node
-           // at the current zoom level. (We only need to do this once.)
-            var xd = d3.interpolate(x.domain(), [node.x, node.x + node.dx]);
-            return function(t) {
-              x.domain(xd(t));
-              return tween(t);
-            };
-          } else {
-            return tween;
-          }
+            var oi = d3.interpolate({x: 0, dx: 0}, a);
+            function tween(t) {
+                var b = oi(t);
+                a.x0  = 0;//b.x;
+                a.dx0 = 0;//b.dx;
+                return arc(b);
+            }
+            if (i == 0) {
+                // If we are on the first arc, adjust the x domain to match the root node
+                // at the current zoom level. (We only need to do this once.)
+                var xd = d3.interpolate(x.domain(), [node.x, node.x + node.dx]);
+                return function(t) {
+                    x.domain(xd(t));
+                    return tween(t);
+                };
+            } else {
+                return tween;
+            }
         }
             
         // When switching data: interpolate the arcs in data space.
         function arcTweenData(a, i) {
-          console.log('in arctweendata');
-          var oi = d3.interpolate({x: a.x0, dx: a.dx0}, a);
-          function tween(t) {
-            var b = oi(t);
-            a.x0 = b.x;
-            a.dx0 = b.dx;
-            return arc(b);
-          }
-          if (i == 0) {
-           // If we are on the first arc, adjust the x domain to match the root node
-           // at the current zoom level. (We only need to do this once.)
-            var xd = d3.interpolate(x.domain(), [node.x, node.x + node.dx]);
-            return function(t) {
-              x.domain(xd(t));
-              return tween(t);
-            };
-          } else {
-            return tween;
-          }
+            var oi = d3.interpolate({x: a.x0, dx: a.dx0}, a);
+            function tween(t) {
+                var b = oi(t);
+                a.x0 = b.x;
+                a.dx0 = b.dx;
+                return arc(b);
+            }
+            if (i == 0) {
+             // If we are on the first arc, adjust the x domain to match the root node
+             // at the current zoom level. (We only need to do this once.)
+                var xd = d3.interpolate(x.domain(), [node.x, node.x + node.dx]);
+                return function(t) {
+                    x.domain(xd(t));
+                    return tween(t);
+                };
+            } else {
+                return tween;
+            }
         }
-            
+       
         // When zooming: interpolate the scales.
         function arcTweenZoom(d) {
-          console.log('in arctween zoom');
-          var xd = d3.interpolate(x.domain(), [d.x, d.x + d.dx]),
-              yd = d3.interpolate(y.domain(), [d.y, 1]),
-              yr = d3.interpolate(y.range(), [d.y ? 20 : 0, radius]);
-          return function(d, i) {
-            return i
-                ? function(t) { return arc(d); }
-                : function(t) { 
-                    x.domain(xd(t)); 
-                    y.domain(yd(t)).range(yr(t)); 
-                    return arc(d); };
-          };
+            var xd = d3.interpolate(x.domain(), [d.x, d.x + d.dx]),
+                yd = d3.interpolate(y.domain(), [d.y, 1]),
+                yr = d3.interpolate(y.range(), [d.y ? 20 : 0, radius]);
+            return function(d, i) {
+                return i
+                  ? function(t) { return arc(d); }
+                  : function(t) { 
+                      x.domain(xd(t)); 
+                      y.domain(yd(t)).range(yr(t)); 
+                      return arc(d); };
+            };
         }
 
 
@@ -446,11 +456,11 @@ ng = mod.directive('plainsunburst', function($compile) {
         pscope.$watch('sunburst_yr',function() { updateYear() });
 
         // set initial year
-        pscope.sunburst_yr = 1999;
+        pscope.sunburst_yr = 2014;
 
         function updateYear() {
 
-            console.log('year updated: '+pscope.sunburst_yr);
+            //console.log('year updated: '+pscope.sunburst_yr);
 
             // some things we will always do:
             //
@@ -459,7 +469,7 @@ ng = mod.directive('plainsunburst', function($compile) {
             // ~~~~~~~~~~~~~~~~~~~~~~~~~~~
             // get treeified category structure
             // (filters tax return data by year)
-            console.log('now we get category tree year data '+pscope.sunburst_yr);
+            //console.log('now we get category tree year data '+pscope.sunburst_yr);
             new_treeified = pscope.get_category_tree_yr(
                     pscope.taxData,
                     pscope.sunburst_yr
@@ -467,20 +477,38 @@ ng = mod.directive('plainsunburst', function($compile) {
 
             node = new_treeified;//pscope.treeified;
 
+
+            // // printing new_treeified confirms
+            // // when we don't do antyhing to it, 
+            // // we are correctly loading it up,
+            // // and it is correctly changing with year
+            // console.log(new_treeified);
+
+
             // ~~~~~~~~~~~~~~~~~~~~~~~~~~~
             // draw the data
             // (put the data in the chart)
-            console.log('add the new nodes/paths.');
-            console.log(new_treeified);
+
+            //console.log('add the new nodes/paths.');
+        
+            // creating a new color scale here keeps everything
+            // ordered and consistent within a given year,
+            // which is more important than being consistent
+            // across given years
+            var color = d3.scale.category20c();
 
             var path = svg
-                .datum(new_treeified).selectAll("path")
+                .datum(new_treeified)
+                .selectAll("path")
                 .data(partition.nodes)
                 .enter().append("path")
                 .attr("d", arc)
                 .style("fill", function(d) { 
                     return color((d.children ? d : d.parent).name); 
-                })
+                });
+
+
+            /*
                 .on("click", click)
                 .each(stash0);
 
@@ -503,6 +531,7 @@ ng = mod.directive('plainsunburst', function($compile) {
             path.each(stash);
 
             pscope.treeified = new_treeified;
+            */
 
         }
 
