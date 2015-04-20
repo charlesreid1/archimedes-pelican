@@ -136,6 +136,7 @@ ng = mod.directive("sunburst", function($compile){
                     "<sunburst-title></sunburst-title>" + 
                     "<sunburst-lead></sunburst-lead>" + 
                     "<sunburst-switch totalcount='totalcount' treeified='treeified'></sunburst-switch>" + 
+                    "<sunburst-year sunburst_yr='sunburst_yr' treeified='treeified'></sunburst-year>" + 
                     "<plainsunburst totalcount='totalcount' treeified='treeified'></plainsunburst>" +
                     //"<sunburst treeified='treeified'></sunburst>" +
                     "</div>"

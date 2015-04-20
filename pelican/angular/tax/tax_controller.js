@@ -72,10 +72,22 @@ function Ctrl1($scope) {
         }
         function doit() {
             if(!$scope.taxData){return};
-            $scope.treeified = $scope.get_category_tree_yr($scope.taxData,2015);
+            //$scope.sunburst_yr = 2015;
+            //$scope.treeified = $scope.get_category_tree_yr($scope.taxData,$scope.sunburst_yr);
         }
     };
 
+    $scope.sunburst_year_back = function() { 
+        console.log('yr back');
+        if( !$scope.sunburst_yr ) { return };
+        $scope.sunburst_yr -= 1;
+    }
+
+    $scope.sunburst_year_fwd = function() { 
+        console.log('yr fwd');
+        if( !$scope.sunburst_yr ) { return };
+        $scope.sunburst_yr += 1;
+    }
 
 
 
@@ -170,12 +182,15 @@ function Ctrl1($scope) {
                 list.push({
                     name: name,
                     parent: category,
+                    total: tot,
                     depth: 2
                 });
             }
         });
 
-        return treeify(list);
+        var rat = treeify(list);
+        //console.log(rat);
+        return rat;
 
     };
 
@@ -187,6 +202,7 @@ function Ctrl1($scope) {
     // year is a number
     //
     $scope.get_category_tree_yr = function(dat,year) { 
+
         var list = [];
         list.push({
             name: 'root',
@@ -233,7 +249,8 @@ function Ctrl1($scope) {
             }
         });
 
-        return treeify(list);
+        var rat = treeify(list);
+        return rat;
 
     };
 

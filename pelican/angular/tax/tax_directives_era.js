@@ -248,6 +248,7 @@ var c_indcorp_dir = mod.directive('categoriesExplorerEraStreamgraph', function($
                 ]);
 
                 var area = d3.svg.area()
+                    .interpolate("basis")
                     .x(function(d)  { return x(d.x); })
                     .y0(function(d) { return y(d.y0); })
                     .y1(function(d) { return y(d.y0 + d.y); });

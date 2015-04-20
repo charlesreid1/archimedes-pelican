@@ -13,6 +13,10 @@ form {
 }
 */
 
+div#year-btn-group { 
+    width: 300px;
+}
+
 div#totalcount { 
     width: 300px;
 }
