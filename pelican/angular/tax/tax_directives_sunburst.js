@@ -332,7 +332,7 @@ ng = mod.directive('plainsunburst', function($compile) {
         //
         var partition = d3.layout.partition()
             .sort(null)
-            .value(function(d) { return d.total; });
+            .value(function(d) { return 1; });
 
         var arc = d3.svg.arc()
             .startAngle( function(d) { return Math.max(0, Math.min(2 * Math.PI, x(d.x))); })
@@ -342,11 +342,15 @@ ng = mod.directive('plainsunburst', function($compile) {
 
         // We can't use this stash function for switching data,
         // since this only works if your data has the exact same structure.
-        /*
+        function stash0(d) {
+            d.x0 = 0;
+            d.dx0 = 0;
+        }
         function stash(d) {
             d.x0 = d.x;
             d.dx0 = d.dx;
         }
+        /*
         function fakestash(d,i) { 
             if(i==15 || i==30) {
                 console.log('fake stash ['+i+']: x / x0: '+d.x+' / '+d.x0);
@@ -401,8 +405,81 @@ ng = mod.directive('plainsunburst', function($compile) {
         }
 
 
+        //////////////////////////////////////////
+        // On with the show:
+        // just draw the damn thing.
+
+        var pscope = scope.$parent;
+
+        // Keep track of the node that is currently being displayed as the root.
+        var node;
 
 
+        // set initial year
+        pscope.sunburst_yr = 1999;
+
+        console.log('year updated: '+pscope.sunburst_yr);
+
+        // some things we will always do:
+
+        // ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        // get treeified category structure
+        // (filters tax return data by year)
+        console.log('now we get category tree year data '+pscope.sunburst_yr);
+        new_treeified = pscope.get_category_tree_yr(
+                pscope.taxData,
+                pscope.sunburst_yr
+        );
+
+        node = new_treeified;//pscope.treeified;
+
+        // ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        // draw the data
+        // (put the data in the chart)
+
+
+        console.log('now we draw the new nodes/paths.');
+        var path = svg.datum(new_treeified).selectAll("path")
+            .data(partition.nodes)
+            /*,function(z) {
+                z.x0 = 0;
+                z.dx0 = 0;
+                return z;
+            })
+            */
+            .enter().append("path")
+            .attr("d", arc)
+            .style("fill", function(d) { 
+                return color((d.children ? d : d.parent).name); 
+            })
+            .on("click", click)
+            .each(stash0);
+
+        path.transition()
+            .duration(1000)
+            .attrTween('d',arcTweenData);
+
+        d3.select(self.frameElement).style("height", height + "px");
+
+        scope.$watch('totalcount',function(){updateFilter()});
+
+        function updateFilter() { 
+            // load the new data values and animate
+            path.data(partition.value(scope.totalcount).nodes)
+                .transition()
+                .duration(1000)
+                .attrTween('d',arcTweenData);
+        }
+        
+        pscope.treeified = new_treeified;
+
+
+
+
+
+
+
+        /*
         //////////////////////////////////////////
         // On with the show:
         // let's obtain our initial data set
@@ -413,108 +490,19 @@ ng = mod.directive('plainsunburst', function($compile) {
         // Keep track of the node that is currently being displayed as the root.
         var node;
 
-
-        // We want to put data into the chart to begin with,
-        // so we can deal with transitions seamlessly.
-        //
-
-        var path;
-
-        if(virgin) {
-
-            pscope.sunburst_yr = 1999;
-            console.log('building initial sunburst for 1999');
-
-            // ~~~~~~~~~~~~~~~~~~~~~~~~~~~
-            // get treeified category structure
-            // (filters tax return data by year)
-            pscope.treeified = pscope.get_category_tree_yr(
-                pscope.taxData,
-                pscope.sunburst_yr
-            );
-
-
-            // ~~~~~~~~~~~~~~~~~~~~~~~~~~~
-            // draw the data
-            // (put the data in the chart)
-
-            node = pscope.treeified;
-            path = svg.datum(pscope.treeified).selectAll("path")
-                .data(partition.nodes)
-                .enter().append("path")
-                .attr("d", arc)
-                .style("fill", function(d) { 
-                    return color((d.children ? d : d.parent).name); 
-                })
-                .on("click", click);
-
-            //console.log('from virgin:');
-            //svg.selectAll("path").each(fakestash);
-
-            d3.select(self.frameElement).style("height", height + "px");
-            
-
-
-            scope.$watch('totalcount', updateFilter);
-
-            function updateFilter() { 
-                path.data(partition.value(scope.totalcount).nodes)
-                    .transition()
-                    .duration(1000)
-                    .attrTween('d',arcTweenData);
-            }
-
-            virgin = false;
-
-
-        } 
-
-
-        //////////////////////////////////////////
-        //
-        // DONT WATCH THE DATA
-        // WATCH THE FILTERS
-        //
-        // here, go through process of creating paths
-        // for initial chart creation.
-        //
-        // once these are created, all we do is watch
-        // for changes in the data, due to total/cout 
-        // or due to year
-        //
-        // we need to fix how we're watching for changes.
-        // instead of watching the data,
-        // watch the year.
-        //
-        // whose responsibility is it to get the right data?
-        // ours. we are the directive.
-        // right. so handle the year and total/count settings
-        // to filter data. don't wait for someone else
-        // to filter data for you.
-
-
         // ----------------------
         // watch for updates to year
 
-        pscope.$watch('sunburst_yr',updateYear);
+        pscope.$watch('sunburst_yr',function() { updateYear() });
 
-        pscope.sunburst_yr = 2000;
-        updateYear();
+        // set initial year
+        pscope.sunburst_yr = 1999;
 
-        function updateYear() { 
+        function updateYear() {
 
             console.log('year updated: '+pscope.sunburst_yr);
 
-            //console.log('first thing we do is to stash.');
-
-            //console.log('before stash:');
-            //svg.selectAll("path").each(fakestash);
-
-            //svg.selectAll("path").each(stash);
-
-            //console.log('after stash:');
-            //svg.selectAll("path").each(fakestash);
-
+            // some things we will always do:
 
             // ~~~~~~~~~~~~~~~~~~~~~~~~~~~
             // get treeified category structure
@@ -530,200 +518,317 @@ ng = mod.directive('plainsunburst', function($compile) {
             // ~~~~~~~~~~~~~~~~~~~~~~~~~~~
             // draw the data
             // (put the data in the chart)
-            //
-            console.log('now we transition to the new nodes/paths.');
-
-            // This part is tricky. 
-            // We need to update the sunburst chart,
-            // but we can't use the normal stash method
-            // (because we're loading a whole new data set).
-            // This means we have to iterate through the 
-            // existing sunburst chart (path) 
-            // to store x, y, dx, dy values.
-            //
-            // Then we pass those to the new sunburst chart.
-            // If a key is in the original and not the new, 
-            // it will be removed.
-            // If a key is in the new but not the original, 
-            // it starts from 0.
-            //
 
 
-            // Step 1:
-            // store the old coordinates from path
-            old_xy = {};
-            path.each(function(z) { 
-                var k = z.name;
-                var v = { 'x0' : z.x,
-                         'dx0' : z.dx,
-                };
-                old_xy[k] = v;
-            });
-            var ks = Object.keys(old_xy);
-
-
-            // Step 2:
-            // generate the new path
-            // the datum() binds the new tree's root to the path.
-            // then we start adding nodes.
-
-            
+            console.log('now we draw the new nodes/paths.');
+            console.log(new_treeified);
             var path = svg.datum(new_treeified).selectAll("path")
-                .data(partition.nodes(node), function(z) {
-
-                    console.log(z);
+                .data(partition.nodes,function(z) {
+                    z.x0 = 0;
+                    z.dx0 = 0;
                     return z;
-
-                    // // Step 3:
-                    // // we have old xy info for this pair,
-                    // // so populate new path with old coordinates
-                    // //
-                    // var io = ks.indexOf(z.name);
-                    // if(io >= 0) { 
-                    //     var xy_info = old_xy[z.name];
-                    //     z.x0  = xy_info.x0;
-                    //     z.dx0 = xy_info.dx0;
-                    // } else {
-                    //     z.x0 = 0;
-                    //     z.dx0 = 0;
-                    // }
-
-                    // //z.x0  = 0;
-                    // //z.dx0 = 0;
-
-                    // return z;
-
-                }).enter()
-                .append("path")
+                })
+                .enter().append("path")
                 .attr("d", arc)
                 .style("fill", function(d) { 
                     return color((d.children ? d : d.parent).name); 
-                });
-                //.on("click", click);
-            
-            //console.log(new_treeified);
-
-            path.each(function(z) { 
-                    //console.log(z);
                 })
-                .transition()
+                .on("click", click);
+
+            path.transition()
                 .duration(1000)
-                .attrTween("d",arcTweenData);
-                //.each(function(a) {
-                //    //console.log('---------------');
-                //    //console.log('dx: ' +a.dx);
-                //    //console.log('dx0: '+a.dx0);
-                //    //console.log('x: '  +a.x);
-                //    //console.log('x0: ' +a.x0);
-                //});
+                .attrTween('d',arcTweenData);
 
+            d3.select(self.frameElement).style("height", height + "px");
+
+            scope.$watch('totalcount',function(){updateFilter(path)});
+
+            function updateFilter(path) { 
+                // load the new data values and animate
+                path.data(partition.value(scope.totalcount).nodes)
+                    .transition()
+                    .duration(1000)
+                    .attrTween('d',arcTweenData);
+            }
+            
             pscope.treeified = new_treeified;
-
-
         }
+        */
+
+
+        // // // if(virgin) {
+
+        // // //     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        // // //     // draw the data
+        // // //     // (put the data in the chart)
+
+        // // //     node = pscope.treeified;
+        // // //     path = svg.datum(pscope.treeified).selectAll("path")
+        // // //         .data(partition.nodes)
+        // // //         .enter().append("path")
+        // // //         .attr("d", arc)
+        // // //         .style("fill", function(d) { 
+        // // //             return color((d.children ? d : d.parent).name); 
+        // // //         })
+        // // //         .on("click", click);
+
+        // // //     //console.log('from virgin:');
+        // // //     //svg.selectAll("path").each(fakestash);
+
+        // // //     d3.select(self.frameElement).style("height", height + "px");
+        // // //     
+
+
+        // // //     scope.$watch('totalcount', updateFilter);
+
+        // // //     function updateFilter() { 
+        // // //         // load the new data values and animate
+        // // //         path.data(partition.value(scope.totalcount).nodes)
+        // // //             .transition()
+        // // //             .duration(1000)
+        // // //             .attrTween('d',arcTweenData);
+        // // //     }
+
+        // // //     virgin = false;
+
+
+        // // // } 
+        // // // console.log('done with virgin.');
+
+
+        // // // //////////////////////////////////////////
+        // // // //
+        // // // // DONT WATCH THE DATA
+        // // // // WATCH THE FILTERS
+        // // // //
+        // // // // here, go through process of creating paths
+        // // // // for initial chart creation.
+        // // // //
+        // // // // once these are created, all we do is watch
+        // // // // for changes in the data, due to total/cout 
+        // // // // or due to year
+        // // // //
+        // // // // we need to fix how we're watching for changes.
+        // // // // instead of watching the data,
+        // // // // watch the year.
+        // // // //
+        // // // // whose responsibility is it to get the right data?
+        // // // // ours. we are the directive.
+        // // // // right. so handle the data filters HERE.
+        // // // // don't wait for someone else to filter it for you.
+
+
+        // // // pscope.sunburst_yr = 1997;
+        // // // //updateYear(path);
+
+        // // // function updateYear(path) { 
+
+        // // //     console.log('year updated: '+pscope.sunburst_yr);
+
+
+        // // //     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        // // //     // get treeified category structure
+        // // //     // (filters tax return data by year)
+        // // //     console.log('now we get category tree year data '+pscope.sunburst_yr);
+        // // //     new_treeified = pscope.get_category_tree_yr(
+        // // //             pscope.taxData,
+        // // //             pscope.sunburst_yr
+        // // //     );
+
+        // // //     node = new_treeified;//pscope.treeified;
+
+
+        // // //     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        // // //     // draw the data
+        // // //     // (put the data in the chart)
+        // // //     //
+        // // //     if(!path) { 
+        // // //         console.log('now we draw the new nodes/paths.');
+        // // //         path = svg.datum(new_treeified).selectAll("path")
+        // // //             .data(partition.nodes)
+        // // //             .enter().append("path")
+        // // //             .attr("d", arc)
+        // // //             .style("fill", function(d) { 
+        // // //                 return color((d.children ? d : d.parent).name); 
+        // // //             })
+        // // //             .on("click", click);
+
+        // // //         d3.select(self.frameElement).style("height", height + "px");
+
+        // // //         scope.$watch('totalcount', updateFilter);
+
+        // // //         function updateFilter() { 
+        // // //             // load the new data values and animate
+        // // //             path.data(partition.value(scope.totalcount).nodes)
+        // // //                 .transition()
+        // // //                 .duration(1000)
+        // // //                 .attrTween('d',arcTweenData);
+        // // //         }
 
 
 
-        // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-        // function chartCallback() {
 
-        //     if(!pscope.treeified){ return; }
-        //     if(!pscope.sunburst_yr){ return; }
 
-        //     // default sort method: count
-        //     //
-        //     var partition = d3.layout.partition()
-        //         .sort(null)
-        //         .value(function(d) { return 1; });
-        //     
-        //     var arc = d3.svg.arc()
-        //         .startAngle( function(d) { return Math.max(0, Math.min(2 * Math.PI, x(d.x))); })
-        //         .endAngle(   function(d) { return Math.max(0, Math.min(2 * Math.PI, x(d.x + d.dx))); })
-        //         .innerRadius(function(d) { return Math.max(0, y(d.y)); })
-        //         .outerRadius(function(d) { return Math.max(0, y(d.y + d.dy)); });
-        //     
-        //     // Keep track of the node that is currently being displayed as the root.
-        //     var node;
 
-        //     node = pscope.treeified;
-        //     var path = svg.datum(pscope.treeified).selectAll("path")
-        //         .data(partition.nodes)
-        //         .enter().append("path")
-        //         .attr("d", arc)
-        //         .style("fill", function(d) { 
-        //             return color((d.children ? d : d.parent).name); 
-        //         })
-        //         .on("click", click)
-        //         .each(stash);
+        // // //     // Step 1:
+        // // //     // store the old coordinates from path
+        // // //     old_xy = {};
+        // // //     path.each(function(z) { 
+        // // //         var k = z.name;
+        // // //         var v = { 'x0' : z.x,
+        // // //                  'dx0' : z.dx,
+        // // //         };
+        // // //         old_xy[k] = v;
+        // // //     });
+        // // //     var ks = Object.keys(old_xy);
 
-        //     function click(d) {
-        //         node = d;
-        //         path.transition()
-        //           .duration(1000)
-        //           .attrTween("d", arcTweenZoom(d));
-        //     }
 
-        //     scope.$watch('totalcount', updateFilter);
+        // // //     // Step 2:
+        // // //     // generate the new path
+        // // //     // the datum() binds the new tree's root to the path.
+        // // //     // then we start adding nodes.
 
-        //     function updateFilter() { 
-        //         path.data(partition.value(scope.totalcount).nodes)
-        //             .transition()
-        //             .duration(1000)
-        //             .attrTween('d',arcTweenData);
-        //     }
+        // // //     
+        // // //     var path = svg.datum(new_treeified).selectAll("path")
+        // // //         .data(partition.nodes(node), function(z) {
 
-        //     d3.select(self.frameElement).style("height", height + "px");
+        // // //             // Step 3:
+        // // //             // we have old xy info for this pair,
+        // // //             // so populate new path with old coordinates
+        // // //             //
+        // // //             var io = ks.indexOf(z.name);
+        // // //             if(io >= 0) { 
+        // // //                 var xy_info = old_xy[z.name];
+        // // //                 z.x0  = xy_info.x0;
+        // // //                 z.dx0 = xy_info.dx0;
+        // // //             } else {
+        // // //                 z.x0  = z.x;
+        // // //                 z.dx0 = z.dx;
+        // // //             }
 
-        //     // Setup for switching data: stash the old values for transition.
-        //     function stash(d) {
-        //         d.x0 = d.x;
-        //         d.dx0 = d.dx;
-        //     }
-        //     
-        //     // When switching data: interpolate the arcs in data space.
-        //     function arcTweenData(a, i) {
-        //       var oi = d3.interpolate({x: a.x0, dx: a.dx0}, a);
-        //       function tween(t) {
-        //         var b = oi(t);
-        //         a.x0 = b.x;
-        //         a.dx0 = b.dx;
-        //         return arc(b);
-        //       }
-        //       if (i == 0) {
-        //        // If we are on the first arc, adjust the x domain to match the root node
-        //        // at the current zoom level. (We only need to do this once.)
-        //         var xd = d3.interpolate(x.domain(), [node.x, node.x + node.dx]);
-        //         return function(t) {
-        //           x.domain(xd(t));
-        //           return tween(t);
-        //         };
-        //       } else {
-        //         return tween;
-        //       }
-        //     }
-        //     
-        //     // When zooming: interpolate the scales.
-        //     function arcTweenZoom(d) {
-        //       var xd = d3.interpolate(x.domain(), [d.x, d.x + d.dx]),
-        //           yd = d3.interpolate(y.domain(), [d.y, 1]),
-        //           yr = d3.interpolate(y.range(), [d.y ? 20 : 0, radius]);
-        //       return function(d, i) {
-        //         return i
-        //             ? function(t) { return arc(d); }
-        //             : function(t) { 
-        //                 x.domain(xd(t)); 
-        //                 y.domain(yd(t)).range(yr(t)); 
-        //                 return arc(d); };
-        //       };
-        //     }
-        // }
+        // // //             //console.log(z);
+        // // //             return z;
 
-        // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+        // // //         }).enter()
+        // // //         .append("path")
+        // // //         .attr("d", arc)
+        // // //         .style("fill", function(d) { 
+        // // //             return color((d.children ? d : d.parent).name); 
+        // // //         });
+
+        // // //     path.transition()
+        // // //         .duration(1000)
+        // // //         .attrTween("d",arcTweenData);
+
+        // // //     pscope.treeified = new_treeified;
+
+
+        // // // }
+
+
+
+        // // // // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        // // // // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        // // // // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+        // // // // function chartCallback() {
+
+        // // // //     if(!pscope.treeified){ return; }
+        // // // //     if(!pscope.sunburst_yr){ return; }
+
+        // // // //     // default sort method: count
+        // // // //     //
+        // // // //     var partition = d3.layout.partition()
+        // // // //         .sort(null)
+        // // // //         .value(function(d) { return 1; });
+        // // // //     
+        // // // //     var arc = d3.svg.arc()
+        // // // //         .startAngle( function(d) { return Math.max(0, Math.min(2 * Math.PI, x(d.x))); })
+        // // // //         .endAngle(   function(d) { return Math.max(0, Math.min(2 * Math.PI, x(d.x + d.dx))); })
+        // // // //         .innerRadius(function(d) { return Math.max(0, y(d.y)); })
+        // // // //         .outerRadius(function(d) { return Math.max(0, y(d.y + d.dy)); });
+        // // // //     
+        // // // //     // Keep track of the node that is currently being displayed as the root.
+        // // // //     var node;
+
+        // // // //     node = pscope.treeified;
+        // // // //     var path = svg.datum(pscope.treeified).selectAll("path")
+        // // // //         .data(partition.nodes)
+        // // // //         .enter().append("path")
+        // // // //         .attr("d", arc)
+        // // // //         .style("fill", function(d) { 
+        // // // //             return color((d.children ? d : d.parent).name); 
+        // // // //         })
+        // // // //         .on("click", click)
+        // // // //         .each(stash);
+
+        // // // //     function click(d) {
+        // // // //         node = d;
+        // // // //         path.transition()
+        // // // //           .duration(1000)
+        // // // //           .attrTween("d", arcTweenZoom(d));
+        // // // //     }
+
+        // // // //     scope.$watch('totalcount', updateFilter);
+
+        // // // //     function updateFilter() { 
+        // // // //         path.data(partition.value(scope.totalcount).nodes)
+        // // // //             .transition()
+        // // // //             .duration(1000)
+        // // // //             .attrTween('d',arcTweenData);
+        // // // //     }
+
+        // // // //     d3.select(self.frameElement).style("height", height + "px");
+
+        // // // //     // Setup for switching data: stash the old values for transition.
+        // // // //     function stash(d) {
+        // // // //         d.x0 = d.x;
+        // // // //         d.dx0 = d.dx;
+        // // // //     }
+        // // // //     
+        // // // //     // When switching data: interpolate the arcs in data space.
+        // // // //     function arcTweenData(a, i) {
+        // // // //       var oi = d3.interpolate({x: a.x0, dx: a.dx0}, a);
+        // // // //       function tween(t) {
+        // // // //         var b = oi(t);
+        // // // //         a.x0 = b.x;
+        // // // //         a.dx0 = b.dx;
+        // // // //         return arc(b);
+        // // // //       }
+        // // // //       if (i == 0) {
+        // // // //        // If we are on the first arc, adjust the x domain to match the root node
+        // // // //        // at the current zoom level. (We only need to do this once.)
+        // // // //         var xd = d3.interpolate(x.domain(), [node.x, node.x + node.dx]);
+        // // // //         return function(t) {
+        // // // //           x.domain(xd(t));
+        // // // //           return tween(t);
+        // // // //         };
+        // // // //       } else {
+        // // // //         return tween;
+        // // // //       }
+        // // // //     }
+        // // // //     
+        // // // //     // When zooming: interpolate the scales.
+        // // // //     function arcTweenZoom(d) {
+        // // // //       var xd = d3.interpolate(x.domain(), [d.x, d.x + d.dx]),
+        // // // //           yd = d3.interpolate(y.domain(), [d.y, 1]),
+        // // // //           yr = d3.interpolate(y.range(), [d.y ? 20 : 0, radius]);
+        // // // //       return function(d, i) {
+        // // // //         return i
+        // // // //             ? function(t) { return arc(d); }
+        // // // //             : function(t) { 
+        // // // //                 x.domain(xd(t)); 
+        // // // //                 y.domain(yd(t)).range(yr(t)); 
+        // // // //                 return arc(d); };
+        // // // //       };
+        // // // //     }
+        // // // // }
+
+        // // // // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        // // // // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        // // // // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     };
 
