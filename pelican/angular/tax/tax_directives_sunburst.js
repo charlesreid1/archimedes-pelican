@@ -343,10 +343,12 @@ ng = mod.directive('plainsunburst', function($compile) {
         // We can't use this stash function for switching data,
         // since this only works if your data has the exact same structure.
         function stash0(d) {
+            console.log('in stash0');
             d.x0 = 0;
             d.dx0 = 0;
         }
         function stash(d) {
+            console.log('in stash');
             d.x0 = d.x;
             d.dx0 = d.dx;
         }
@@ -358,13 +360,29 @@ ng = mod.directive('plainsunburst', function($compile) {
         }
         */
 
-        function click(d) {
-            node = d;
-            path.transition()
-              .duration(1000)
-              .attrTween("d", arcTweenZoom(d));
+        // Tween from zero 
+        function arcTweenZero(a, i) {
+          console.log('in arctweendata');
+          var oi = d3.interpolate({x: 0, dx: 0}, a);
+          function tween(t) {
+            var b = oi(t);
+            a.x0  = 0;//b.x;
+            a.dx0 = 0;//b.dx;
+            return arc(b);
+          }
+          if (i == 0) {
+           // If we are on the first arc, adjust the x domain to match the root node
+           // at the current zoom level. (We only need to do this once.)
+            var xd = d3.interpolate(x.domain(), [node.x, node.x + node.dx]);
+            return function(t) {
+              x.domain(xd(t));
+              return tween(t);
+            };
+          } else {
+            return tween;
+          }
         }
-
+            
         // When switching data: interpolate the arcs in data space.
         function arcTweenData(a, i) {
           console.log('in arctweendata');
@@ -414,69 +432,79 @@ ng = mod.directive('plainsunburst', function($compile) {
         // Keep track of the node that is currently being displayed as the root.
         var node;
 
+        function click(d) {
+            node = d;
+            path.transition()
+              .duration(1000)
+              .attrTween("d", arcTweenZoom(d));
+        }
+
+
+        // ----------------------
+        // watch for updates to year
+
+        pscope.$watch('sunburst_yr',function() { updateYear() });
 
         // set initial year
         pscope.sunburst_yr = 1999;
 
-        console.log('year updated: '+pscope.sunburst_yr);
+        function updateYear() {
 
-        // some things we will always do:
+            console.log('year updated: '+pscope.sunburst_yr);
 
-        // ~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        // get treeified category structure
-        // (filters tax return data by year)
-        console.log('now we get category tree year data '+pscope.sunburst_yr);
-        new_treeified = pscope.get_category_tree_yr(
-                pscope.taxData,
-                pscope.sunburst_yr
-        );
+            // some things we will always do:
+            //
+            svg.selectAll("path").remove();
 
-        node = new_treeified;//pscope.treeified;
+            // ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            // get treeified category structure
+            // (filters tax return data by year)
+            console.log('now we get category tree year data '+pscope.sunburst_yr);
+            new_treeified = pscope.get_category_tree_yr(
+                    pscope.taxData,
+                    pscope.sunburst_yr
+            );
 
-        // ~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        // draw the data
-        // (put the data in the chart)
+            node = new_treeified;//pscope.treeified;
 
+            // ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            // draw the data
+            // (put the data in the chart)
+            console.log('add the new nodes/paths.');
+            console.log(new_treeified);
 
-        console.log('now we draw the new nodes/paths.');
-        var path = svg.datum(new_treeified).selectAll("path")
-            .data(partition.nodes)
-            /*,function(z) {
-                z.x0 = 0;
-                z.dx0 = 0;
-                return z;
-            })
-            */
-            .enter().append("path")
-            .attr("d", arc)
-            .style("fill", function(d) { 
-                return color((d.children ? d : d.parent).name); 
-            })
-            .on("click", click)
-            .each(stash0);
+            var path = svg
+                .datum(new_treeified).selectAll("path")
+                .data(partition.nodes)
+                .enter().append("path")
+                .attr("d", arc)
+                .style("fill", function(d) { 
+                    return color((d.children ? d : d.parent).name); 
+                })
+                .on("click", click)
+                .each(stash0);
 
-        path.transition()
-            .duration(1000)
-            .attrTween('d',arcTweenData);
-
-        d3.select(self.frameElement).style("height", height + "px");
-
-        scope.$watch('totalcount',function(){updateFilter()});
-
-        function updateFilter() { 
-            // load the new data values and animate
-            path.data(partition.value(scope.totalcount).nodes)
-                .transition()
+            path.transition()
                 .duration(1000)
-                .attrTween('d',arcTweenData);
+                .attrTween('d',arcTweenZero);
+
+            d3.select(self.frameElement).style("height", height + "px");
+
+            scope.$watch('totalcount',function(){updateFilter()});
+
+            function updateFilter() { 
+                // load the new data values and animate
+                path.data(partition.value(scope.totalcount).nodes)
+                    .transition()
+                    .duration(1000)
+                    .attrTween('d',arcTweenData);
+            }
+            
+            path.each(stash);
+
+            pscope.treeified = new_treeified;
+
         }
-        
-        pscope.treeified = new_treeified;
-
-
-
-
-
 
 
         /*
