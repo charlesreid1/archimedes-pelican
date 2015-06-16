@@ -165,9 +165,6 @@ var dir = mod.directive('wine', function() {
                   d3.selectAll('g.point').classed('active',function(e){
                       var did = +d['id'];
                       var eid = e['id'];
-                      if(did==eid) {
-                          console.log(e);
-                      }
                       return did==eid;
                   });
               })

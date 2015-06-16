@@ -132,6 +132,7 @@ TEMPLATE_PAGES['page3_module.js']       = 'page3/page3_module.js'
 TEMPLATE_PAGES['page3_controller.js']   = 'page3/page3_controller.js'
 TEMPLATE_PAGES['page3_directives.js']   = 'page3/page3_directives.js'
 
+TEMPLATE_PAGES['flare.json']                    = 'tax/flare.json'
 TEMPLATE_PAGES['tax-data.csv']                  = 'tax/tax-data.csv'
 TEMPLATE_PAGES['tax-data2.json']                = 'tax/tax-data2.json'
 TEMPLATE_PAGES['tax.html']                      = 'tax/index.html'
@@ -142,6 +143,8 @@ TEMPLATE_PAGES['tax_directives_pages.js']       = 'tax/tax_directives_pages.js'
 TEMPLATE_PAGES['tax_directives_intro.js']       = 'tax/tax_directives_intro.js'
 TEMPLATE_PAGES['tax_directives_categories.js']  = 'tax/tax_directives_categories.js'
 TEMPLATE_PAGES['tax_directives_categoriesexplorer.js']  = 'tax/tax_directives_categoriesexplorer.js'
+TEMPLATE_PAGES['tax_directives_era.js']         = 'tax/tax_directives_era.js'
+TEMPLATE_PAGES['tax_directives_sunburst.js']    = 'tax/tax_directives_sunburst.js'
 
 
 
